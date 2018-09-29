@@ -1,8 +1,4 @@
-
-const colors = {
-  flatBlue: '#3498db',
-  flatGreen: '#2ecc71',
-  flatRed: '#e74c3c'
+export default {
+  accent: '#7B1FA2',
+  grey: '#D8D8D8',
 };
-
-export default colors;
