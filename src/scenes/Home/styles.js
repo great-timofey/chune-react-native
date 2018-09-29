@@ -3,17 +3,17 @@ import { colors } from '../../global';
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex: 0.5,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: colors.flatBlue,
-    borderRadius: 6
+    borderRadius: 6,
   },
   buttonText: {
     margin: 12,
     fontWeight: 'bold',
-    color: 'black'
-  }
+    color: 'black',
+  },
 });
