@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Spotify from 'rn-spotify-sdk';
+import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import styles from './styles';
 
 type Props = {
@@ -74,6 +75,20 @@ class Home extends Component<Props> {
           <Text style={styles.buttonText}>
             {spotifyInitialized ? 'yep' : 'no'}
           </Text>
+          <LoginButton
+            onLoginFinished={(error, result) => {
+              if (error) {
+                console.log(`login has error: ${result.error}`);
+              } else if (result.isCancelled) {
+                console.log('login is cancelled.');
+              } else {
+                AccessToken.getCurrentAccessToken().then((data) => {
+                  console.log(data.accessToken.toString());
+                });
+              }
+            }}
+            onLogoutFinished={() => console.log('logout.')}
+          />
         </TouchableOpacity>
       </View>
     );
