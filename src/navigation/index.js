@@ -1,19 +1,37 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator, NavigationActions } from 'react-navigation';
+
+import Auth from '../scenes/Auth';
 import Home from '../scenes/Home';
-import Counter from '../scenes/Counter';
+import { HomeScene, AuthScene } from './scenes';
 
 export const AppNavigator = createStackNavigator({
-  Home: {
-    screen: Home,
+  [AuthScene]: {
+    screen: Auth,
   },
-  Counter: {
-    path: 'counter',
-    screen: Counter,
+  [HomeScene]: {
+    screen: Home,
+    navigationOptions: {
+      // gesturesEnabled: false,
+      // headerLeft: null,
+    },
   },
 });
-export default function Navigator() {
-  return (
-    <AppNavigator />
+
+let navigatorRef;
+export const navigate = (routeName, params) => {
+  navigatorRef.dispatch(
+    NavigationActions.navigate({
+      routeName,
+      params,
+    }),
   );
-}
+};
+
+export default () => (
+  <AppNavigator
+    ref={(ref) => {
+      navigatorRef = ref;
+    }}
+  />
+);
