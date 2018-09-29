@@ -1,19 +1,28 @@
 import { StyleSheet } from 'react-native';
-import { colors } from '../../global';
 
 export default StyleSheet.create({
   container: {
-    flex: 0.5,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonsContainer: {
+    flexDirection: 'row'
+  },
+  count: {
+    fontWeight: 'bold',
+    fontSize: 70
   },
   button: {
-    backgroundColor: colors.flatBlue,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 6,
+    width: 40,
+    height: 40,
+    margin: 8
   },
   buttonText: {
-    margin: 12,
-    fontWeight: 'bold',
     color: 'black',
-  },
+    fontSize: 24
+  }
 });

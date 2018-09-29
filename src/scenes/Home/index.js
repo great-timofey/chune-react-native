@@ -1,107 +1,66 @@
-import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import Spotify from 'rn-spotify-sdk'
-import { LoginButton, AccessToken } from 'react-native-fbsdk'
-import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin'
-
-import styles from './styles'
+import React, { PureComponent } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Spotify from 'rn-spotify-sdk';
+import * as counter from '../../redux/actions/counter';
+import { colors } from '../../global';
+import styles from './styles';
 
 type Props = {
-  navigation: Object,
+  count?: Number,
+  increment: Function,
+  decrement: Function,
 };
 
-class Home extends Component<Props> {
-  state = {
-    isLogged: false,
+class Counter extends PureComponent<Props> {
+  static defaultProps = {
+    count: 0,
   };
 
   componentDidMount() {
-    GoogleSignin.configure({
-      iosClientId:
-        '839963583954-do66c05dv80tm42e1gpfhgf4pevfvddm.apps.googleusercontent.com',
-    })
-
-    const spotifyOptions = {
-      clientID: '7f3b314d392d405dabc16fb93308762a',
-      sessionUserDefaultsKey: 'SpotifySession',
-      redirectURL: 'rnspotify://auth',
-      scopes: [
-        'user-read-private',
-        'playlist-read',
-        'playlist-read-private',
-        'streaming',
-      ],
-    }
-
-    Spotify.initialize(spotifyOptions)
+    Spotify.getMe().then((_) => {
+      // update state with user info
+      Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
+    });
   }
 
-  _handleAuthSpotify = async () => {
-    const loggedIn = await Spotify.login()
-    if (loggedIn) {
-      try {
-        const authInfo = await Spotify.getAuthAsync()
-        console.log(authInfo)
-        this.setState({ isLogged: true })
-      } catch (err) {
-        alert('Error', err.message)
-      }
-    } else {
-      alert('Spotify Auth Error')
-    }
-  };
-
-  _handleAuthGoogle = async () => {
-    try {
-      await GoogleSignin.hasPlayServices()
-      const userInfo = await GoogleSignin.signIn()
-      console.log(userInfo)
-      this.setState({ isLogged: true })
-    } catch (error) {
-      console.log(error)
-    }
-  };
-
-  _handleAuthFb = async (error, result) => {
-    if (error) {
-      console.log(`login has error: ${result.error}`)
-    } else if (result.isCancelled) {
-      console.log('login is cancelled.')
-    } else {
-      AccessToken.getCurrentAccessToken().then((data) => {
-        console.log(data.accessToken.toString())
-      })
-      this.setState({ isLogged: true })
-    }
-  };
+  componentWillUnmount() {
+    Spotify.setPlaying(false);
+  }
 
   render() {
-    const { navigation } = this.props
-    const { isLogged } = this.state
+    const { count, decrement, increment } = this.props;
     return (
       <View style={styles.container}>
-        <Text>{isLogged ? 'logged' : 'not logged'}</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={this._handleAuthSpotify}
-        >
-          <Text style={styles.buttonText}>Continue with Spotify</Text>
-        </TouchableOpacity>
-        <LoginButton onLoginFinished={this._handleAuthFb} />
-        <GoogleSigninButton
-          style={{ width: 48, height: 48 }}
-          size={GoogleSigninButton.Size.Icon}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={this._handleAuthGoogle}
-        />
-        <TouchableOpacity
-          disabled={!isLogged}
-          onPress={() => navigation.navigate('Counter')}
-        >
-          <Text>Go To Player</Text>
-        </TouchableOpacity>
+        <Text style={styles.count}>Here goes home screen</Text>
+        <Text style={styles.count}>{count}</Text>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.flatRed }]}
+            onPress={() => decrement()}
+          >
+            <Text style={styles.buttonText}>-</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.flatGreen }]}
+            onPress={() => increment()}
+          >
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    )
+    );
   }
 }
-export default Home
+
+export default connect(
+  state => ({ count: state.counter.count }),
+  dispatch => bindActionCreators(
+    {
+      decrement: counter.decrement,
+      increment: counter.increment,
+    },
+    dispatch,
+  ),
+)(Counter);
