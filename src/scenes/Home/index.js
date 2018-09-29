@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Spotify from 'rn-spotify-sdk';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from 'react-native-google-signin';
+
 import styles from './styles';
 
 type Props = {
@@ -18,6 +24,16 @@ class Home extends Component<Props> {
   }
 
   componentDidMount() {
+    GoogleSignin.configure({
+      // webClientId:
+      // '839963583954-v1aqn3htautcthljmgrnluoji2kf2cvr.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      iosClientId:
+        '839963583954-do66c05dv80tm42e1gpfhgf4pevfvddm.apps.googleusercontent.com',
+      // com..apps.
+      scopes: ['email'],
+      shouldFetchBasicProfile: true,
+    });
+
     const spotifyOptions = {
       clientID: '7f3b314d392d405dabc16fb93308762a',
       sessionUserDefaultsKey: 'SpotifySession',
@@ -63,6 +79,26 @@ class Home extends Component<Props> {
     // }
   }
 
+  _signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+      // this.setState({ userInfo });
+    } catch (error) {
+      console.log(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (f.e. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+
   render() {
     const { navigation } = this.props;
     const { spotifyInitialized } = this.state;
@@ -75,21 +111,27 @@ class Home extends Component<Props> {
           <Text style={styles.buttonText}>
             {spotifyInitialized ? 'yep' : 'no'}
           </Text>
-          <LoginButton
-            onLoginFinished={(error, result) => {
-              if (error) {
-                console.log(`login has error: ${result.error}`);
-              } else if (result.isCancelled) {
-                console.log('login is cancelled.');
-              } else {
-                AccessToken.getCurrentAccessToken().then((data) => {
-                  console.log(data.accessToken.toString());
-                });
-              }
-            }}
-            onLogoutFinished={() => console.log('logout.')}
-          />
         </TouchableOpacity>
+        <LoginButton
+          onLoginFinished={(error, result) => {
+            if (error) {
+              console.log(`login has error: ${result.error}`);
+            } else if (result.isCancelled) {
+              console.log('login is cancelled.');
+            } else {
+              AccessToken.getCurrentAccessToken().then((data) => {
+                console.log(data.accessToken.toString());
+              });
+            }
+          }}
+          onLogoutFinished={() => console.log('logout.')}
+        />
+        <GoogleSigninButton
+          style={{ width: 48, height: 48 }}
+          size={GoogleSigninButton.Size.Icon}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={this._signIn}
+        />
       </View>
     );
   }
