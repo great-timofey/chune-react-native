@@ -25,13 +25,8 @@ class Home extends Component<Props> {
 
   componentDidMount() {
     GoogleSignin.configure({
-      // webClientId:
-      // '839963583954-v1aqn3htautcthljmgrnluoji2kf2cvr.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       iosClientId:
         '839963583954-do66c05dv80tm42e1gpfhgf4pevfvddm.apps.googleusercontent.com',
-      // com..apps.
-      scopes: ['email'],
-      shouldFetchBasicProfile: true,
     });
 
     const spotifyOptions = {
