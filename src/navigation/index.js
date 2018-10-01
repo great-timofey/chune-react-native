@@ -7,12 +7,12 @@ import {
   createMaterialTopTabNavigator,
   NavigationActions,
 } from 'react-navigation';
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import colors from '../global/colors';
 import AuthScreen from '../screens/auth';
 import HomeScreen from '../screens/Home';
-import CustomTabView from '../components/CustomTabView';
+import HomeTabView from '../components/CustomTabView';
 import { HomeScreenName, AuthScreenName } from './screens';
 
 // const HomeTab = createMaterialTopTabNavigator(
@@ -38,34 +38,51 @@ import { HomeScreenName, AuthScreenName } from './screens';
 
 export const AppNavigator = createStackNavigator({
   [AuthScreenName]: {
-    // screen: AuthScreen,
-    screen: CustomTabView,
-    // navigationOptions: {
-    // //  for debugging
-    // gesturesEnabled: false,
-    // headerLeft: (
-    // <Icon.Button
-    // name="menu"
-    // size={24}
-    // backgroundColor="transparent"
-    // iconStyle={{
-    // marginLeft: 5,
-    // marginRight: 0,
-    // width: 24,
-    // height: 24,
-    // }}
-    // borderRadius={0}
-    // onPress={() => alert('hi')}
-    // />
-    // ),
-    // headerStyle: {
-    // borderTopWidth: 20,
-    // borderTopColor: '#52146C',
-    // paddingTop: 20,
-    // backgroundColor: colors.accent,
-    // borderBottomWidth: 0,
-    // },
-    // },
+    screen: HomeTabView,
+    navigationOptions: {
+      //  for debugging
+      gesturesEnabled: false,
+      title: 'Chune',
+      headerTitleStyle: { color: 'white', fontFamily: 'Roboto-Regular' },
+      headerLeft: (
+        <Icon.Button
+          name="menu"
+          size={24}
+          backgroundColor="transparent"
+          iconStyle={{
+            marginLeft: 10,
+            marginRight: 0,
+            width: 24,
+            height: 24,
+          }}
+          borderRadius={0}
+          onPress={() => alert('hi')}
+        />
+      ),
+      headerRight: (
+        <Icon.Button
+          name="search"
+          size={24}
+          backgroundColor="transparent"
+          iconStyle={{
+            marginLeft: 0,
+            marginRight: 10,
+            width: 24,
+            height: 24,
+          }}
+          borderRadius={0}
+          onPress={() => alert('hi')}
+        />
+      ),
+      headerStyle: {
+        borderTopWidth: 21,
+        borderTopColor: '#52146C',
+        marginBottom: 4,
+        paddingTop: 20,
+        backgroundColor: colors.accent,
+        borderBottomWidth: 0,
+      },
+    },
   },
   [HomeScreenName]: {
     screen: HomeScreen,
