@@ -1,21 +1,22 @@
 import { Image } from 'react-native';
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 
 import Spotify from 'rn-spotify-sdk';
 import styled from 'styled-components';
 import { LoginManager as FacebookLoginManager } from 'react-native-fbsdk';
-import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+// import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
 
 import images from '../global/images';
 import colors from '../global/colors';
 import AuthInput from '../components/AuthInput';
-import { spotifyAuthOptions, googleAuthOptions } from '../services/auth';
+import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
 
 type Props = {
   navigation: Object,
 };
 
-export default class Auth extends PureComponent<Props> {
+export default class AuthScreen extends PureComponent<Props> {
   static navigationOptions = {
     header: null,
   };
@@ -23,6 +24,7 @@ export default class Auth extends PureComponent<Props> {
   state = {
     userInfo: null,
     authorized: false,
+    //  for testing
     input: '',
     error: {
       name: '',
@@ -32,9 +34,9 @@ export default class Auth extends PureComponent<Props> {
   };
 
   componentDidMount() {
-    GoogleLoginManager.configure({
-      iosClientId: googleAuthOptions.iosClientId,
-    });
+    // GoogleLoginManager.configure({
+    // iosClientId: googleAuthOptions.iosClientId,
+    // });
 
     Spotify.initialize(spotifyAuthOptions);
   }
@@ -56,9 +58,10 @@ export default class Auth extends PureComponent<Props> {
 
   _handleAuthGoogle = async () => {
     try {
-      await GoogleLoginManager.hasPlayServices();
-      const userInfo = await GoogleLoginManager.signIn();
-      console.log(userInfo);
+      //  commented because of google login lib bug
+      // await GoogleLoginManager.hasPlayServices();
+      // const userInfo = await GoogleLoginManager.signIn();
+      // console.log(userInfo);
       this.setState({ authorized: true });
     } catch (error) {
       console.log(error);
@@ -96,7 +99,7 @@ export default class Auth extends PureComponent<Props> {
   render() {
     const { isSignUp } = this.state;
     return (
-      <Fragment>
+      <KeyboardAwareScrollView extraScrollHeight={100}>
         <MainContent>
           <Logo source={images.logo_chune} reducedMargin={isSignUp} />
           <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
@@ -147,7 +150,7 @@ export default class Auth extends PureComponent<Props> {
             </ToggleEnterModeButtonText>
           </ToggleEnterModeButton>
         </SnackBar>
-      </Fragment>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -163,6 +166,7 @@ const EnterButton = styled.TouchableOpacity`
 const MainContent = styled.View`
   flex: 1;
   padding-top: 35;
+  padding-bottom: 30;
   padding-horizontal: 16;
   align-items: center;
   background-color: white;
