@@ -1,3 +1,4 @@
+import { Image } from 'react-native';
 import React, { PureComponent, Fragment } from 'react';
 
 import Spotify from 'rn-spotify-sdk';
@@ -8,9 +9,7 @@ import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
 import images from '../../global/images';
 import colors from '../../global/colors';
 import AuthInput from '../../components/AuthInput';
-import AuthSocials from '../../components/AuthSocials';
-import SpotifySignInButton from '../../components/SpotifySignInButton';
-import { spotifyAuthOptions, googleAuthOptions } from '../../services';
+import { spotifyAuthOptions, googleAuthOptions } from '../../services/auth';
 
 type Props = {
   navigation: Object,
@@ -98,7 +97,7 @@ export default class Auth extends PureComponent<Props> {
     const { isSignUp } = this.state;
     return (
       <Fragment>
-        <Container>
+        <MainContent>
           <Logo source={images.logo_chune} reducedMargin={isSignUp} />
           <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
           <InvitationPromptEmail>by email</InvitationPromptEmail>
@@ -118,14 +117,23 @@ export default class Auth extends PureComponent<Props> {
             </EnterButtonText>
           </EnterButton>
           <InvitationPromptSocials>or by socials</InvitationPromptSocials>
-          <SocialsContainer>
-            <SpotifySignInButton onPress={this._handleAuthSpotify} />
-            <AuthSocials
-              onFbAuth={this._handleAuthFb}
-              onGoogleAuth={this._handleAuthGoogle}
-            />
-          </SocialsContainer>
-        </Container>
+          <ExternalAuthContainer>
+            <SpotifyButton onPress={this._handleAuthSpotify}>
+              <SpotifyButtonImage source={images.logo_spotify} />
+            </SpotifyButton>
+            <Socials>
+              <FacebookButton onPress={this._handleAuthFb}>
+                <Image source={images.logo_facebook} />
+              </FacebookButton>
+              <TwitterButton>
+                <Image source={images.logo_twitter} />
+              </TwitterButton>
+              <GoogleButton onPress={this._handleAuthGoogle}>
+                <Image source={images.logo_google_plus} />
+              </GoogleButton>
+            </Socials>
+          </ExternalAuthContainer>
+        </MainContent>
         <SnackBar shrinkedText={isSignUp}>
           <SnackBarText>
             {isSignUp ? 'Have an account?' : "Don't have an account?"}
@@ -152,7 +160,7 @@ const EnterButton = styled.TouchableOpacity`
   border-radius: 3;
 `;
 
-const Container = styled.View`
+const MainContent = styled.View`
   flex: 1;
   padding-top: 35;
   padding-horizontal: 16;
@@ -221,7 +229,30 @@ const ToggleEnterModeButtonText = styled.Text`
   font-size: 20;
 `;
 
-const SocialsContainer = styled.View``;
-const FormField = styled(AuthInput)``;
+const Socials = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-horizontal: 17;
+`;
+
+const SpotifyButton = styled.TouchableOpacity`
+  justify-content: center;
+  border-width: 1;
+  border-radius: 10;
+  border-color: #979797;
+  margin-bottom: 20;
+`;
+
+const SpotifyButtonImage = styled.Image`
+  margin-vertical: 4;
+  margin-horizontal: 28;
+`;
+
 const SnackBarText = styled.Text``;
+const FormField = styled(AuthInput)``;
+const ExternalAuthContainer = styled.View``;
+const GoogleButton = styled.TouchableOpacity``;
+const TwitterButton = styled.TouchableOpacity``;
+const FacebookButton = styled.TouchableOpacity``;
 const ToggleEnterModeButton = styled.TouchableOpacity``;
