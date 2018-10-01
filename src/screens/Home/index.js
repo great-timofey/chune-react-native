@@ -21,7 +21,7 @@ class Counter extends PureComponent<Props> {
   componentDidMount() {
     Spotify.getMe().then((_) => {
       // update state with user info
-      Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
+      // Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
     });
   }
 
@@ -33,7 +33,9 @@ class Counter extends PureComponent<Props> {
     const { count, decrement, increment } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.count}>Here goes home screen</Text>
+        <Text style={(styles.count, { fontFamily: 'Roboto-Bold' })}>
+          Here goes home screen
+        </Text>
         <Text style={styles.count}>{count}</Text>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity

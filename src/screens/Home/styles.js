@@ -4,14 +4,13 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonsContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   count: {
-    fontWeight: 'bold',
-    fontSize: 70
+    fontSize: 70,
   },
   button: {
     justifyContent: 'center',
@@ -19,10 +18,10 @@ export default StyleSheet.create({
     borderRadius: 6,
     width: 40,
     height: 40,
-    margin: 8
+    margin: 8,
   },
   buttonText: {
     color: 'black',
-    fontSize: 24
-  }
+    fontSize: 24,
+  },
 });
