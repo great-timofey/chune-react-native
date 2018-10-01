@@ -1,17 +1,18 @@
 import React from 'react';
 import { createStackNavigator, NavigationActions } from 'react-navigation';
 
-import Auth from '../scenes/Auth';
-import Home from '../scenes/Home';
-import { HomeScene, AuthScene } from './scenes';
+import AuthScreen from '../screens/auth';
+import HomeScreen from '../screens/Home';
+import { HomeScreenName, AuthScreenName } from './screens';
 
 export const AppNavigator = createStackNavigator({
-  [AuthScene]: {
-    screen: Auth,
+  [AuthScreenName]: {
+    screen: AuthScreen,
   },
-  [HomeScene]: {
-    screen: Home,
+  [HomeScreenName]: {
+    screen: HomeScreen,
     navigationOptions: {
+      //  for debugging
       // gesturesEnabled: false,
       // headerLeft: null,
     },

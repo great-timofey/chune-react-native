@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Spotify from 'rn-spotify-sdk';
-import * as counter from '../../redux/actions/counter';
+import * as counter from '../../ducks/counter';
 import { colors } from '../../global';
 import styles from './styles';
 
@@ -57,10 +57,7 @@ class Counter extends PureComponent<Props> {
 export default connect(
   state => ({ count: state.counter.count }),
   dispatch => bindActionCreators(
-    {
-      decrement: counter.decrement,
-      increment: counter.increment,
-    },
+    { decrement: counter.decrement, increment: counter.increment },
     dispatch,
   ),
 )(Counter);

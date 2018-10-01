@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { LoginManager as FacebookLoginManager } from 'react-native-fbsdk';
 import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
 
-import images from '../../global/images';
-import colors from '../../global/colors';
-import AuthInput from '../../components/AuthInput';
-import { spotifyAuthOptions, googleAuthOptions } from '../../services/auth';
+import images from '../global/images';
+import colors from '../global/colors';
+import AuthInput from '../components/AuthInput';
+import { spotifyAuthOptions, googleAuthOptions } from '../services/auth';
 
 type Props = {
   navigation: Object,
