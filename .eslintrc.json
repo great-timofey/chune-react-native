@@ -8,17 +8,18 @@
   ],
   "rules": {
     "comma-dangle": 2,
+    "max-len": [2, {"code": 80}],
     "no-restricted-syntax": 1,
     "new-cap": 1,
     "no-continue": 1,
-    "no-underscore-dangle": 0,
     "global-require": 1,
     "react/no-multi-comp": 1,
+    "no-underscore-dangle": 0,
     "react/jsx-filename-extension": 0,
     "camelcase": 1,
     "import/no-unresolved": 1,
     "import/prefer-default-export": 1,
     "import/extensions": 1,
-    "no-return-assign": 1,
+    "no-return-assign": 1
   }
 }
