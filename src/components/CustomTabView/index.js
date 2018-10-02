@@ -14,13 +14,16 @@ export default () => (
           width: '100%',
           alignItems: 'center',
           justifyContent: 'space-between',
-          color: 'white',
         }}
         tabBarStyle={{
           height: 48,
           marginTop: 0,
           paddingTop: 20,
           backgroundColor: colors.accent,
+          shadowRadius: 3,
+          shadowColor: 'black',
+          shadowOffset: { height: 0, width: 0 },
+          shadowOpacity: 0.75,
         }}
         tabBarTextStyle={{
           color: '#D8D8D8',
