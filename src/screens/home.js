@@ -5,13 +5,14 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Image,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Spotify from 'rn-spotify-sdk';
-import * as counter from '../../ducks/counter';
-import { colors } from '../../global';
-import styles from './styles';
+import * as counter from '../ducks/counter';
+import { colors } from '../global';
+import { API, setUserToken } from '../services/chune-api';
 
 type Props = {
   count?: Number,
@@ -19,24 +20,27 @@ type Props = {
   decrement: Function,
 };
 
-const SmallCard = () => (
+const SmallCard = (key, title, sourceName, artistName, image) => (
   <View
+    key={key}
     style={{
       width: '100%',
+      height: 100,
       backgroundColor: 'red',
       flexDirection: 'row',
-      marginBottom: 8,
+      marginBottom: 12,
     }}
   >
-    <View
+    <Image
+      resizeMode="cover"
       style={{
-        width: width * 0.27,
-        justifyContent: 'flex-end',
-        backgroundColor: 'black',
+        width: 100,
+        height: 100,
       }}
-    >
-      <Text style={{ color: 'white' }}>Picture</Text>
-    </View>
+      source={{
+        uri: `https://chunesupply.s3.amazonaws.com/imgs/${image}`,
+      }}
+    />
     <View
       style={{
         flex: 1,
@@ -46,21 +50,22 @@ const SmallCard = () => (
       }}
     >
       <Text
+        numberOfLines={2}
+        ellipsizeMode="tail"
         style={{
           color: '#210130',
           fontSize: 16,
           fontFamily: 'Roboto-Regular',
-          marginBottom: 5,
+          marginBottom: 3,
         }}
       >
-        Internet Banner Advertising
+        {title}
       </Text>
       <Text
         style={{
           color: '#86758E',
           fontSize: 13,
           fontFamily: 'Roboto-Regular',
-          marginBottom: 5,
         }}
       >
         What Makes Flyers Untivaled
@@ -70,7 +75,7 @@ const SmallCard = () => (
           color: '#86758E',
           fontSize: 13,
           fontFamily: 'Roboto-Regular',
-          marginBottom: 10,
+          marginBottom: 3,
         }}
       >
         dewd
@@ -81,9 +86,9 @@ const SmallCard = () => (
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ color: '#86758E' }}>VIA YOUREDM</Text>
-        <Text style={{ color: '#86758E' }}>22 SEP, 2016</Text>
-        <Text style={{ color: '#86758E' }}>Drake</Text>
+        <Text style={{ color: '#86758E' }}>{sourceName}</Text>
+        <Text style={{ color: '#86758E' }}>22 SEP</Text>
+        <Text style={{ color: '#86758E' }}>{artistName}</Text>
       </View>
     </View>
   </View>
@@ -91,12 +96,33 @@ const SmallCard = () => (
 
 const { width, height } = Dimensions.get('window');
 
-class Counter extends PureComponent<Props> {
+export default class HomeScreen extends PureComponent<Props> {
   static defaultProps = {
     count: 0,
   };
 
+  state = {
+    data: [],
+  };
+
   componentDidMount() {
+    // const name = 'tim';
+    const email = 'tim@mail.com';
+    const password = 'aA12345';
+    const user = JSON.stringify({
+      // name,
+      email,
+      password,
+    });
+
+    API.post('users/login', user)
+      .then(res => res.data.token)
+      .then(token => setUserToken(token))
+      .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
+      .then(res => res.data.content_feed)
+      .then(data => this.setState({ data }))
+      .then(_ => console.log(this.state.data))
+      .catch(err => console.log(err.response));
     // Spotify.getMe().then((_) => {
     // update state with user info
     // Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
@@ -260,38 +286,19 @@ class Counter extends PureComponent<Props> {
               </View>
             </View>
           </View>
-          <SmallCard />
-          <SmallCard />
+          {!!this.state.data.length
+            && this.state.data.map(
+              item => item.type == 'article'
+                && SmallCard(
+                  item.id,
+                  item.title,
+                  item.source_name,
+                  item.artist_name,
+                  item.image,
+                ),
+            )}
         </View>
       </ScrollView>
-      // <View style={styles.container}>
-      // <Text style={(styles.count, { fontFamily: 'Roboto-Bold' })}>
-      // Here goes home screen
-      // </Text>
-      // <Text style={styles.count}>{count}</Text>
-      // <View style={styles.buttonsContainer}>
-      // <TouchableOpacity
-      // style={[styles.button, { backgroundColor: colors.flatRed }]}
-      // onPress={() => decrement()}
-      // >
-      // <Text style={styles.buttonText}>-</Text>
-      // </TouchableOpacity>
-      // <TouchableOpacity
-      // style={[styles.button, { backgroundColor: colors.flatGreen }]}
-      // onPress={() => increment()}
-      // >
-      // <Text style={styles.buttonText}>+</Text>
-      // </TouchableOpacity>
-      // </View>
-      // </View>
     );
   }
 }
-
-export default connect(
-  state => ({ count: state.counter.count }),
-  dispatch => bindActionCreators(
-    { decrement: counter.decrement, increment: counter.increment },
-    dispatch,
-  ),
-)(Counter);
