@@ -1,9 +1,5 @@
 # react-native-chune-app
 
-prerequisites Android: 
-![alt text](https://git.allmax.team/chune/chune-react-native/blob/master/android-requirements.png)
-![alt text](https://git.allmax.team/chune/chune-react-native/blob/master/android-requirements-2.png)
-
 #### installation:
 1.  git clone __https://github.com/ChuneMusic/ChuneReactNative__
 2.  cd __ChuneReactNative__
