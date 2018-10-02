@@ -15,36 +15,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import colors from '../global/colors';
 import AuthScreen from '../screens/auth';
-import HomeScreen from '../screens/Home';
+import HomeScreen from '../screens/home';
 import HomeTabView from '../components/CustomTabView';
 import { HomeScreenName, AuthScreenName } from './screens';
-
-// const HomeTab = createMaterialTopTabNavigator(
-// {
-// Home: HomeScreen,
-// 'For You': HomeScreen,
-// 'Artists & Events': HomeScreen,
-// },
-// {
-// tabBarOptions: {
-// optimizationsEnabled: true,
-// style: {
-// backgroundColor: colors.accent,
-// height: 55,
-// },
-// labelStyle: {
-// fontFamily: 'Roboto-Bold',
-// fontSize: 14,
-// },
-// },
-// },
-// );
 
 export const AppNavigator = createStackNavigator({
   [AuthScreenName]: {
     screen: HomeTabView,
     navigationOptions: {
-      //  for debugging
       gesturesEnabled: false,
       title: 'Chune',
       headerTitleStyle: { color: 'white', fontFamily: 'Roboto-Regular' },
@@ -98,7 +76,6 @@ export const AppNavigator = createStackNavigator({
   [HomeScreenName]: {
     screen: HomeScreen,
     navigationOptions: {
-      //  for debugging
       gesturesEnabled: false,
       headerLeft: null,
     },
