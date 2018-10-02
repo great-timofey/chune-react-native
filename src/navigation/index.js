@@ -79,6 +79,7 @@ export const AppNavigator = createStackNavigator({
         />
       ),
       headerStyle: {
+        borderBottomWidth: 0,
         backgroundColor: colors.accent,
         ...Platform.select({
           ios: {
