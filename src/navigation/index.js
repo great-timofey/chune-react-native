@@ -1,6 +1,10 @@
 import React from 'react';
 import {
-  View, TouchableOpacity, Text, TouchableHighlight,
+  View,
+  TouchableOpacity,
+  Text,
+  TouchableHighlight,
+  Platform,
 } from 'react-native';
 import {
   createStackNavigator,
@@ -75,12 +79,18 @@ export const AppNavigator = createStackNavigator({
         />
       ),
       headerStyle: {
-        borderTopWidth: 21,
-        borderTopColor: '#52146C',
-        marginBottom: 4,
-        paddingTop: 20,
         backgroundColor: colors.accent,
-        borderBottomWidth: 0,
+        ...Platform.select({
+          ios: {
+            borderTopWidth: 21,
+            borderTopColor: '#52146C',
+            marginBottom: 4,
+            paddingTop: 20,
+          },
+          android: {
+            elevation: 0,
+          },
+        }),
       },
     },
   },

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 
 import TabBar from 'react-native-underline-tabbar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -32,6 +33,7 @@ export default () => (
         activeTabTextStyle={{
           color: 'white',
         }}
+        underlineHeight={Platform.OS === 'android' ? 4 : 2}
         underlineColor="white"
       />
     )}

@@ -8,7 +8,7 @@ import Navigator from './navigation';
 export default () => (
   <Provider store={store}>
     <Fragment>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor="#52146C" />
       <Navigator />
     </Fragment>
   </Provider>
