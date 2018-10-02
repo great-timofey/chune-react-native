@@ -1,4 +1,4 @@
-# react-native-spotify-app
+# react-native-chune-app
 
 prerequisites Android: 
 ![alt text](https://github.com/ChuneMusic/ChuneReactNative/blob/master/android-requirements.png)
