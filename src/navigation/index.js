@@ -1,22 +1,12 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  TouchableHighlight,
-  Platform,
-} from 'react-native';
-import {
-  createStackNavigator,
-  createMaterialTopTabNavigator,
-  NavigationActions,
-} from 'react-navigation';
+import { Platform } from 'react-native';
+import { createStackNavigator, NavigationActions } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import colors from '../global/colors';
 import AuthScreen from '../screens/auth';
 import HomeScreen from '../screens/home';
-import HomeTabView from '../components/CustomTabView';
+import HomeTabView from '../components/tab-view';
 import { HomeScreenName, AuthScreenName } from './screens';
 
 export const AppNavigator = createStackNavigator({

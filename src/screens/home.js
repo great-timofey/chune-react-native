@@ -7,11 +7,11 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
-import Spotify from 'rn-spotify-sdk';
-import * as counter from '../ducks/counter';
+
 import { colors } from '../global';
+import * as counter from '../ducks/counter';
 import { API, setUserToken } from '../services/chune-api';
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
   decrement: Function,
 };
 
-const SmallCard = (key, title, sourceName, artistName, image) => (
+const ArticleCard = (key, title, sourceName, artistName, image) => (
   <View
     key={key}
     style={{
@@ -141,7 +141,7 @@ export default class HomeScreen extends PureComponent<Props> {
           style={{
             //  main card
             width: '100%',
-            height: Dimensions.get('window').height * 0.43,
+            height: height * 0.43,
           }}
         >
           <View
@@ -206,7 +206,7 @@ export default class HomeScreen extends PureComponent<Props> {
             style={{
               //  first two other cards container
               width: '100%',
-              height: Dimensions.get('window').height * 0.295,
+              height: height * 0.295,
               flexDirection: 'row',
               justifyContent: 'space-between',
               paddingBottom: 8,
@@ -216,7 +216,7 @@ export default class HomeScreen extends PureComponent<Props> {
               style={{
                 //  other cards big card
                 backgroundColor: 'green',
-                width: Dimensions.get('window').width * 0.47,
+                width: width * 0.47,
                 justifyContent: 'flex-end',
                 paddingHorizontal: 8,
                 paddingBottom: 8,
@@ -253,7 +253,7 @@ export default class HomeScreen extends PureComponent<Props> {
               style={{
                 //  other cards big card
                 backgroundColor: 'black',
-                width: Dimensions.get('window').width * 0.47,
+                width: width * 0.47,
                 justifyContent: 'flex-end',
                 paddingHorizontal: 8,
                 paddingBottom: 14,
@@ -289,7 +289,7 @@ export default class HomeScreen extends PureComponent<Props> {
           {!!this.state.data.length
             && this.state.data.map(
               item => item.type == 'article'
-                && SmallCard(
+                && ArticleCard(
                   item.id,
                   item.title,
                   item.source_name,

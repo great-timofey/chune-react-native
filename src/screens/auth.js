@@ -9,7 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import images from '../global/images';
 import colors from '../global/colors';
-import AuthInput from '../components/AuthInput';
+import AuthInput from '../components/auth-input';
 import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
 
 type Props = {
