@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   FlatList,
   View,
   Text,
+  ActivityIndicator,
   TouchableOpacity,
   ScrollView,
   Dimensions,
@@ -12,45 +13,40 @@ import {
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import styled from 'styled-components';
-import ViewOverflow from 'react-native-view-overflow';
 import Icon from 'react-native-vector-icons/Feather';
+import ViewOverflow from 'react-native-view-overflow';
 
 import { colors } from '../global';
+import { API } from '../services/chune-api';
 
 const { width: deviceWidth, height: deviceHeight } = Dimensions.get('window');
 
-export default ({
-  isVisible, topTracks, chuneSupply, callback,
-}) => {
-  const TrackContainer = styled.TouchableOpacity`
-    width: ${deviceWidth};
-    height: 45;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding-vertical: 8;
-    padding-left: 10;
-    padding-right: 16;
-  `;
+type Props = {
+  isVisible: Boolean,
+  callback: Function,
+};
 
-  const TrackNumberContainer = styled.View`
-    flex: ${15 / 180};
-  `;
+export default class Player extends Component<Props> {
+  state = {
+    showTopTracks: true,
+    loading: true,
+    topTracks: [],
+    chuneSupply: [],
+  };
 
-  const TrackDescriptionContainer = styled.View`
-    flex: ${110 / 180};
-  `;
+  componentDidMount() {
+    console.log('rendered');
+    API.get('tracks/sources/1/')
+      .then(res => this.setState({ topTracks: res.data }))
+      .then(_ => API.get('tracks/sources/2/'))
+      .then(res => this.setState({ chuneSupply: res.data }))
+      .then(_ => console.log(this.state))
+      .then(res => this.setState({ loading: false }))
+      .catch(err => console.log(err.response));
+  }
 
-  const TrackPayloadInfoContainer = styled.View`
-    align-items: flex-end;
-    flex: ${55 / 180};
-  `;
-
-  const renderTrack = ({
-    item: { artist_name, title, duration_ms },
-    index,
-  }) => (
-    <TrackContainer key={duration_ms}>
+  _renderTrack = ({ item: { artist_name, title, duration_ms }, index }) => (
+    <TrackContainer>
       <TrackNumberContainer>
         {index === 0 ? (
           <Icon.Button
@@ -88,36 +84,62 @@ export default ({
     </TrackContainer>
   );
 
-  return (
-    <ViewOverflow>
-      <ModalView
-        onSwipe={callback}
-        swipeThreshold={100}
-        swipeDirection="down"
-        isVisible={isVisible}
-      >
-        <TopPanelContainer>
-          <TopPanelButtonContainer onPress={callback}>
-            <TopPanelButton />
-          </TopPanelButtonContainer>
-        </TopPanelContainer>
-        <ToggleTypeContainer>
-          <ToggleTypeButton accented>
-            <ToggleTypeButtonText accented>Top Tracks</ToggleTypeButtonText>
-          </ToggleTypeButton>
-          <ToggleTypeButton>
-            <ToggleTypeButtonText>Chune Supply</ToggleTypeButtonText>
-          </ToggleTypeButton>
-        </ToggleTypeContainer>
-        <FlatList
-          data={topTracks}
-          renderItem={renderTrack}
-          keyExtractor={item => item.id}
-        />
-      </ModalView>
-    </ViewOverflow>
-  );
-};
+  _showTopTracks = () => this.setState({ showTopTracks: true });
+
+  _showChuneSupply = () => this.setState({ showTopTracks: false });
+
+  render() {
+    const { isVisible, callback } = this.props;
+    const {
+      chuneSupply, topTracks, showTopTracks, loading,
+    } = this.state;
+    return (
+      <ViewOverflow>
+        <ModalView
+          onSwipe={callback}
+          swipeThreshold={100}
+          swipeDirection="down"
+          isVisible={isVisible}
+        >
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Fragment>
+              <TopPanelContainer>
+                <TopPanelButtonContainer onPress={callback}>
+                  <TopPanelButton />
+                </TopPanelButtonContainer>
+              </TopPanelContainer>
+              <ToggleTypeContainer>
+                <ToggleTypeButton
+                  onPress={this._showTopTracks}
+                  accented={showTopTracks}
+                >
+                  <ToggleTypeButtonText accented={showTopTracks}>
+                    Top Tracks
+                  </ToggleTypeButtonText>
+                </ToggleTypeButton>
+                <ToggleTypeButton
+                  onPress={this._showChuneSupply}
+                  accented={!showTopTracks}
+                >
+                  <ToggleTypeButtonText accented={!showTopTracks}>
+                    Chune Supply
+                  </ToggleTypeButtonText>
+                </ToggleTypeButton>
+              </ToggleTypeContainer>
+              <FlatList
+                data={showTopTracks ? topTracks : chuneSupply}
+                renderItem={this._renderTrack}
+                keyExtractor={item => item.id}
+              />
+            </Fragment>
+          )}
+        </ModalView>
+      </ViewOverflow>
+    );
+  }
+}
 
 const ModalView = styled(Modal)`
   flex: 1;
@@ -174,8 +196,6 @@ const ToggleTypeButton = styled.TouchableOpacity`
   ${props => props.accented && 'border-bottom-width: 2;'};
 `;
 
-const SampleOneLinedText = <Text />;
-
 const TextRobotoRegular = styled.Text`
   font-family: Roboto-Regular;
 `;
@@ -192,4 +212,28 @@ const ToggleTypeButtonText = styled(TextRobotoMedium)`
 const TrackText = styled(TextRobotoRegular)`
   ${props => props.accented && 'margin-bottom: 3'};
   color: ${props => (props.accented ? colors.black : colors.greyPrompts)};
+`;
+
+const TrackContainer = styled.TouchableOpacity`
+  width: ${deviceWidth};
+  height: 45;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-vertical: 8;
+  padding-left: 10;
+  padding-right: 16;
+`;
+
+const TrackNumberContainer = styled.View`
+  flex: ${15 / 180};
+`;
+
+const TrackDescriptionContainer = styled.View`
+  flex: ${110 / 180};
+`;
+
+const TrackPayloadInfoContainer = styled.View`
+  align-items: flex-end;
+  flex: ${55 / 180};
 `;

@@ -17,12 +17,6 @@ import Player from '../components/player';
 import * as counter from '../ducks/counter';
 import { API, setUserToken } from '../services/chune-api';
 
-type Props = {
-  count?: Number,
-  increment: Function,
-  decrement: Function,
-};
-
 const ArticleCard = (key, title, sourceName, artistName, image) => (
   <View
     key={key}
@@ -106,8 +100,6 @@ export default class HomeScreen extends PureComponent<Props> {
 
   state = {
     recs: [],
-    topTracks: [],
-    chuneSupply: [],
     loading: true,
     isModalOpen: false,
   };
@@ -126,17 +118,12 @@ export default class HomeScreen extends PureComponent<Props> {
       password,
     });
 
-    // p5aei2tfmj.execute-api.us-east-2.amazonaws.com/dev/api/v1/
     API.post('users/login', user)
       .then(res => res.data.token)
       .then(token => setUserToken(token))
       .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
       .then(res => res.data.content_feed)
       .then(recs => this.setState({ recs }))
-      .then(_ => API.get('tracks/sources/1/'))
-      .then(res => this.setState({ topTracks: res.data }))
-      .then(_ => API.get('tracks/sources/2/'))
-      .then(res => this.setState({ chuneSupply: res.data }))
       .then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }))
       .catch(err => console.log(err.response));
@@ -153,7 +140,6 @@ export default class HomeScreen extends PureComponent<Props> {
 
   render() {
     const { isModalOpen, loading } = this.state;
-    // const { count, decrement, increment } = this.props;
     return loading ? (
       <ActivityIndicator />
     ) : (
@@ -216,17 +202,13 @@ export default class HomeScreen extends PureComponent<Props> {
             </TouchableOpacity>
           </View>
         </View>
-        <View>
-          <TouchableOpacity onPress={this.togglePlayer}>
-            <Text>show player</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={this.togglePlayer}>
+          <Text>show player</Text>
+        </TouchableOpacity>
           <Player
             isVisible={this.state.isModalOpen}
-            topTracks={this.state.topTracks}
-            chuneSupply={this.state.chuneSupply}
             callback={this.togglePlayer}
           />
-        </View>
         <View
           style={{
             //  other cards container
