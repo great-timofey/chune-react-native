@@ -8,6 +8,7 @@ SDK tools:
 - Google Play services (49) 
 - Intel x86 Emulator Accelerator (HAXM Installer) (7.3.0)
 - Support Repository
+
 SDK platforms:
 - Android 8.0 (Oreo) API level 26 revision 2
 - Android 6.0 (Marshmallow) API level 23 revision 3
