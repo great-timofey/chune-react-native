@@ -146,6 +146,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-view-overflow')
     compile project(':react-native-fbsdk')
     compile project(':react-native-events')
     compile project(':rn-spotify-sdk')
