@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   View,
   Text,
+  ActivityIndicator,
   TouchableOpacity,
   ScrollView,
   Dimensions,
@@ -104,7 +105,10 @@ export default class HomeScreen extends PureComponent<Props> {
   };
 
   state = {
-    data: [],
+    recs: [],
+    topTracks: [],
+    chuneSupply: [],
+    loading: true,
     isModalOpen: false,
   };
 
@@ -122,14 +126,21 @@ export default class HomeScreen extends PureComponent<Props> {
       password,
     });
 
+    // p5aei2tfmj.execute-api.us-east-2.amazonaws.com/dev/api/v1/
     API.post('users/login', user)
       .then(res => res.data.token)
       .then(token => setUserToken(token))
       .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
       .then(res => res.data.content_feed)
-      .then(data => this.setState({ data }))
-      .then(_ => console.log(this.state.data))
+      .then(recs => this.setState({ recs }))
+      .then(_ => API.get('tracks/sources/1/'))
+      .then(res => this.setState({ topTracks: res.data }))
+      .then(_ => API.get('tracks/sources/2/'))
+      .then(res => this.setState({ chuneSupply: res.data }))
+      .then(_ => console.log(this.state))
+      .then(res => this.setState({ loading: false }))
       .catch(err => console.log(err.response));
+
     // Spotify.getMe().then((_) => {
     // update state with user info
     // Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
@@ -141,9 +152,11 @@ export default class HomeScreen extends PureComponent<Props> {
   // }
 
   render() {
-    const { isModalOpen } = this.state;
+    const { isModalOpen, loading } = this.state;
     // const { count, decrement, increment } = this.props;
-    return (
+    return loading ? (
+      <ActivityIndicator />
+    ) : (
       <ScrollView>
         <View
           style={{
@@ -209,6 +222,8 @@ export default class HomeScreen extends PureComponent<Props> {
           </TouchableOpacity>
           <Player
             isVisible={this.state.isModalOpen}
+            topTracks={this.state.topTracks}
+            chuneSupply={this.state.chuneSupply}
             callback={this.togglePlayer}
           />
         </View>
@@ -303,8 +318,8 @@ export default class HomeScreen extends PureComponent<Props> {
               </View>
             </View>
           </View>
-          {!!this.state.data.length
-            && this.state.data.map(
+          {!!this.state.recs.length
+            && this.state.recs.map(
               item => item.type == 'article'
                 && ArticleCard(
                   item.id,
