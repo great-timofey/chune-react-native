@@ -7,10 +7,12 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
+import Modal from 'react-native-modal';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
 import { colors } from '../global';
+import Player from '../components/player';
 import * as counter from '../ducks/counter';
 import { API, setUserToken } from '../services/chune-api';
 
@@ -103,7 +105,12 @@ export default class HomeScreen extends PureComponent<Props> {
 
   state = {
     data: [],
+    isModalOpen: false,
   };
+
+  togglePlayer = () => this.setState(({ isModalOpen }) => ({
+    isModalOpen: !isModalOpen,
+  }));
 
   componentDidMount() {
     // const name = 'tim';
@@ -134,6 +141,7 @@ export default class HomeScreen extends PureComponent<Props> {
   // }
 
   render() {
+    const { isModalOpen } = this.state;
     // const { count, decrement, increment } = this.props;
     return (
       <ScrollView>
@@ -194,6 +202,15 @@ export default class HomeScreen extends PureComponent<Props> {
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View>
+          <TouchableOpacity onPress={this.togglePlayer}>
+            <Text>show player</Text>
+          </TouchableOpacity>
+          <Player
+            isVisible={this.state.isModalOpen}
+            callback={this.togglePlayer}
+          />
         </View>
         <View
           style={{
