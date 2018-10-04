@@ -8,6 +8,9 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
+import Control from './control';
+import PlayerTopPanel from './player-top-panel';
+
 import { API } from '../services/chune-api';
 import { colors, components, utils } from '../global';
 
@@ -76,6 +79,16 @@ export default class Player extends Component<Props> {
 
   _showChuneSupply = () => this.setState({ showTopTracks: false });
 
+  _handleSkipBack = () => {};
+
+  _handleShuffle = () => {};
+
+  _handlePlay = () => {};
+
+  _handleRepeat = () => {};
+
+  _hadleSkipForward = () => {};
+
   render() {
     const { isVisible, callback } = this.props;
     const {
@@ -89,11 +102,7 @@ export default class Player extends Component<Props> {
           swipeDirection="down"
           isVisible={isVisible}
         >
-          <TopPanelContainer>
-            <TopPanelButtonContainer onPress={callback}>
-              <TopPanelButton />
-            </TopPanelButtonContainer>
-          </TopPanelContainer>
+          <PlayerTopPanel callback={callback} />
           {loading ? (
             <ActivityIndicator />
           ) : (
@@ -134,11 +143,14 @@ export default class Player extends Component<Props> {
                 <Text>here goes progressbar</Text>
               </ProgressBar>
               <Controls>
-                {Control('skip-back')}
-                {Control('shuffle')}
-                {Control('play')}
-                {Control('repeat')}
-                {Control('skip-forward')}
+                <Control type="skip-back" callback={this._handleSkipBack} />
+                <Control type="shuffle" callback={this._handleShuffle} />
+                <Control type="play" callback={this._handlePlay} />
+                <Control type="repeat" callback={this._handleRepeat} />
+                <Control
+                  type="skip-forward"
+                  callback={this._hadleSkipForward}
+                />
               </Controls>
             </Dashboard>
           </DashboardContainer>
@@ -147,23 +159,6 @@ export default class Player extends Component<Props> {
     );
   }
 }
-
-const Control = type => (
-  <Icon.Button
-    backgroundColor="transparent"
-    name={type}
-    size={21}
-    iconStyle={{
-      width: 21,
-      height: 21,
-      padding: 0,
-      marginRight: 0,
-    }}
-    color="#E5E0E7"
-    borderRadius={0}
-    onPress={() => alert('tapped')}
-  />
-);
 
 const ModalView = styled(Modal)`
   flex: 1;
@@ -187,23 +182,6 @@ const ModalView = styled(Modal)`
       justifyContent: 'flex-start',
     },
   })};
-`;
-
-const TopPanelContainer = styled.View`
-  width: ${utils.deviceWidth};
-  padding-top: 3;
-  height: 20;
-  align-items: center;
-  border-top-left-radius: 10;
-  border-top-right-radius: 10;
-`;
-
-const TopPanelButtonContainer = styled.TouchableOpacity``;
-
-const TopPanelButton = styled.View`
-  width: 60;
-  height: 3;
-  background-color: #bdbdbd;
 `;
 
 const ToggleTypeContainer = styled.View`
