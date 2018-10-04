@@ -1,14 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import {
   FlatList,
-  View,
-  Text,
-  ActivityIndicator,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
   Platform,
-  Image,
+  ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
 import Modal from 'react-native-modal';
@@ -16,10 +10,8 @@ import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import { colors } from '../global';
 import { API } from '../services/chune-api';
-
-const { width: deviceWidth, height: deviceHeight } = Dimensions.get('window');
+import { colors, components, utils } from '../global';
 
 type Props = {
   isVisible: Boolean,
@@ -35,12 +27,10 @@ export default class Player extends Component<Props> {
   };
 
   componentDidMount() {
-    console.log('rendered');
     API.get('tracks/sources/1/')
       .then(res => this.setState({ topTracks: res.data }))
       .then(_ => API.get('tracks/sources/2/'))
       .then(res => this.setState({ chuneSupply: res.data }))
-      .then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }))
       .catch(err => console.log(err.response));
   }
@@ -101,15 +91,15 @@ export default class Player extends Component<Props> {
           swipeDirection="down"
           isVisible={isVisible}
         >
+          <TopPanelContainer>
+            <TopPanelButtonContainer onPress={callback}>
+              <TopPanelButton />
+            </TopPanelButtonContainer>
+          </TopPanelContainer>
           {loading ? (
             <ActivityIndicator />
           ) : (
             <Fragment>
-              <TopPanelContainer>
-                <TopPanelButtonContainer onPress={callback}>
-                  <TopPanelButton />
-                </TopPanelButtonContainer>
-              </TopPanelContainer>
               <ToggleTypeContainer>
                 <ToggleTypeButton
                   onPress={this._showTopTracks}
@@ -148,7 +138,8 @@ const ModalView = styled(Modal)`
   position: absolute;
   border-top-left-radius: 10;
   border-top-right-radius: 10;
-  width: ${deviceWidth};
+  padding-bottom: 30;
+  width: ${utils.deviceWidth};
   ${Platform.select({
     android: {
       top: -10,
@@ -164,7 +155,7 @@ const ModalView = styled(Modal)`
 `;
 
 const TopPanelContainer = styled.View`
-  width: ${deviceWidth};
+  width: ${utils.deviceWidth};
   padding-top: 3;
   height: 20;
   align-items: center;
@@ -196,26 +187,18 @@ const ToggleTypeButton = styled.TouchableOpacity`
   ${props => props.accented && 'border-bottom-width: 2;'};
 `;
 
-const TextRobotoRegular = styled.Text`
-  font-family: Roboto-Regular;
-`;
-
-const TextRobotoMedium = styled.Text`
-  font-family: Roboto-Medium;
-`;
-
-const ToggleTypeButtonText = styled(TextRobotoMedium)`
+const ToggleTypeButtonText = styled(components.TextMedium)`
   text-transform: uppercase;
   color: ${props => (props.accented ? '#3E224B' : colors.grey)};
 `;
 
-const TrackText = styled(TextRobotoRegular)`
+const TrackText = styled(components.TextRegular)`
   ${props => props.accented && 'margin-bottom: 3'};
   color: ${props => (props.accented ? colors.black : colors.greyPrompts)};
 `;
 
 const TrackContainer = styled.TouchableOpacity`
-  width: ${deviceWidth};
+  width: ${utils.deviceWidth};
   height: 45;
   flex-direction: row;
   justify-content: space-between;
