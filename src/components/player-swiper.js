@@ -46,10 +46,10 @@ export default ({
         </View>
       </TextContainer>
     ) : (
-      <TouchableTextContainer>
-        <Text>Connect</Text>
+      <TouchableTextContainer onPress={showCallback}>
+        <Invite>Connect</Invite>
         <Logo source={images.logoSpotifyColorless} />
-        <Text>to listen top tracks chart</Text>
+        <Invite>to listen top tracks chart</Invite>
         <Icon
           style={{
             marginLeft: 10,
@@ -92,7 +92,7 @@ const TextContainer = styled.View`
   justify-content: space-between;
 `;
 
-const Text = styled(components.TextRegular)`
+const Invite = styled(components.TextRegular)`
   color: ${colors.black};
 `;
 

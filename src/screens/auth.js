@@ -101,7 +101,7 @@ export default class AuthScreen extends PureComponent<Props> {
     return (
       <KeyboardAwareScrollView extraScrollHeight={100}>
         <MainContent>
-          <Logo source={images.logo_chune} reducedMargin={isSignUp} />
+          <Logo source={images.logoChune} reducedMargin={isSignUp} />
           <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
           <InvitationPromptEmail>by email</InvitationPromptEmail>
           <Form>
@@ -122,17 +122,17 @@ export default class AuthScreen extends PureComponent<Props> {
           <InvitationPromptSocials>or by socials</InvitationPromptSocials>
           <ExternalAuthContainer>
             <SpotifyButton onPress={this._handleAuthSpotify}>
-              <SpotifyButtonImage source={images.logo_spotify} />
+              <SpotifyButtonImage source={images.logoSpotify} />
             </SpotifyButton>
             <Socials>
               <FacebookButton onPress={this._handleAuthFb}>
-                <Image source={images.logo_facebook} />
+                <Image source={images.logoFacebook} />
               </FacebookButton>
               <TwitterButton>
-                <Image source={images.logo_twitter} />
+                <Image source={images.logoTwitter} />
               </TwitterButton>
               <GoogleButton onPress={this._handleAuthGoogle}>
-                <Image source={images.logo_google_plus} />
+                <Image source={images.logoGooglePlus} />
               </GoogleButton>
             </Socials>
           </ExternalAuthContainer>

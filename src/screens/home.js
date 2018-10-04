@@ -5,7 +5,7 @@ import {
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
-import Player from '../components/player';
+import PlayerView from '../components/player-view';
 import PlayerSwiper from '../components/player-swiper';
 import { MainCard, ListCard } from '../components/home';
 
@@ -94,8 +94,14 @@ export default class HomeScreen extends PureComponent {
             )}
           </View>
         </ScreenScrollContainer>
-        <PlayerSwiper callback={this._togglePlayer} />
-        <Player isVisible={isPlayerOpen} callback={this._togglePlayer} />
+        <PlayerSwiper
+          isAuthorized={false}
+          showCallback={this._togglePlayer}
+          prevCallback={() => alert('prev')}
+          playCallback={() => alert('play')}
+          nextCallback={() => alert('next')}
+        />
+        <PlayerView isVisible={isPlayerOpen} callback={this._togglePlayer} />
       </ScreenContainer>
     );
   }

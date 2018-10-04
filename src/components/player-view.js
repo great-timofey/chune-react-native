@@ -54,7 +54,7 @@ export default class Player extends Component<Props> {
             onPress={() => alert('play')}
           />
         ) : (
-          <TrackText>{0}</TrackText>
+          <TrackText>{index}</TrackText>
         )}
       </TrackNumberContainer>
       <TrackDescriptionContainer>
