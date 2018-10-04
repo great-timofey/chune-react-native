@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import {
-  FlatList,
-  Platform,
-  ActivityIndicator,
+  Text, FlatList, Platform, ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
 import Modal from 'react-native-modal';
@@ -125,21 +123,58 @@ export default class Player extends Component<Props> {
               />
             </Fragment>
           )}
+          <DashboardContainer>
+            <Cover source={{ uri: 'https://via.placeholder.com/110x110' }} />
+            <Dashboard>
+              <Description>
+                <DescriptionName>The Kill</DescriptionName>
+                <DescriptionArtist>30 Seconds To Mars</DescriptionArtist>
+              </Description>
+              <ProgressBar>
+                <Text>here goes progressbar</Text>
+              </ProgressBar>
+              <Controls>
+                {Control('skip-back')}
+                {Control('shuffle')}
+                {Control('play')}
+                {Control('repeat')}
+                {Control('skip-forward')}
+              </Controls>
+            </Dashboard>
+          </DashboardContainer>
         </ModalView>
       </ViewOverflow>
     );
   }
 }
 
+const Control = type => (
+  <Icon.Button
+    backgroundColor="transparent"
+    name={type}
+    size={21}
+    iconStyle={{
+      width: 21,
+      height: 21,
+      padding: 0,
+      marginRight: 0,
+    }}
+    color="#E5E0E7"
+    borderRadius={0}
+    onPress={() => alert('tapped')}
+  />
+);
+
 const ModalView = styled(Modal)`
   flex: 1;
   height: 100%;
-  background-color: white;
   position: absolute;
+  padding-bottom: 30;
+  background-color: white;
   border-top-left-radius: 10;
   border-top-right-radius: 10;
-  padding-bottom: 30;
   width: ${utils.deviceWidth};
+  justify-content: space-between;
   ${Platform.select({
     android: {
       top: -10,
@@ -219,4 +254,52 @@ const TrackDescriptionContainer = styled.View`
 const TrackPayloadInfoContainer = styled.View`
   align-items: flex-end;
   flex: ${55 / 180};
+`;
+
+const DashboardContainer = styled.View`
+  height: 110;
+  width: 100%;
+  flex-direction: row;
+  background-color: ${colors.darkViolet};
+  margin-bottom: -1;
+`;
+
+const Cover = styled.Image`
+  width: 110;
+  height: 110;
+`;
+
+const Dashboard = styled.View`
+  padding-top: 8;
+  padding-horizontal: 12;
+  padding-bottom: 10;
+  width: ${utils.deviceWidth - 110};
+`;
+
+const Description = styled.View`
+  flex: 1;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const DescriptionName = styled(components.TextRegular)`
+  color: white;
+  font-size: 16;
+`;
+
+const DescriptionArtist = styled(components.TextRegular)`
+  font-size: 13;
+  color: ${colors.paleViolet};
+`;
+
+const ProgressBar = styled.View`
+  flex: 1;
+  justify-content: center;
+`;
+
+const Controls = styled.View`
+  flex: 1;
+  flex-direction: row;
+  margin-horizontal: -5;
+  justify-content: space-between;
 `;
