@@ -3,6 +3,7 @@ export default {
   white: '#FFFFFF',
   grey: '#D8D8D8',
   greyPrompts: '#87768F',
-  paleViolet: '86758E',
+  paleViolet: '#86758E',
+  darkViolet: '#3C144A',
   black: '#210130',
 };
