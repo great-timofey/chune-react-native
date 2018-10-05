@@ -1,22 +1,21 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { TouchableOpacity, View, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Octicons';
 
-import PlayerTopPanel from './player-top-panel';
-import Control from './control';
 import {
   colors, components, utils, images,
 } from '../global';
+import Control from './control';
+import PlayerTopPanel from './player-top-panel';
 
 type Props = {
-  isAuthorized: Boolean,
+  isAuthorized: boolean,
   showCallback: Function,
   nextCallback: Function,
   playCallback: Function,
   prevCallback: Function,
-  header: Text,
+  header: string,
 };
 
 export default ({
@@ -29,24 +28,26 @@ export default ({
 }: Props) => (
   <Container extended={isAuthorized}>
     {isAuthorized ? (
-      <TextContainer>
+      <Content>
         <PlayerTopPanel callback={showCallback} text={header} />
-        <View>
+        <PlayerDataContainer>
           <TrackInfoContainer>
             <TrackName>The Kill</TrackName>
             <TrackArtist>30 Seconds To Mars</TrackArtist>
           </TrackInfoContainer>
-          <DashboardContainer>
-            <Controls>
-              <Control type="skip-back" />
-              <Control type="play" />
-              <Control type="skip-forward" />
-            </Controls>
-          </DashboardContainer>
-        </View>
-      </TextContainer>
+          <Controls>
+            <Control callback={prevCallback} color="#1D012A" type="skip-back" />
+            <Control callback={playCallback} color="#1D012A" type="play" />
+            <Control
+              callback={nextCallback}
+              color="#1D012A"
+              type="skip-forward"
+            />
+          </Controls>
+        </PlayerDataContainer>
+      </Content>
     ) : (
-      <TouchableTextContainer onPress={showCallback}>
+      <TouchableContent onPress={showCallback}>
         <Invite>Connect</Invite>
         <Logo source={images.logoSpotifyColorless} />
         <Invite>to listen top tracks chart</Invite>
@@ -62,7 +63,7 @@ export default ({
           name="chevron-right"
           backgroundColor="transparent"
         />
-      </TouchableTextContainer>
+      </TouchableContent>
     )}
   </Container>
 );
@@ -78,17 +79,18 @@ const Container = styled.View`
   height: ${props => (props.extended ? '70' : '40')};
 `;
 
-const TouchableTextContainer = styled.TouchableOpacity`
+const TouchableContent = styled.TouchableOpacity`
   width: 90%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-const TextContainer = styled.View`
-  width: 90%;
-  flex-direction: row;
+const Content = styled.View`
+  width: 100%;
+  padding-bottom: 8;
   align-items: center;
+  padding-horizontal: 16;
   justify-content: space-between;
 `;
 
@@ -99,4 +101,32 @@ const Invite = styled(components.TextRegular)`
 const Logo = styled.Image`
   width: 80;
   height: 24;
+`;
+
+const PlayerDataContainer = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const TrackInfoContainer = styled.View`
+  align-items: flex-start;
+  justify-content: center;
+`;
+
+const Controls = styled.View`
+  width: 33%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const TrackName = styled(components.TextRegular)`
+  font-size: 14;
+  color: ${colors.darkViolet};
+`;
+
+const TrackArtist = styled(components.TextRegular)`
+  font-size: 12;
+  color: ${colors.paleViolet};
 `;

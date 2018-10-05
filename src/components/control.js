@@ -1,18 +1,27 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
-export default ({ type, callback }) => (
+type Props = {
+  type: string,
+  callback: Function,
+  size: number,
+  color: string,
+};
+
+export default ({
+  type, callback, size = 24, color,
+}: Props) => (
   <Icon.Button
     backgroundColor="transparent"
     name={type}
-    size={21}
+    size={size}
+    color={color}
     iconStyle={{
-      width: 21,
-      height: 21,
+      width: size,
+      height: size,
       padding: 0,
       marginRight: 0,
     }}
-    color="#E5E0E7"
     borderRadius={0}
     onPress={callback}
   />

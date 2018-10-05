@@ -143,10 +143,22 @@ export default class Player extends Component<Props> {
                 <Text>here goes progressbar</Text>
               </ProgressBar>
               <Controls>
-                <Control type="skip-back" callback={this._handleSkipBack} />
-                <Control type="shuffle" callback={this._handleShuffle} />
-                <Control type="play" callback={this._handlePlay} />
-                <Control type="repeat" callback={this._handleRepeat} />
+                <Control
+                  size={21}
+                  type="skip-back"
+                  callback={this._handleSkipBack}
+                />
+                <Control
+                  size={21}
+                  type="shuffle"
+                  callback={this._handleShuffle}
+                />
+                <Control size={21} type="play" callback={this._handlePlay} />
+                <Control
+                  size={21}
+                  type="repeat"
+                  callback={this._handleRepeat}
+                />
                 <Control
                   type="skip-forward"
                   callback={this._hadleSkipForward}

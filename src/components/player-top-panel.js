@@ -1,9 +1,15 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+
 import styled from 'styled-components';
 
 import { colors, components, utils } from '../global';
 
-export default ({ callback, text }) => (
+type Props = {
+  text: string,
+  callback: Function,
+};
+
+export default ({ callback, text }: Props) => (
   <TopPanelContainer>
     <TopPanelButtonContainer onPress={callback}>
       <TopPanelButton />
@@ -13,15 +19,18 @@ export default ({ callback, text }) => (
 );
 
 const TopPanelContainer = styled.View`
-  width: ${utils.deviceWidth};
-  padding-top: 3;
   height: 20;
+  padding-top: 3;
   align-items: center;
+  width: ${utils.deviceWidth};
   border-top-left-radius: 10;
   border-top-right-radius: 10;
 `;
 
-const TopPanelButtonContainer = styled.TouchableOpacity``;
+const TopPanelButtonContainer = styled.TouchableOpacity`
+  width: 100%;
+  align-items: center;
+`;
 
 const TopPanelButton = styled.View`
   width: 60;
@@ -29,7 +38,9 @@ const TopPanelButton = styled.View`
   background-color: #bdbdbd;
 `;
 
-const Header = styled(components.TextRegular)`
+const Header = styled(components.TextBold)`
   font-size: 10;
-  color: ${colors.greyPrompts};
+  padding-top: 3;
+  color: #bdbdbd;
+  text-transform: uppercase;
 `;
