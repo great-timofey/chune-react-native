@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Text } from 'react-native';
 import styled from 'styled-components';
 
@@ -14,7 +15,12 @@ type Props = {
 };
 
 export default ({
-  title, sourceName, artistName, image, type,
+  title,
+  source_name,
+  published_on,
+  artist_name,
+  image,
+  type,
 }: Props) => {
   switch (type) {
     case 'tweet':
@@ -35,9 +41,13 @@ export default ({
             <Description>What Makes Flyers Untivaled</Description>
             <From>dewd</From>
             <Metadata>
-              <MetadataText>{sourceName}</MetadataText>
-              <MetadataText>22 SEP</MetadataText>
-              <MetadataText>{artistName}</MetadataText>
+              <MetadataText>{source_name}</MetadataText>
+              <MetadataText>
+                {moment(published_on)
+                  .format('D MMM')
+                  .toUpperCase()}
+              </MetadataText>
+              <MetadataText>{artist_name}</MetadataText>
             </Metadata>
           </TextContainer>
         </Container>
@@ -89,5 +99,6 @@ const Metadata = styled.View`
 `;
 
 const MetadataText = styled(components.TextRegular)`
+  font-size: 13;
   color: ${colors.greyPrompts};
 `;
