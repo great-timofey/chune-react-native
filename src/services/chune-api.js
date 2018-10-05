@@ -15,5 +15,5 @@ export const clearUserToken = () => {
   API.defaults.headers.common.Authorization = null;
 };
 
-export const homeImagesPrefix = 'http://api-stage.chunesupply.com/static/imgs/thumbs/medium/';
 export const featuredArticleImageUrl = 'http://api-stage.chunesupply.com/static/imgs/full/';
+export const homeImagesPrefix = 'http://api-stage.chunesupply.com/static/imgs/thumbs/medium/';

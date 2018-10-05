@@ -8,4 +8,8 @@ const TextMedium = styled.Text`
   font-family: Roboto-Medium;
 `;
 
-export default { TextRegular, TextMedium };
+const TextBold = styled.Text`
+  font-family: Roboto-Bold;
+`;
+
+export default { TextRegular, TextMedium, TextBold };

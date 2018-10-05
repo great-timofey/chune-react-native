@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
+
 import TabBar from 'react-native-underline-tabbar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 

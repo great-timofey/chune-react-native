@@ -17,7 +17,7 @@ export default class HomeScreen extends PureComponent {
   state = {
     content: {
       featured: [],
-      content_feed: [],
+      contentFeed: [],
     },
     loading: true,
     isPlayerOpen: false,
@@ -37,14 +37,15 @@ export default class HomeScreen extends PureComponent {
     API.post('users/login', user)
       .then(res => res.data.token)
       .then(token => setUserToken(token))
-      .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
+      .then(_ => API.get('content/?filter=recent&start=0&max_results=30'))
       .then(res => res.data)
-      .then(({ featured, content_feed }) => this.setState({
-        content: { featured, content_feed },
-      }))
+      .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
+        ...state,
+        ...{ content: { featured, contentFeed } },
+      })))
       .then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }))
-      .catch(err => console.log(err));
+      .catch(err => alert(err));
     // Spotify.getMe().then((_) => {
     // Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
   }
@@ -83,19 +84,16 @@ export default class HomeScreen extends PureComponent {
               <MainCard data={content.featured[1]} />
               <MainCard data={content.featured[2]} />
             </View>
-            {!!content.length && (
-              <FlatList
-                data={content.content_feed.filter(
-                  item => item.type === 'article',
-                )}
-                renderItem={this._renderCard}
-                keyExtractor={item => item.id}
-              />
-            )}
+            <FlatList
+              data={content.contentFeed}
+              renderItem={this._renderCard}
+              keyExtractor={item => item.id}
+            />
           </View>
         </ScreenScrollContainer>
         <PlayerSwiper
-          isAuthorized={false}
+          isAuthorized={!1}
+          header="Top Tracks Chart"
           showCallback={this._togglePlayer}
           prevCallback={() => alert('prev')}
           playCallback={() => alert('play')}

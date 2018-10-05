@@ -1,10 +1,17 @@
 import React from 'react';
 import { TextField } from 'react-native-material-textfield';
 
+type Props = {
+  label: string,
+  error: string,
+  password: string,
+  validation: Function,
+};
+
 // validation function : onChangeText={value => validation(value)}
 export default ({
   label, password, error, validation,
-}) => (
+}: Props) => (
   <TextField
     titleTextStyle={{ alignSelf: 'flex-end' }}
     secureTextEntry={password}

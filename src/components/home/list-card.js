@@ -1,40 +1,58 @@
 import React from 'react';
+import { Text } from 'react-native';
 import styled from 'styled-components';
 
 import { colors, components, utils } from '../../global';
 import { homeImagesPrefix } from '../../services/chune-api';
 
+type Props = {
+  title: string,
+  image: string,
+  sourceName: string,
+  artistName: string,
+  type: string,
+};
+
 export default ({
-  title, sourceName, artistName, image,
-}) => (
-  <Container>
-    <Picture
-      resizeMode="cover"
-      source={{
-        uri: `${homeImagesPrefix}${image}.jpg`,
-      }}
-    />
-    <TextContainer>
-      <Header numberOfLines={2} ellipsizeMode="tail">
-        {title}
-      </Header>
-      <Description>What Makes Flyers Untivaled</Description>
-      <From>dewd</From>
-      <Metadata>
-        <MetadataText>{sourceName}</MetadataText>
-        <MetadataText>22 SEP</MetadataText>
-        <MetadataText>{artistName}</MetadataText>
-      </Metadata>
-    </TextContainer>
-  </Container>
-);
+  title, sourceName, artistName, image, type,
+}: Props) => {
+  switch (type) {
+    case 'tweet':
+      return <Text>Tweet</Text>;
+    case 'article':
+      return (
+        <Container>
+          <Picture
+            resizeMode="cover"
+            source={{
+              uri: homeImagesPrefix + image,
+            }}
+          />
+          <TextContainer>
+            <Header numberOfLines={2} ellipsizeMode="tail">
+              {title}
+            </Header>
+            <Description>What Makes Flyers Untivaled</Description>
+            <From>dewd</From>
+            <Metadata>
+              <MetadataText>{sourceName}</MetadataText>
+              <MetadataText>22 SEP</MetadataText>
+              <MetadataText>{artistName}</MetadataText>
+            </Metadata>
+          </TextContainer>
+        </Container>
+      );
+    default:
+      return <Text>{type}</Text>;
+  }
+};
 
 const Container = styled.View`
   width: 100%;
   height: 100;
-  background-color: red;
-  flex-direction: row;
   margin-bottom: 12;
+  flex-direction: row;
+  background-color: red;
 `;
 
 const Picture = styled.Image`
@@ -49,20 +67,20 @@ const TextContainer = styled.View`
   background-color: white;
 `;
 const Header = styled(components.TextRegular)`
-  color: ${colors.black};
   font-size: 16;
   margin-bottom: 3;
+  color: ${colors.black};
 `;
 
 const Description = styled(components.TextRegular)`
-  color: ${colors.paleViolet};
   font-size: 13;
+  color: ${colors.paleViolet};
 `;
 
 const From = styled(components.TextRegular)`
-  color: ${colors.paleViolet};
   font-size: 13;
   margin-bottom: 3;
+  color: ${colors.paleViolet};
 `;
 
 const Metadata = styled.View`

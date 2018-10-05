@@ -5,11 +5,11 @@ import { colors, components, utils } from '../../global';
 import { featuredArticleImageUrl } from '../../services/chune-api';
 
 type Props = {
-  main: Boolean,
+  main: boolean,
   data: Object,
-  url: String,
-  title: String,
-  image: String,
+  url: string,
+  title: string,
+  image: string,
 };
 
 export default ({ main, data: { url, title, image } }: Props) => (
