@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
 import Control from '~components/Control';
-import PlayerTopPanel from './player-top-panel';
+import PlayerTopPanel from './PlayerTopPanel';
 
 import { API } from '~services/chune-api';
 import { colors, components, utils } from '~global';
