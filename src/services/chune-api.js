@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const API = axios.create({
-  baseURL: 'http://api-stage.chunesupply.com/api/v1/',
+  baseURL: 'https://api-stage.chunesupply.com/api/v1/',
   headers: {
     'content-type': 'application/json',
   },
@@ -15,5 +15,5 @@ export const clearUserToken = () => {
   API.defaults.headers.common.Authorization = null;
 };
 
-export const featuredArticleImageUrl = 'http://api-stage.chunesupply.com/static/imgs/full/';
-export const homeImagesPrefix = 'http://api-stage.chunesupply.com/static/imgs/thumbs/medium/';
+export const featuredArticleImageUrl = 'https://api-stage.chunesupply.com/static/imgs/full/';
+export const homeImagesPrefix = 'https://api-stage.chunesupply.com/static/imgs/thumbs/medium/';
