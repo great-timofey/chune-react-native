@@ -1,4 +1,6 @@
 import { Image } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import React, { PureComponent } from 'react';
 
 import Spotify from 'rn-spotify-sdk';
@@ -7,16 +9,19 @@ import { LoginManager as FacebookLoginManager } from 'react-native-fbsdk';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
 
-import images from '../global/images';
-import colors from '../global/colors';
-import AuthInput from '../components/auth-input';
-import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
+import images from '~global/images';
+import colors from '~global/colors';
+import AuthInput from '~components/auth-input';
+import { setToken } from '~redux/auth/actions';
+
+import { API, setUserToken } from '~services/chune-api';
+import { spotifyAuthOptions /* googleAuthOptions */ } from '~services/auth';
 
 type Props = {
   navigation: Object,
 };
 
-export default class AuthScreen extends PureComponent<Props> {
+class AuthScreen extends PureComponent<Props> {
   static navigationOptions = {
     header: null,
   };
@@ -46,7 +51,24 @@ export default class AuthScreen extends PureComponent<Props> {
     if (loggedIn) {
       try {
         const authInfo = await Spotify.getAuthAsync();
-        console.log(authInfo);
+
+        if (authInfo && authInfo.accessToken) {
+          this.props.setToken(authInfo.accessToken);
+          const user = await Spotify.getMe();
+
+          console.log(333, { authInfo, user });
+
+          const userInfo = JSON.stringify({
+            email: user && user.email,
+            first_name: user && user.display_name,
+            last_name: user && user.display_name,
+            artists: [],
+          });
+
+          API.post('users/social/login/spotify', userInfo)
+            .then((res) => { console.log(777, 'spotify', res); })
+            .catch((e) => { console.log(555, 'spotify', e); });
+        }
         this.setState({ authorized: true });
       } catch (err) {
         alert('Error', err.message);
@@ -86,12 +108,28 @@ export default class AuthScreen extends PureComponent<Props> {
     );
   };
 
-  _handleEnter = () => {
+  handleEnter = () => {
     const { authorized } = this.state;
     const { navigation } = this.props;
     if (authorized) {
       navigation.navigate('Home');
     } else {
+      // this.props.setToken();
+
+      const user = JSON.stringify({
+        // name,
+        email: this.emailRef.input._getText(),
+        password: this.passwordRef.input._getText(),
+      });
+
+      API.post('users/login', user)
+        .then(res => res.data.token)
+        .then((token) => { setUserToken(token); this.props.setToken(token); })
+        .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
+        .then((res) => { console.log('DATA', res.data); return res.data; })
+        .then(_ => console.log(this.state))
+        .then(res => this.setState({ loading: false }));
+
       console.log('user is not authorized');
     }
   };
@@ -106,15 +144,19 @@ export default class AuthScreen extends PureComponent<Props> {
           <InvitationPromptEmail>by email</InvitationPromptEmail>
           <Form>
             {isSignUp && <FormField label="Name" />}
-            <FormField label="Email" />
-            <FormField label="Password" password />
+            <FormField label="Email" refCallback={(el) => { this.emailRef = el; }} />
+            <FormField
+              password
+              label="Password"
+              refCallback={(el) => { this.passwordRef = el; }}
+            />
           </Form>
           {!isSignUp && (
             <ForgetPasswordButton>
               <ForgetPasswordText>Forgot password?</ForgetPasswordText>
             </ForgetPasswordButton>
           )}
-          <EnterButton onPress={this._handleEnter}>
+          <EnterButton onPress={this.handleEnter}>
             <EnterButtonText>
               {`Sign ${isSignUp ? 'up' : 'in'}`}
             </EnterButtonText>
@@ -154,6 +196,14 @@ export default class AuthScreen extends PureComponent<Props> {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    setToken,
+  }, dispatch)
+);
+
+export default connect(() => ({}), mapDispatchToProps)(AuthScreen);
 
 const EnterButton = styled.TouchableOpacity`
   justify-content: center;

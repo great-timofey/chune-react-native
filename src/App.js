@@ -1,15 +1,16 @@
-import React, { Fragment } from 'react';
-import { StatusBar } from 'react-native';
+import React from 'react';
 import { Provider } from 'react-redux';
+import { StatusBar } from 'react-native';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import store from './redux';
-import Navigator from './navigation';
+import { store, persistor } from '~redux/store';
+import { connected as AppNavigator } from './navigation';
 
 export default () => (
   <Provider store={store}>
-    <Fragment>
+    <PersistGate loading={null} persistor={persistor}>
       <StatusBar barStyle="light-content" backgroundColor="#52146C" />
-      <Navigator />
-    </Fragment>
+      <AppNavigator />
+    </PersistGate>
   </Provider>
 );

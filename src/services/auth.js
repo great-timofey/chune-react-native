@@ -7,6 +7,7 @@ export const spotifyAuthOptions = {
     'playlist-read',
     'playlist-read-private',
     'streaming',
+    'user-read-email',
   ],
 };
 

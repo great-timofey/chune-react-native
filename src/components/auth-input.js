@@ -10,9 +10,10 @@ type Props = {
 
 // validation function : onChangeText={value => validation(value)}
 export default ({
-  label, password, error, validation,
+  label, password, error, validation, refCallback,
 }: Props) => (
   <TextField
+    ref={refCallback}
     titleTextStyle={{ alignSelf: 'flex-end' }}
     secureTextEntry={password}
     fontSize={16}

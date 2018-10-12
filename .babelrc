@@ -1,4 +1,25 @@
 {
-  "presets": ["react-native"],
-  "plugins": ["transform-decorators-legacy"]
+  "presets": [
+    "react-native"
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./src"
+        ],
+        "alias": {
+          "~redux": "./src/redux",
+          "~global": "./src/global",
+          "~screens": "./src/screens",
+          "~services": "./src/services",
+          "~navigation": "./src/navigation",
+          "~components": "./src/components",
+          "~constants": "./src/global/constants"
+        }
+      }
+    ]
+  ]
 }

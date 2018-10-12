@@ -4,11 +4,17 @@
   "plugins": [
     "react",
     "jsx-a11y",
-    "import"
+    "import",
+    "module-resolver"
   ],
   "rules": {
     "comma-dangle": 2,
-    "max-len": [2, {"code": 80}],
+    "max-len": [
+      2,
+      {
+        "code": 80
+      }
+    ],
     "no-restricted-syntax": 1,
     "new-cap": 1,
     "no-continue": 1,
@@ -18,8 +24,14 @@
     "react/jsx-filename-extension": 0,
     "camelcase": 1,
     "import/no-unresolved": 1,
-    "import/prefer-default-export": 1,
+    "import/prefer-default-export": 0,
     "import/extensions": 1,
-    "no-return-assign": 1
+    "no-return-assign": 1,
+    "module-resolver/use-alias": 2
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
   }
 }
