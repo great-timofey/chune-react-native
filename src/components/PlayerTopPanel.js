@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import { colors, components, utils } from '../global';
+import { colors, components, utils } from '~global';
 
 type Props = {
   text: string,

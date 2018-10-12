@@ -5,17 +5,17 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import {
   colors, components, utils, images,
-} from '../global';
-import Control from './control';
-import PlayerTopPanel from './player-top-panel';
+} from '~global';
+import Control from '~components/Control';
+import PlayerTopPanel from './PlayerTopPanel';
 
 type Props = {
+  header: string,
   isAuthorized: boolean,
   showCallback: Function,
   nextCallback: Function,
   playCallback: Function,
   prevCallback: Function,
-  header: string,
 };
 
 export default ({

@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import images from '~global/images';
 import colors from '~global/colors';
-import AuthInput from '~components/auth-input';
+import AuthInput from '~components/AuthInput';
 import { setToken } from '~redux/auth/actions';
 
 import { API, setUserToken } from '~services/chune-api';

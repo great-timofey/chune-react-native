@@ -5,12 +5,12 @@ import {
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
-import PlayerView from '../components/player-view';
-import PlayerSwiper from '../components/player-swiper';
-import { MainCard, ListCard } from '../components/home';
+import PlayerView from '~components/PlayerView';
+import PlayerSwiper from '~components/PlayerSwiper';
+import { MainCard, ListCard } from '~components/home';
 
-import { colors, components, utils } from '../global';
-import { API, setUserToken } from '../services/chune-api';
+import { colors, components, utils } from '~global';
+import { API, setUserToken } from '~services/chune-api';
 
 export default class HomeScreen extends PureComponent {
   state = {
