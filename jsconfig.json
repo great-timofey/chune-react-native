@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "./src/*"
+      ],
+      "~redux/*": [
+        "./src/redux/*"
+      ],
+      "~global/*": [
+        "./src/global/*"
+      ],
+      "~screens/*": [
+        "./src/screens/*"
+      ],
+      "~services/*": [
+        "./src/services/*"
+      ],
+      "~components/*": [
+        "./src/components/*"
+      ],
+      "~navigation/*": [
+        "./src/navigation/*"
+      ],
+      "~constants": [
+        "./src/global/constants"
+      ],
+      "~": [
+        "./"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

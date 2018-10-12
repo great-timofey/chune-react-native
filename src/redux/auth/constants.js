@@ -1,0 +1,5 @@
+export const AUTH_ACTIONS = {
+  LOGOUT: 'LOGOUT',
+  SET_USER: 'SET_USER',
+  SET_TOKEN: 'SET_TOKEN',
+};

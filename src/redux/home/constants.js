@@ -1,0 +1,3 @@
+export const HOME_ACTIONS = {
+  SET_SPOTIFY_LIST: 'SET_SPOTIFY_LIST',
+};

@@ -9,7 +9,6 @@ import PlayerView from '../components/player-view';
 import PlayerSwiper from '../components/player-swiper';
 import { MainCard, ListCard } from '../components/home';
 
-import * as counter from '../ducks/counter';
 import { colors, components, utils } from '../global';
 import { API, setUserToken } from '../services/chune-api';
 
@@ -44,7 +43,7 @@ export default class HomeScreen extends PureComponent {
       .then(res => res.data.token)
       .then(token => setUserToken(token))
       .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
-      .then(res => res.data)
+      .then((res) => { console.log('DATA', res.data); return res.data; })
       // .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
       // ...state,
       // ...{ content: { featured, contentFeed } },
@@ -56,9 +55,9 @@ export default class HomeScreen extends PureComponent {
     // Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
   }
 
-  _renderCard = ({ item: { ...data } }) => <ListCard {...data} />;
+  renderCard = ({ item: { ...data } }) => <ListCard {...data} />;
 
-  _togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
+  togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
     isPlayerOpen: !isPlayerOpen,
   }));
 
@@ -96,7 +95,7 @@ export default class HomeScreen extends PureComponent {
             </View>
             <FlatList
               data={content.contentFeed}
-              renderItem={this._renderCard}
+              renderItem={this.renderCard}
               keyExtractor={item => item.id}
             />
           </View>
@@ -104,12 +103,12 @@ export default class HomeScreen extends PureComponent {
         <PlayerSwiper
           isAuthorized={!1}
           header="Top Tracks Chart"
-          showCallback={this._togglePlayer}
+          showCallback={this.togglePlayer}
           prevCallback={() => alert('prev')}
           playCallback={() => alert('play')}
           nextCallback={() => alert('next')}
         />
-        <PlayerView isVisible={isPlayerOpen} callback={this._togglePlayer} />
+        <PlayerView isVisible={isPlayerOpen} callback={this.togglePlayer} />
       </ScreenContainer>
     );
   }
