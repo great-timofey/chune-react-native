@@ -12,6 +12,9 @@
       "~global/*": [
         "./src/global/*"
       ],
+      "~global": [
+        "./src/global/index"
+      ],
       "~screens/*": [
         "./src/screens/*"
       ],
