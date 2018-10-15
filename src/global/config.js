@@ -6,6 +6,7 @@ export default {
 
   IP,
   API_URL: `https://${IP}${API_VERSION}`,
+  API_URL_IMAGES: `https://${IP}/`,
   HEADERS: {
     'content-type': 'application/json',
   },
