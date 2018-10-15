@@ -9,7 +9,7 @@ import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import Control from '~components/Control';
+import Control from 'components/Control';
 import PlayerTopPanel from 'components/PlayerTopPanel';
 
 import { colors, components, utils } from '~global';
