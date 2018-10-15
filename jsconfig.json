@@ -4,13 +4,16 @@
     "baseUrl": ".",
     "paths": {
       "*": [
-        "./src/*"
+        "src/*"
       ],
       "~redux/*": [
         "./src/redux/*"
       ],
       "~global/*": [
         "./src/global/*"
+      ],
+      "~global": [
+        "./src/global/index"
       ],
       "~screens/*": [
         "./src/screens/*"

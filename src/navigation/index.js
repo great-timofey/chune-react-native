@@ -2,7 +2,7 @@ import R from 'ramda';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setNavigatior, Auth, RootNavigator } from '../global/navigations';
+import { setNavigatior, Auth, RootNavigator } from '~global/navigations';
 
 const navRef = R.curry(setNavigatior)('HOME_NAVIGATOR');
 const authNavRef = R.curry(setNavigatior)('AUTH_NAVIGATOR');
@@ -17,4 +17,4 @@ const mapStateToProps = ({ auth: { isLoggedIn } }) => ({
   isLoggedIn,
 });
 
-export const connected = connect(mapStateToProps)(AppNavigator);  1 
+export const connected = connect(mapStateToProps)(AppNavigator);

@@ -3,8 +3,8 @@ import moment from 'moment';
 import { Text } from 'react-native';
 import styled from 'styled-components';
 
-import { colors, components, utils } from '../../global';
-import { homeImagesPrefix } from '../../services/chune-api';
+import { colors, components, utils } from '~global';
+import { homeImagesPrefix } from 'services/chuneAPI';
 
 type Props = {
   title: string,

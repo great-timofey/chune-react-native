@@ -9,13 +9,11 @@ import styles from './styles';
 import { platformSelect } from './utils';
 import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 
-import {
-  userLogout
-} from '~redux/auth/actions';
 import { store } from '~redux/store';
 import AuthScreen from '~screens/auth';
 import HomeScreen from '~screens/home';
-import HomeTabView from '~components/tab-view';
+import HomeTabView from '~components/TabView';
+import { userLogout } from '~redux/auth/actions';
 // export const authStack = generateRoutes(auth);
 
 

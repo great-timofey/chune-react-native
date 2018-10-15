@@ -11,10 +11,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import images from '~global/images';
 import colors from '~global/colors';
-import AuthInput from '~components/auth-input';
+import AuthInput from '~components/AuthInput';
 import { setToken } from '~redux/auth/actions';
 
-import { API, setUserToken } from '~services/chune-api';
+import { API, setAuthToken } from 'services/chuneAPI';
 import { spotifyAuthOptions /* googleAuthOptions */ } from '~services/auth';
 
 type Props = {
@@ -124,7 +124,7 @@ class AuthScreen extends PureComponent<Props> {
 
       API.post('users/login', user)
         .then(res => res.data.token)
-        .then((token) => { setUserToken(token); this.props.setToken(token); })
+        .then((token) => { setAuthToken(token); this.props.setToken(token); })
         .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
         .then((res) => { console.log('DATA', res.data); return res.data; })
         .then(_ => console.log(this.state))

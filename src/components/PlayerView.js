@@ -5,26 +5,27 @@ import {
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import styled from 'styled-components';
+import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import Control from './control';
-import PlayerTopPanel from './player-top-panel';
+import Control from '~components/Control';
+import PlayerTopPanel from 'components/PlayerTopPanel';
 
-import { API } from '../services/chune-api';
-import { colors, components, utils } from '../global';
+import { API } from 'services/chuneAPI';
+import { colors, components, utils } from '~global';
 
 type Props = {
   isVisible: Boolean,
   callback: Function,
 };
 
-export default class Player extends Component<Props> {
+class Player extends Component<Props> {
   state = {
-    showTopTracks: true,
     loading: true,
     topTracks: [],
     chuneSupply: [],
+    showTopTracks: true,
   };
 
   componentDidMount() {
@@ -34,9 +35,37 @@ export default class Player extends Component<Props> {
       .then(res => this.setState({ chuneSupply: res.data }))
       .then(res => this.setState({ loading: false }))
       .catch(err => console.log(err.response));
+
+
+    // TrackPlayer.setupPlayer().then(async () => {
+    //   // Adds a track to the queue
+    //   await TrackPlayer.add({
+    //     id: 'trackId',
+    //     url: 'http://www.europaplus.ru/sound/1517574568_C-BooL_feat_Giang_Pham_-_DJ_Is_Your_Second_Name_Radio_Edit.mp3',
+    //     title: 'Track Title',
+    //     artist: 'Track Artist',
+    //   });
+
+    //   // Starts playing it
+    //   TrackPlayer.play();
+    // });
   }
 
-  _renderTrack = ({ item: { artist_name, title, duration_ms }, index }) => (
+  showTopTracks = () => this.setState({ showTopTracks: true });
+
+  showChuneSupply = () => this.setState({ showTopTracks: false });
+
+  handleSkipBack = () => {};
+
+  handleShuffle = () => {};
+
+  handlePlay = () => {};
+
+  handleRepeat = () => {};
+
+  hadleSkipForward = () => {};
+
+  renderTrack = ({ item: { artist_name, title, duration_ms }, index }) => (
     <TrackContainer>
       <TrackNumberContainer>
         {index === 0 ? (
@@ -75,20 +104,6 @@ export default class Player extends Component<Props> {
     </TrackContainer>
   );
 
-  _showTopTracks = () => this.setState({ showTopTracks: true });
-
-  _showChuneSupply = () => this.setState({ showTopTracks: false });
-
-  _handleSkipBack = () => {};
-
-  _handleShuffle = () => {};
-
-  _handlePlay = () => {};
-
-  _handleRepeat = () => {};
-
-  _hadleSkipForward = () => {};
-
   render() {
     const { isVisible, callback } = this.props;
     const {
@@ -109,7 +124,7 @@ export default class Player extends Component<Props> {
             <Fragment>
               <ToggleTypeContainer>
                 <ToggleTypeButton
-                  onPress={this._showTopTracks}
+                  onPress={this.showTopTracks}
                   accented={showTopTracks}
                 >
                   <ToggleTypeButtonText accented={showTopTracks}>
@@ -117,7 +132,7 @@ export default class Player extends Component<Props> {
                   </ToggleTypeButtonText>
                 </ToggleTypeButton>
                 <ToggleTypeButton
-                  onPress={this._showChuneSupply}
+                  onPress={this.showChuneSupply}
                   accented={!showTopTracks}
                 >
                   <ToggleTypeButtonText accented={!showTopTracks}>
@@ -127,7 +142,7 @@ export default class Player extends Component<Props> {
               </ToggleTypeContainer>
               <FlatList
                 data={showTopTracks ? topTracks : chuneSupply}
-                renderItem={this._renderTrack}
+                renderItem={this.renderTrack}
                 keyExtractor={item => item.id}
               />
             </Fragment>
@@ -146,22 +161,22 @@ export default class Player extends Component<Props> {
                 <Control
                   size={21}
                   type="skip-back"
-                  callback={this._handleSkipBack}
+                  callback={this.handleSkipBack}
                 />
                 <Control
                   size={21}
                   type="shuffle"
-                  callback={this._handleShuffle}
+                  callback={this.handleShuffle}
                 />
-                <Control size={21} type="play" callback={this._handlePlay} />
+                <Control size={21} type="play" callback={this.handlePlay} />
                 <Control
                   size={21}
                   type="repeat"
-                  callback={this._handleRepeat}
+                  callback={this.handleRepeat}
                 />
                 <Control
                   type="skip-forward"
-                  callback={this._hadleSkipForward}
+                  callback={this.hadleSkipForward}
                 />
               </Controls>
             </Dashboard>
@@ -171,6 +186,8 @@ export default class Player extends Component<Props> {
     );
   }
 }
+
+export default Player;
 
 const ModalView = styled(Modal)`
   flex: 1;

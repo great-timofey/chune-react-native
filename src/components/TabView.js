@@ -4,9 +4,9 @@ import { Platform } from 'react-native';
 import TabBar from 'react-native-underline-tabbar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import colors from '../global/colors';
-import HomeScreen from '../screens/home';
-import AuthScreen from '../screens/auth';
+import colors from '~global/colors';
+import HomeScreen from '~screens/home';
+import AuthScreen from '~screens/auth';
 
 export default () => {
   const _renderTab = () => (

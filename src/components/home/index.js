@@ -1,4 +1,4 @@
-import MainCard from './main-card';
-import ListCard from './list-card';
+import MainCard from './MainCard';
+import ListCard from './ListCard';
 
 export { MainCard, ListCard };
