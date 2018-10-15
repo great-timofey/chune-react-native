@@ -17,7 +17,7 @@ export default ({ main, data: { url, title, image } }: Props) => (
     <BackgroundImage
       resizeMode="cover"
       source={{
-        uri: featuredArticleImageUrl + image,
+        uri: `${featuredArticleImageUrl}${image}`,
       }}
     >
       <TextAligner>
@@ -26,9 +26,9 @@ export default ({ main, data: { url, title, image } }: Props) => (
             {title}
           </Header>
           {main && (
-            <ReadMoreButton>
-              <ReadMoreButtonText>Read More</ReadMoreButtonText>
-            </ReadMoreButton>
+          <ReadMoreButton>
+            <ReadMoreButtonText>Read More</ReadMoreButtonText>
+          </ReadMoreButton>
           )}
         </TextContainer>
       </TextAligner>
