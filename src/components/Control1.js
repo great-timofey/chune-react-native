@@ -8,6 +8,7 @@ type Props = {
   color: string,
 };
 
+
 export default ({
   type, callback, size = 24, color,
 }: Props) => (
