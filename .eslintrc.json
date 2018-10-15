@@ -4,8 +4,7 @@
   "plugins": [
     "react",
     "jsx-a11y",
-    "import",
-    "module-resolver"
+    "import"
   ],
   "rules": {
     "comma-dangle": 2,
@@ -26,12 +25,13 @@
     "import/no-unresolved": 1,
     "import/prefer-default-export": 0,
     "import/extensions": 1,
-    "no-return-assign": 1,
-    "module-resolver/use-alias": 2
+    "no-return-assign": 1
   },
   "settings": {
     "import/resolver": {
-      "babel-module": {}
+      "babel-module": {
+        "root": "[./src]"
+      }
     }
   }
 }

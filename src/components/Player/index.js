@@ -3,8 +3,8 @@ import {
   Text, FlatList, Platform, ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
-import Modal from 'react-native-modal';
 import styled from 'styled-components';
+import Modal from 'react-native-modal';
 import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
@@ -12,7 +12,6 @@ import ViewOverflow from 'react-native-view-overflow';
 import Control from '~components/Control';
 import PlayerTopPanel from 'components/PlayerTopPanel';
 
-import { API } from 'services/chuneAPI';
 import { colors, components, utils } from '~global';
 
 type Props = {
@@ -20,7 +19,7 @@ type Props = {
   callback: Function,
 };
 
-class Player extends Component<Props> {
+export default class Player extends Component<Props> {
   state = {
     loading: true,
     topTracks: [],
@@ -29,26 +28,7 @@ class Player extends Component<Props> {
   };
 
   componentDidMount() {
-    API.get('tracks/sources/1/')
-      .then(res => this.setState({ topTracks: res.data }))
-      .then(_ => API.get('tracks/sources/2/'))
-      .then(res => this.setState({ chuneSupply: res.data }))
-      .then(res => this.setState({ loading: false }))
-      .catch(err => console.log(err.response));
 
-
-    // TrackPlayer.setupPlayer().then(async () => {
-    //   // Adds a track to the queue
-    //   await TrackPlayer.add({
-    //     id: 'trackId',
-    //     url: 'http://www.europaplus.ru/sound/1517574568_C-BooL_feat_Giang_Pham_-_DJ_Is_Your_Second_Name_Radio_Edit.mp3',
-    //     title: 'Track Title',
-    //     artist: 'Track Artist',
-    //   });
-
-    //   // Starts playing it
-    //   TrackPlayer.play();
-    // });
   }
 
   showTopTracks = () => this.setState({ showTopTracks: true });
@@ -118,35 +98,26 @@ class Player extends Component<Props> {
           isVisible={isVisible}
         >
           <PlayerTopPanel callback={callback} />
-          {loading ? (
-            <ActivityIndicator />
-          ) : (
-            <Fragment>
-              <ToggleTypeContainer>
-                <ToggleTypeButton
-                  onPress={this.showTopTracks}
-                  accented={showTopTracks}
-                >
-                  <ToggleTypeButtonText accented={showTopTracks}>
-                    Top Tracks
-                  </ToggleTypeButtonText>
-                </ToggleTypeButton>
-                <ToggleTypeButton
-                  onPress={this.showChuneSupply}
-                  accented={!showTopTracks}
-                >
-                  <ToggleTypeButtonText accented={!showTopTracks}>
-                    Chune Supply
-                  </ToggleTypeButtonText>
-                </ToggleTypeButton>
-              </ToggleTypeContainer>
-              <FlatList
-                data={showTopTracks ? topTracks : chuneSupply}
-                renderItem={this.renderTrack}
-                keyExtractor={item => item.id}
-              />
-            </Fragment>
-          )}
+
+          {loading
+            ? <ActivityIndicator />
+            : (
+              <Fragment>
+                <ToggleTypeContainer>
+                  <ToggleTypeButton onPress={this.showTopTracks} accented={showTopTracks}>
+                    <ToggleTypeButtonText accented={showTopTracks}>Top Tracks</ToggleTypeButtonText>
+                  </ToggleTypeButton>
+                  <ToggleTypeButton onPress={this.showChuneSupply} accented={!showTopTracks}>
+                    <ToggleTypeButtonText accented={!showTopTracks}>Chune Supply</ToggleTypeButtonText>
+                  </ToggleTypeButton>
+                </ToggleTypeContainer>
+                <FlatList
+                  renderItem={this.renderTrack}
+                  keyExtractor={item => item.id}
+                  data={showTopTracks ? topTracks : chuneSupply}
+                />
+              </Fragment>)}
+
           <DashboardContainer>
             <Cover source={{ uri: 'https://via.placeholder.com/110x110' }} />
             <Dashboard>
@@ -158,26 +129,11 @@ class Player extends Component<Props> {
                 <Text>here goes progressbar</Text>
               </ProgressBar>
               <Controls>
-                <Control
-                  size={21}
-                  type="skip-back"
-                  callback={this.handleSkipBack}
-                />
-                <Control
-                  size={21}
-                  type="shuffle"
-                  callback={this.handleShuffle}
-                />
+                <Control size={21} type="skip-back" callback={this.handleSkipBack} />
+                <Control size={21} type="shuffle" callback={this.handleShuffle} />
                 <Control size={21} type="play" callback={this.handlePlay} />
-                <Control
-                  size={21}
-                  type="repeat"
-                  callback={this.handleRepeat}
-                />
-                <Control
-                  type="skip-forward"
-                  callback={this.hadleSkipForward}
-                />
+                <Control size={21} type="repeat" callback={this.handleRepeat} />
+                <Control type="skip-forward" callback={this.hadleSkipForward} />
               </Controls>
             </Dashboard>
           </DashboardContainer>
@@ -186,8 +142,6 @@ class Player extends Component<Props> {
     );
   }
 }
-
-export default Player;
 
 const ModalView = styled(Modal)`
   flex: 1;

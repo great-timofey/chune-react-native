@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { colors, components, utils } from '~global';
-import { featuredArticleImageUrl } from '~services/chune-api';
+import { featuredArticleImageUrl } from 'services/chuneAPI';
 
 type Props = {
   main: boolean,

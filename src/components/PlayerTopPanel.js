@@ -1,17 +1,24 @@
 import React from 'react';
-
 import styled from 'styled-components';
 
-import { colors, components, utils } from '~global';
+import { components, utils } from '~global';
+import device from 'global/device';
 
 type Props = {
   text: string,
   callback: Function,
 };
 
+const hitSlop = {
+  top: 0,
+  left: 0,
+  bottom: 20,
+  right: device.width,
+};
+
 export default ({ callback, text }: Props) => (
   <TopPanelContainer>
-    <TopPanelButtonContainer onPress={callback}>
+    <TopPanelButtonContainer onPress={callback} hitSlop={hitSlop}>
       <TopPanelButton />
       {text && <Header>{text}</Header>}
     </TopPanelButtonContainer>

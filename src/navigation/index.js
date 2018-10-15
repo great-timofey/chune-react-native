@@ -17,4 +17,4 @@ const mapStateToProps = ({ auth: { isLoggedIn } }) => ({
   isLoggedIn,
 });
 
-export const connected = connect(mapStateToProps)(AppNavigator);  1 
+export const connected = connect(mapStateToProps)(AppNavigator);

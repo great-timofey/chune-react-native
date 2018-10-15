@@ -5,12 +5,12 @@ import {
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
-import PlayerView from '~components/PlayerView';
+import Player from '~components/PlayerView';
 import PlayerSwiper from '~components/PlayerSwiper';
-import { MainCard, ListCard } from '~components/home';
+import { MainCard, ListCard } from '~components/Home';
 
 import { colors, components, utils } from '~global';
-import { API, setUserToken } from '~services/chune-api';
+import { API, setAuthToken } from 'services/chuneAPI';
 
 export default class HomeScreen extends PureComponent {
   state = {
@@ -41,7 +41,7 @@ export default class HomeScreen extends PureComponent {
     // API.post('users/', user)
     API.post('users/login', user)
       .then(res => res.data.token)
-      .then(token => setUserToken(token))
+      .then(token => setAuthToken(token))
       .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
       .then((res) => { console.log('DATA', res.data); return res.data; })
       // .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
@@ -108,7 +108,7 @@ export default class HomeScreen extends PureComponent {
           playCallback={() => alert('play')}
           nextCallback={() => alert('next')}
         />
-        <PlayerView isVisible={isPlayerOpen} callback={this.togglePlayer} />
+        <Player isVisible={isPlayerOpen} callback={this.togglePlayer} />
       </ScreenContainer>
     );
   }

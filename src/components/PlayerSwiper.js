@@ -19,12 +19,12 @@ type Props = {
 };
 
 export default ({
+  header,
   isAuthorized,
   showCallback,
   nextCallback,
   playCallback,
   prevCallback,
-  header,
 }: Props) => (
   <Container extended={isAuthorized}>
     {isAuthorized ? (
