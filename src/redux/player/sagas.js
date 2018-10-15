@@ -16,15 +16,15 @@ import { setTracks } from './actions';
 const rehydrate = ({ type, key }) => type === REHYDRATE && key === 'player';
 
 function* getTracksWorker() {
-  //console.log('sdf');
-  //const token = yield select(state => state.auth.token);
+  console.log('sdf');
+  const token = yield select(state => state.auth.token);
   // API.post('token/verify', token)
   // .then(res => console.log(res))
   // .catch(err => console.log(err.response));
   // yield call()
-  //yield call(setAuthToken, token);
-  //const res = yield call(getTopTracks);
-  //console.log(1, res);
+  yield call(setAuthToken, token);
+  const res = yield call(getTopTracks);
+  console.log(1, res);
   // API.get('tracks/sources/1/')
   // .then(res => console.log(res))
   // .then(_ => API.get('tracks/sources/2/'))
@@ -51,7 +51,7 @@ function* getTracksWorker() {
 
 function* sagas() {
   yield takeLatest(TRACKS_ACTIONS.GET_TRACKS, getTracksWorker);
-  //yield takeLatest(rehydrate, getTracksWorker);
+  yield takeLatest(rehydrate, getTracksWorker);
 }
 
 export default sagas;

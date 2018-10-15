@@ -116,19 +116,29 @@ class AuthScreen extends PureComponent<Props> {
     } else {
       // this.props.setToken();
 
+      // const user = JSON.stringify({
+      //   // name,
+      //   // email: this.emailRef.input._getText(),
+      //   // password: this.passwordRef.input._getText(),
+      //   email: 'rstudenov@allmax.team',
+      //   password: 'chune45',
+      // });
       const user = JSON.stringify({
         // name,
-        email: this.emailRef.input._getText(),
-        password: this.passwordRef.input._getText(),
+        // email: this.emailRef.input._getText(),
+        // password: this.passwordRef.input._getText(),
+        email: 'tim2@mail.com',
+        password: 'aA12345',
       });
 
       API.post('users/login', user)
-        .then(res => res.data.token)
+        .then((res) => { console.log(123, res); return res.data.token; })
         .then((token) => { setAuthToken(token); this.props.setToken(token); })
-        .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
-        .then((res) => { console.log('DATA', res.data); return res.data; })
-        .then(_ => console.log(this.state))
-        .then(res => this.setState({ loading: false }));
+        .catch((e) => { console.log(666, e); });
+      // .then(_ => API.get('content/?filter=recent&start=0&max_results=10'));
+      // .then((res) => { console.log('DATA', res.data); return res.data; })
+      // .then(_ => console.log(this.state))
+      // .then(res => this.setState({ loading: false }));
 
       console.log('user is not authorized');
     }

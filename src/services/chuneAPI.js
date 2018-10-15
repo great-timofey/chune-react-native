@@ -21,9 +21,9 @@ export const featuredArticleImageUrl = `${CONFIG.API_URL_IMAGES}${
   CONFIG.API.IMAGES.FULL
 }`;
 
-export const getTopTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_TOP).then(
-  response => response && response.data,
-);
+export const getTopTracks = (): Promise => API
+  .get(CONFIG.API.TRACKS.GET_TOP)
+  .then(response => response && response.data);
 
 export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_SUPPLY).then(
   response => response && response.data,
