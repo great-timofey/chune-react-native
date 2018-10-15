@@ -10,7 +10,7 @@ import PlayerSwiper from '~components/PlayerSwiper';
 import { MainCard, ListCard } from '~components/home';
 
 import { colors, components, utils } from '~global';
-import { API, setAuthToken } from 'services/chuneAPI';
+import { API, setAuthToken } from '~services/chuneAPI';
 
 export default class HomeScreen extends PureComponent {
   state = {
@@ -77,7 +77,7 @@ export default class HomeScreen extends PureComponent {
     ) : (
       <ScreenContainer>
         <ScreenScrollContainer>
-          {true && <MainCard main data={content.featured[0]} />}
+          <MainCard main data={content.featured[0]} />
           <View
             style={{
               //  other cards container
@@ -95,12 +95,8 @@ export default class HomeScreen extends PureComponent {
                 paddingBottom: 8,
               }}
             >
-              {true && (
-                <Fragment>
-                  <MainCard data={content.featured[1]} />
-                  <MainCard data={content.featured[2]} />
-                </Fragment>
-              )}
+              <MainCard data={content.featured[1]} />
+              <MainCard data={content.featured[2]} />
             </View>
             <FlatList
               data={content.contentFeed}
