@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "clean:deps": "rm -rf node_modules/ yarn.lock",
+    "reset": "yarn start -- --reset-cache",
     "test": "jest"
   },
   "rnpm": {
