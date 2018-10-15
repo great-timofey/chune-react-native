@@ -1,12 +1,8 @@
-import React, { PureComponent, Fragment } from 'react';
-import {
-  View, Text, Image, FlatList, ActivityIndicator,
-} from 'react-native';
+import React, { PureComponent } from 'react';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
-import Player from '~components/PlayerView';
-import PlayerSwiper from '~components/PlayerSwiper';
 import { MainCard, ListCard } from '~components/home';
 
 import { colors, components, utils } from '~global';
@@ -19,7 +15,6 @@ export default class HomeScreen extends PureComponent {
       contentFeed: [],
     },
     loading: true,
-    isPlayerOpen: false,
   };
 
   componentDidMount() {
@@ -49,10 +44,7 @@ export default class HomeScreen extends PureComponent {
       // return res.data;
       // })
       .then(_ => API.get('content/?filter=recent&start=0&max_results=30'))
-      .then((res) => {
-        console.log('DATA', res.data);
-        return res.data;
-      })
+      .then(res => res.data)
       .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
         ...state,
         ...{ content: { featured, contentFeed } },
@@ -65,10 +57,6 @@ export default class HomeScreen extends PureComponent {
   }
 
   renderCard = ({ item: { ...data } }) => <ListCard {...data} />;
-
-  togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
-    isPlayerOpen: !isPlayerOpen,
-  }));
 
   render() {
     const { isPlayerOpen, loading, content } = this.state;
@@ -105,15 +93,6 @@ export default class HomeScreen extends PureComponent {
             />
           </View>
         </ScreenScrollContainer>
-        <PlayerSwiper
-          isAuthorized={1}
-          header="Top Tracks Chart"
-          showCallback={this.togglePlayer}
-          prevCallback={() => alert('prev')}
-          playCallback={() => alert('play')}
-          nextCallback={() => alert('next')}
-        />
-        <Player isVisible={isPlayerOpen} callback={this.togglePlayer} />
       </ScreenContainer>
     );
   }

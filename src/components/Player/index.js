@@ -5,13 +5,16 @@ import {
 import moment from 'moment';
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
-import TrackPlayer from 'react-native-track-player';
+import { connect } from 'react-redux';
+import { API } from 'services/chuneAPI';
+// import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
 import Control from 'components/Control';
 import PlayerTopPanel from 'components/PlayerTopPanel';
 
+import { getTracks } from '~redux/player/actions';
 import { colors, components, utils } from '~global';
 
 type Props = {
@@ -19,7 +22,7 @@ type Props = {
   callback: Function,
 };
 
-export default class Player extends Component<Props> {
+class Player extends Component<Props> {
   state = {
     loading: true,
     topTracks: [],
@@ -28,7 +31,12 @@ export default class Player extends Component<Props> {
   };
 
   componentDidMount() {
-
+    API.get('tracks/sources/1/')
+      // .then(res => this.setState({ topTracks: res.data }))
+      .then(_ => API.get('tracks/sources/2/'))
+      // .then(res => this.setState({ chuneSupply: res.data }))
+      // .then(res => this.setState({ loading: false }))
+      .catch(err => console.log(err.response));
   }
 
   showTopTracks = () => this.setState({ showTopTracks: true });
@@ -99,24 +107,35 @@ export default class Player extends Component<Props> {
         >
           <PlayerTopPanel callback={callback} />
 
-          {loading
-            ? <ActivityIndicator />
-            : (
-              <Fragment>
-                <ToggleTypeContainer>
-                  <ToggleTypeButton onPress={this.showTopTracks} accented={showTopTracks}>
-                    <ToggleTypeButtonText accented={showTopTracks}>Top Tracks</ToggleTypeButtonText>
-                  </ToggleTypeButton>
-                  <ToggleTypeButton onPress={this.showChuneSupply} accented={!showTopTracks}>
-                    <ToggleTypeButtonText accented={!showTopTracks}>Chune Supply</ToggleTypeButtonText>
-                  </ToggleTypeButton>
-                </ToggleTypeContainer>
-                <FlatList
-                  renderItem={this.renderTrack}
-                  keyExtractor={item => item.id}
-                  data={showTopTracks ? topTracks : chuneSupply}
-                />
-              </Fragment>)}
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Fragment>
+              <ToggleTypeContainer>
+                <ToggleTypeButton
+                  onPress={this.showTopTracks}
+                  accented={showTopTracks}
+                >
+                  <ToggleTypeButtonText accented={showTopTracks}>
+                    Top Tracks
+                  </ToggleTypeButtonText>
+                </ToggleTypeButton>
+                <ToggleTypeButton
+                  onPress={this.showChuneSupply}
+                  accented={!showTopTracks}
+                >
+                  <ToggleTypeButtonText accented={!showTopTracks}>
+                    Chune Supply
+                  </ToggleTypeButtonText>
+                </ToggleTypeButton>
+              </ToggleTypeContainer>
+              <FlatList
+                renderItem={this.renderTrack}
+                keyExtractor={item => item.id}
+                data={showTopTracks ? topTracks : chuneSupply}
+              />
+            </Fragment>
+          )}
 
           <DashboardContainer>
             <Cover source={{ uri: 'https://via.placeholder.com/110x110' }} />
@@ -129,8 +148,16 @@ export default class Player extends Component<Props> {
                 <Text>here goes progressbar</Text>
               </ProgressBar>
               <Controls>
-                <Control size={21} type="skip-back" callback={this.handleSkipBack} />
-                <Control size={21} type="shuffle" callback={this.handleShuffle} />
+                <Control
+                  size={21}
+                  type="skip-back"
+                  callback={this.handleSkipBack}
+                />
+                <Control
+                  size={21}
+                  type="shuffle"
+                  callback={this.handleShuffle}
+                />
                 <Control size={21} type="play" callback={this.handlePlay} />
                 <Control size={21} type="repeat" callback={this.handleRepeat} />
                 <Control type="skip-forward" callback={this.hadleSkipForward} />
@@ -142,6 +169,11 @@ export default class Player extends Component<Props> {
     );
   }
 }
+
+export default connect(({ player }) => ({
+  topTracks: player.tracks,
+  chuneSupply: player.chuneSupply,
+}))(Player);
 
 const ModalView = styled(Modal)`
   flex: 1;
