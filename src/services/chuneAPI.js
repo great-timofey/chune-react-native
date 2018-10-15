@@ -14,16 +14,20 @@ export const clearAuthToken = () => {
   API.defaults.headers.common.Authorization = null;
 };
 
-export const homeImagesPrefix = `${CONFIG.API_URL}${CONFIG.API.IMAGES.MEDIUM}`;
-export const featuredArticleImageUrl = `${CONFIG.API_URL}${CONFIG.API.IMAGES.FULL}`;
+export const homeImagesPrefix = `${CONFIG.API_URL_IMAGES}${
+  CONFIG.API.IMAGES.MEDIUM
+}`;
+export const featuredArticleImageUrl = `${CONFIG.API_URL_IMAGES}${
+  CONFIG.API.IMAGES.FULL
+}`;
 
-export const getTopTracks = (): Promise => API
-  .get(CONFIG.API.TRACKS.GET_TOP)
-  .then(response => response && response.data);
+export const getTopTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_TOP).then(
+  response => response && response.data,
+);
 
-export const getChuneSupplyTracks = (): Promise => API
-  .get(CONFIG.API.TRACKS.GET_SUPPLY)
-  .then(response => response && response.data);
+export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_SUPPLY).then(
+  response => response && response.data,
+);
 
 // API.get('tracks/sources/1/')
 //   .then(res => this.setState({ topTracks: res.data }))

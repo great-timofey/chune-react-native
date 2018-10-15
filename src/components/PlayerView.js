@@ -9,10 +9,10 @@ import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import Control from 'components/Control';
-import PlayerTopPanel from 'components/PlayerTopPanel';
+import Control from '~components/Control';
+import PlayerTopPanel from '~components/PlayerTopPanel';
 
-import { API } from 'services/chuneAPI';
+import { API } from '~services/chuneAPI';
 import { colors, components, utils } from '~global';
 
 type Props = {
@@ -35,7 +35,6 @@ class Player extends Component<Props> {
       .then(res => this.setState({ chuneSupply: res.data }))
       .then(res => this.setState({ loading: false }))
       .catch(err => console.log(err.response));
-
 
     // TrackPlayer.setupPlayer().then(async () => {
     //   // Adds a track to the queue
@@ -169,15 +168,8 @@ class Player extends Component<Props> {
                   callback={this.handleShuffle}
                 />
                 <Control size={21} type="play" callback={this.handlePlay} />
-                <Control
-                  size={21}
-                  type="repeat"
-                  callback={this.handleRepeat}
-                />
-                <Control
-                  type="skip-forward"
-                  callback={this.hadleSkipForward}
-                />
+                <Control size={21} type="repeat" callback={this.handleRepeat} />
+                <Control type="skip-forward" callback={this.hadleSkipForward} />
               </Controls>
             </Dashboard>
           </DashboardContainer>

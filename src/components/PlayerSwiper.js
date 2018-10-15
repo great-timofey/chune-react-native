@@ -3,10 +3,10 @@ import styled from 'styled-components';
 
 import Icon from 'react-native-vector-icons/Octicons';
 
+import Control from 'components/Control';
 import {
   colors, components, utils, images,
 } from '~global';
-import Control from 'components/Control';
 import PlayerTopPanel from './PlayerTopPanel';
 
 type Props = {

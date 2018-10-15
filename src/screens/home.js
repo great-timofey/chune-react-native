@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import Player from '~components/PlayerView';
 import PlayerSwiper from '~components/PlayerSwiper';
-import { MainCard, ListCard } from '~components/Home';
+import { MainCard, ListCard } from '~components/home';
 
 import { colors, components, utils } from '~global';
 import { API, setAuthToken } from 'services/chuneAPI';
@@ -32,22 +32,31 @@ export default class HomeScreen extends PureComponent {
       password,
     });
 
-    const raw = '{"id":"AvzorXK","title":"Listen To Anderson .Paak & Kendrick Lamars Must Hear Smooth New Collab Tints","artist_name":"Kendrick Lamar","published_on":"2018-10-04T17:09:54Z","image":"d9ee37aabae9bf20b5a01bee48777b1ca12d5aaa.jpg","url":"http://thissongissick.com/post/anderson-paak-kendrick-lamar-tints","source_name":"This Song Is Sick","type":"article"}';
+    // const raw = '{"id":"AvzorXK","title":"Listen To Anderson .Paak & Kendrick Lamars Must Hear Smooth New Collab Tints","artist_name":"Kendrick Lamar","published_on":"2018-10-04T17:09:54Z","image":"d9ee37aabae9bf20b5a01bee48777b1ca12d5aaa.jpg","url":"http://thissongissick.com/post/anderson-paak-kendrick-lamar-tints","source_name":"This Song Is Sick","type":"article"}';
 
-    const contentFeed = [JSON.parse(raw)];
-    console.log(contentFeed);
-    this.setState({ content: { contentFeed } });
+    // const contentFeed = [JSON.parse(raw)];
+    // console.log(contentFeed);
+    // this.setState({ content: { contentFeed } });
 
     // API.post('users/', user)
     API.post('users/login', user)
       .then(res => res.data.token)
       .then(token => setAuthToken(token))
-      .then(_ => API.get('content/?filter=recent&start=0&max_results=10'))
-      .then((res) => { console.log('DATA', res.data); return res.data; })
-      // .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
-      // ...state,
-      // ...{ content: { featured, contentFeed } },
-      // })))
+      // .then(_ => API.get('recs/home/?filter=recent&start=0&max_results=30'))
+      // .then(_ => API.get('content/?filter=followed&start=0&max_results=10'))
+      // .then((res) => {
+      // console.log('for you', res.data);
+      // return res.data;
+      // })
+      .then(_ => API.get('content/?filter=recent&start=0&max_results=30'))
+      .then((res) => {
+        console.log('DATA', res.data);
+        return res.data;
+      })
+      .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
+        ...state,
+        ...{ content: { featured, contentFeed } },
+      })))
       .then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }));
     // .catch(err => alert(err));
@@ -68,7 +77,7 @@ export default class HomeScreen extends PureComponent {
     ) : (
       <ScreenContainer>
         <ScreenScrollContainer>
-          {false && <MainCard main data={content.featured[0]} />}
+          {true && <MainCard main data={content.featured[0]} />}
           <View
             style={{
               //  other cards container
@@ -86,7 +95,7 @@ export default class HomeScreen extends PureComponent {
                 paddingBottom: 8,
               }}
             >
-              {false && (
+              {true && (
                 <Fragment>
                   <MainCard data={content.featured[1]} />
                   <MainCard data={content.featured[2]} />
@@ -101,7 +110,7 @@ export default class HomeScreen extends PureComponent {
           </View>
         </ScreenScrollContainer>
         <PlayerSwiper
-          isAuthorized={!1}
+          isAuthorized={1}
           header="Top Tracks Chart"
           showCallback={this.togglePlayer}
           prevCallback={() => alert('prev')}
