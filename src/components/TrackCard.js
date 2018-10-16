@@ -14,19 +14,20 @@ type Props = {
   index: number,
   callback: Function,
   currentTrack: Object,
+  playbackData: Object,
 };
 
 class TrackCard extends Component<Props> {
   render() {
     const {
-      item, index, callback, currentTrack,
+      item, index, callback, currentTrack, playbackData,
     } = this.props;
     return (
       <TrackContainer onPress={() => callback(item)}>
         <TrackNumberContainer>
           {currentTrack && currentTrack.id === item.id ? (
             <Icon.Button
-              name="play"
+              name={playbackData.playing ? 'pause' : 'play'}
               size={16}
               backgroundColor="transparent"
               color="black"
@@ -36,10 +37,10 @@ class TrackCard extends Component<Props> {
                 marginLeft: -8,
               }}
               borderRadius={0}
-              onPress={() => alert('play')}
+              onPress={() => callback(item)}
             />
           ) : (
-            <TrackText>{index}</TrackText>
+            <TrackText>{index + 1}</TrackText>
           )}
         </TrackNumberContainer>
         <TrackDescriptionContainer>
@@ -62,9 +63,10 @@ class TrackCard extends Component<Props> {
   }
 }
 
-export default connect(({ player }) => ({ currentTrack: player.currentTrack }))(
-  TrackCard,
-);
+export default connect(({ player }) => ({
+  currentTrack: player.currentTrack,
+  playbackData: player.playbackData,
+}))(TrackCard);
 
 const TrackText = styled(components.TextRegular)`
   ${props => props.accented && 'margin-bottom: 3'};

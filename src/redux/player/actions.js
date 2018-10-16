@@ -4,6 +4,15 @@ export const getTracks = () => ({
   type: TRACKS_ACTIONS.GET_TRACKS,
 });
 
+export const getPlaybackData = () => ({
+  type: TRACKS_ACTIONS.GET_PLAYBACK_DATA,
+});
+
+export const setPlaybackData = playbackData => ({
+  type: TRACKS_ACTIONS.SET_PLAYBACK_DATA,
+  payload: { playbackData },
+});
+
 export const togglePlaying = () => ({
   type: TRACKS_ACTIONS.TOGGLE_PLAYING,
 });

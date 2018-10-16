@@ -4,11 +4,10 @@ import { createReducer } from '~global/reducerHelper';
 
 const INITIAL_STATE = {
   currentTrack: null,
+  playbackData: null,
   topTracks: [],
   chuneSupply: [],
 };
-
-// const setTracksHandler = (state, action) => INITIAL_STATE;
 
 const setTracksHandler = ({ topTracks, chuneSupply }) => R.pipe(
   R.assoc('topTracks', topTracks),
@@ -17,9 +16,12 @@ const setTracksHandler = ({ topTracks, chuneSupply }) => R.pipe(
 
 const setTrackHandler = ({ currentTrack }) => R.assoc('currentTrack', currentTrack);
 
+const setPlaybackDataHandler = ({ playbackData }) => R.assoc('playbackData', playbackData);
+
 const HANDLERS = {
   [TRACKS_ACTIONS.SET_TRACKS]: setTracksHandler,
   [TRACKS_ACTIONS.SET_CURRENT_TRACK]: setTrackHandler,
+  [TRACKS_ACTIONS.SET_PLAYBACK_DATA]: setPlaybackDataHandler,
 };
 
 export default createReducer(INITIAL_STATE, HANDLERS);

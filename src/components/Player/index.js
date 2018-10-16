@@ -12,7 +12,7 @@ import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { API } from 'services/chuneAPI';
+import { API } from '~services/chuneAPI';
 // import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
@@ -30,6 +30,7 @@ import { colors, components, utils } from '~global';
 
 type Props = {
   currentTrack: Object,
+  playbackData: Object,
   setCurrentTrack: Function,
   togglePlaying: Function,
   loading: boolean,
@@ -89,6 +90,7 @@ class Player extends Component<Props> {
       chuneSupply,
       currentTrack,
       getTracks,
+      playbackData,
     } = this.props;
     const { showTopTracks, isPlaying } = this.state;
     return (
@@ -158,11 +160,11 @@ class Player extends Component<Props> {
                   type="shuffle"
                   callback={this.handleShuffle}
                 />
-                {isPlaying ? (
-                  <Control size={21} type="play" callback={this.handlePlay} />
-                ) : (
-                  <Control size={21} type="pause" callback={this.handlePlay} />
-                )}
+                <Control
+                  size={21}
+                  type={playbackData.playing ? 'pause' : 'play'}
+                  callback={this.handlePlay}
+                />
                 <Control size={21} type="repeat" callback={this.handleRepeat} />
                 <Control type="skip-forward" callback={this.hadleSkipForward} />
               </Controls>
@@ -178,6 +180,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({ getTracks, setCurren
 
 export default connect(
   ({ player }) => ({
+    playbackData: player.playbackData,
     loading: player.topTracks.length === 0,
     topTracks: player.topTracks,
     chuneSupply: player.chuneSupply,

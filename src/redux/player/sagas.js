@@ -9,7 +9,12 @@ import {
   getChuneSupplyTracks,
 } from 'services/chuneAPI';
 import Spotify from 'rn-spotify-sdk';
-import { setTracks, setCurrentTrack } from './actions';
+import {
+  setTracks,
+  setCurrentTrack,
+  getPlaybackData,
+  setPlaybackData,
+} from './actions';
 import { TRACKS_ACTIONS } from './constants';
 import { AUTH_ACTIONS } from '../auth/constants';
 import { spotifyAuthOptions } from '~services/auth';
@@ -22,11 +27,18 @@ function* getTracksWorker() {
   // .catch(err => console.log(err.response));
   try {
     const token = yield select(state => state.auth.token);
+    yield Spotify.initialize(spotifyAuthOptions);
     yield call(setAuthToken, token);
+    const isInitialized = yield Spotify.isInitializedAsync();
+    console.log('is spotify initialized? ', isInitialized);
+    if (!isInitialized) {
+      yield Spotify.initialize(spotifyAuthOptions);
+    }
     const topTracks = yield call(getTopTracks);
     const chuneSupply = yield call(getChuneSupplyTracks);
     const tracks = { topTracks, chuneSupply };
     yield put(setTracks(tracks));
+    yield put(getPlaybackData());
   } catch (err) {
     console.log(err);
   }
@@ -34,29 +46,29 @@ function* getTracksWorker() {
 
 function* setTrackWorker(action) {
   try {
-    const isInitialized = yield Spotify.isInitializedAsync();
     const trackUri = action.payload.currentTrack.url.slice(-22);
-    console.log('is spotify initialized? ', isInitialized);
-    if (isInitialized) {
-      yield Spotify.getMe();
-      yield Spotify.playURI(`spotify:track:${trackUri}`, 0, 0);
-    } else {
-      yield Spotify.initialize(spotifyAuthOptions);
-      console.log('spotify has been initialized');
-      yield Spotify.getMe();
-      yield Spotify.playURI(`spotify:track:${trackUri}`, 0, 0);
-    }
+    yield Spotify.playURI(`spotify:track:${trackUri}`, 0, 0);
   } catch (err) {
     console.log(err);
   }
 }
 
 function* togglePlayingWorker() {
-  const playback = yield Spotify.getPlaybackStateAsync();
   try {
-    if (playback) {
-      yield Spotify.setPlaying(!playback.playing);
-    }
+    const playbackData = yield select(state => state.player.playbackData);
+    yield Spotify.setPlaying(!playbackData.playing);
+    yield put(getPlaybackData());
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function* getPlaybackDataWorker() {
+  try {
+    const playbackData = yield Spotify.getPlaybackStateAsync();
+    const playbackMetadata = yield Spotify.getPlaybackMetadataAsync();
+    console.log(playbackMetadata);
+    yield put(setPlaybackData(playbackData));
   } catch (err) {
     console.log(err);
   }
@@ -66,6 +78,7 @@ function* sagas() {
   yield takeLatest(TRACKS_ACTIONS.TOGGLE_PLAYING, togglePlayingWorker);
   yield takeLatest(TRACKS_ACTIONS.GET_TRACKS, getTracksWorker);
   yield takeLatest(TRACKS_ACTIONS.SET_CURRENT_TRACK, setTrackWorker);
+  yield takeLatest(TRACKS_ACTIONS.GET_PLAYBACK_DATA, getPlaybackDataWorker);
   yield takeLatest(rehydrate, getTracksWorker);
 }
 
