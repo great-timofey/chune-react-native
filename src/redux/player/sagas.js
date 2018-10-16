@@ -5,15 +5,19 @@ import { REHYDRATE } from 'redux-persist/lib/constants';
 import {
   API,
   setAuthToken,
-  getTopTracks,
-  getChuneSupplyTracks,
+  getTracksOfChosenType,
+  // getTopTracks,
+  // getChuneSupplyTracks,
 } from 'services/chuneAPI';
 import Spotify from 'rn-spotify-sdk';
 import {
   setTracks,
+  setTracksTypes,
+  togglePlaying,
   setCurrentTrack,
   getPlaybackData,
   setPlaybackData,
+  setCurrentTracks,
 } from './actions';
 import { TRACKS_ACTIONS } from './constants';
 import { AUTH_ACTIONS } from '../auth/constants';
@@ -30,13 +34,16 @@ function* getTracksWorker() {
     yield Spotify.initialize(spotifyAuthOptions);
     yield call(setAuthToken, token);
     const isInitialized = yield Spotify.isInitializedAsync();
-    console.log('is spotify initialized? ', isInitialized);
+    // console.log('is spotify initialized? ', isInitialized);
     if (!isInitialized) {
       yield Spotify.initialize(spotifyAuthOptions);
     }
-    const topTracks = yield call(getTopTracks);
-    const chuneSupply = yield call(getChuneSupplyTracks);
-    const tracks = { topTracks, chuneSupply };
+    const firstSectionTracks = yield call(getTracksOfChosenType, 'topTracks');
+    const secondSectionTracks = yield call(
+      getTracksOfChosenType,
+      'chuneSupply',
+    );
+    const tracks = { firstSectionTracks, secondSectionTracks };
     yield put(setTracks(tracks));
     yield put(getPlaybackData());
   } catch (err) {
@@ -46,8 +53,12 @@ function* getTracksWorker() {
 
 function* setTrackWorker(action) {
   try {
-    const trackUri = action.payload.currentTrack.url.slice(-22);
-    yield Spotify.playURI(`spotify:track:${trackUri}`, 0, 0);
+    yield Spotify.playURI(
+      `spotify:track:${action.payload.currentTrack.spotify_id}`,
+      0,
+      0,
+    );
+    yield put(getPlaybackData());
   } catch (err) {
     console.log(err);
   }

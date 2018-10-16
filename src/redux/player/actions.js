@@ -22,7 +22,17 @@ export const setCurrentTrack = currentTrack => ({
   payload: { currentTrack },
 });
 
-export const setTracks = ({ topTracks, chuneSupply }) => ({
+export const setCurrentTracksType = index => ({
+  type: TRACKS_ACTIONS.SET_CURRENT_TRACKS_TYPE,
+  payload: { index },
+});
+
+export const setTracksTypes = types => ({
+  type: TRACKS_ACTIONS.SET_TRACKS_TYPES,
+  payload: { types },
+});
+
+export const setTracks = ({ firstSectionTracks, secondSectionTracks }) => ({
   type: TRACKS_ACTIONS.SET_TRACKS,
-  payload: { topTracks, chuneSupply },
+  payload: { firstSectionTracks, secondSectionTracks },
 });
