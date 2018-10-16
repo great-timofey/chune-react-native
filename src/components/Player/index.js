@@ -18,12 +18,20 @@ import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
 import Control from 'components/Control';
+import TrackCard from 'components/TrackCard';
 import PlayerTopPanel from 'components/PlayerTopPanel';
 
-import { getTracks, setCurrentTrack } from '~redux/player/actions';
+import {
+  getTracks,
+  setCurrentTrack,
+  togglePlaying,
+} from '~redux/player/actions';
 import { colors, components, utils } from '~global';
 
 type Props = {
+  currentTrack: Object,
+  setCurrentTrack: Function,
+  togglePlaying: Function,
   loading: boolean,
   isVisible: boolean,
   callback: Function,
@@ -34,6 +42,7 @@ type Props = {
 class Player extends Component<Props> {
   state = {
     showTopTracks: true,
+    isPlaying: true,
   };
 
   showTopTracks = () => this.setState({ showTopTracks: true });
@@ -44,50 +53,32 @@ class Player extends Component<Props> {
 
   handleShuffle = () => {};
 
-  handlePlay = () => {};
+  handlePlay = () => {
+    this.props.togglePlaying();
+    this.setState(({ isPlaying }) => ({ isPlaying: !isPlaying }));
+  };
 
   handleRepeat = () => {};
 
   hadleSkipForward = () => {};
 
-  renderTrack = ({ item, index }) => (
-    <TrackContainer onPress={() => this.props.setCurrentTrack(item)}>
-      <TrackNumberContainer>
-        {index === 0 ? (
-          <Icon.Button
-            name="play"
-            size={16}
-            backgroundColor="transparent"
-            color="black"
-            iconStyle={{
-              width: 16,
-              height: 16,
-              marginLeft: -8,
-            }}
-            borderRadius={0}
-            onPress={() => alert('play')}
-          />
-        ) : (
-          <TrackText>{index}</TrackText>
-        )}
-      </TrackNumberContainer>
-      <TrackDescriptionContainer>
-        <TrackText numberOfLines={1} ellipsizeMode="tail" accented>
-          {item.title}
-        </TrackText>
-        <TrackText numberOfLines={1} ellipsizeMode="tail">
-          {item.artist_name}
-        </TrackText>
-      </TrackDescriptionContainer>
-      <TrackPayloadInfoContainer>
-        {index === 0 ? (
-          <TrackText>Now playing</TrackText>
-        ) : (
-          <TrackText>{moment(item.duration_ms).format('mm:ss')}</TrackText>
-        )}
-      </TrackPayloadInfoContainer>
-    </TrackContainer>
-  );
+  // calculateIfPlaying = (index) => {
+  // const { currentTrack, topTracks, chuneSupply } = this.props;
+  // const { showTopTracks } = this.state;
+  // if (currentTrack) {
+  // return (
+  // currentTrack.id
+  //= == (showTopTracks ? topTracks[index].id : chuneSupply[index].id)
+  // );
+  // }
+  // return false;
+  // };
+
+  renderTrack = ({ item, index }) => {
+    const { currentTrack } = this.props;
+    const { setCurrentTrack } = this.props;
+    return <TrackCard index={index} item={item} callback={setCurrentTrack} />;
+  };
 
   render() {
     const {
@@ -97,8 +88,9 @@ class Player extends Component<Props> {
       topTracks,
       chuneSupply,
       currentTrack,
+      getTracks,
     } = this.props;
-    const { showTopTracks } = this.state;
+    const { showTopTracks, isPlaying } = this.state;
     return (
       <ViewOverflow>
         <ModalView
@@ -145,9 +137,11 @@ class Player extends Component<Props> {
             <Cover source={{ uri: 'https://via.placeholder.com/110x110' }} />
             <Dashboard>
               <Description>
-                <DescriptionName>{currentTrack.title || '...'}</DescriptionName>
+                <DescriptionName>
+                  {(currentTrack && currentTrack.title) || '...'}
+                </DescriptionName>
                 <DescriptionArtist>
-                  {currentTrack.artist_name || '......'}
+                  {(currentTrack && currentTrack.artist_name) || '......'}
                 </DescriptionArtist>
               </Description>
               <ProgressBar>
@@ -164,7 +158,11 @@ class Player extends Component<Props> {
                   type="shuffle"
                   callback={this.handleShuffle}
                 />
-                <Control size={21} type="play" callback={this.handlePlay} />
+                {isPlaying ? (
+                  <Control size={21} type="play" callback={this.handlePlay} />
+                ) : (
+                  <Control size={21} type="pause" callback={this.handlePlay} />
+                )}
                 <Control size={21} type="repeat" callback={this.handleRepeat} />
                 <Control type="skip-forward" callback={this.hadleSkipForward} />
               </Controls>
@@ -176,7 +174,7 @@ class Player extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ getTracks, setCurrentTrack }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ getTracks, setCurrentTrack, togglePlaying }, dispatch);
 
 export default connect(
   ({ player }) => ({
