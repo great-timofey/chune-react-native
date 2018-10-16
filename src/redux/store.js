@@ -13,8 +13,6 @@ import homeSagas from '~redux/home/sagas';
 import playerReducer from '~redux/player/reducer';
 import playerSagas from '~redux/player/sagas';
 
-import commonReducer from '~redux/common/reducer';
-
 const authPersistConfig = {
   key: 'auth',
   storage,
@@ -31,11 +29,6 @@ const playerPersistConfig = {
   blacklist: ['*'],
 };
 
-// const commonPersistConfig = {
-// key: 'common',
-// storage,
-// };
-
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
@@ -44,7 +37,6 @@ export const store = createStore(
   combineReducers({
     auth: persistReducer(authPersistConfig, authReducer),
     player: persistReducer(playerPersistConfig, playerReducer),
-    // common: persistReducer(commonPersistConfig, commonReducer),
     // home: persistReducer(homePersistConfig, homeReducer),
   }),
   composeWithDevTools(applyMiddleware(...middleware)),

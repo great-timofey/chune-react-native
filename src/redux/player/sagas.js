@@ -66,8 +66,6 @@ function* togglePlayingWorker() {
 function* getPlaybackDataWorker() {
   try {
     const playbackData = yield Spotify.getPlaybackStateAsync();
-    const playbackMetadata = yield Spotify.getPlaybackMetadataAsync();
-    console.log(playbackMetadata);
     yield put(setPlaybackData(playbackData));
   } catch (err) {
     console.log(err);
