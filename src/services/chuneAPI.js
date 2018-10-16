@@ -29,6 +29,15 @@ export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET
   response => response && response.data,
 );
 
+export const getTracksOfChosenType = type => {
+  switch(type) {
+    case 'topTracks':
+      return getTopTracks();
+    case 'chuneSupply':
+      return getChuneSupplyTracks();
+  }
+}
+
 // API.get('tracks/sources/1/')
 //   .then(res => this.setState({ topTracks: res.data }))
 //   .then(_ => API.get('tracks/sources/2/'))
