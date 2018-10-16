@@ -66,8 +66,12 @@ class AuthScreen extends PureComponent<Props> {
           });
 
           API.post('users/social/login/spotify', userInfo)
-            .then((res) => { console.log(777, 'spotify', res); })
-            .catch((e) => { console.log(555, 'spotify', e); });
+            .then((res) => {
+              console.log(777, 'spotify', res);
+            })
+            .catch((e) => {
+              console.log(555, 'spotify', e);
+            });
         }
         this.setState({ authorized: true });
       } catch (err) {
@@ -108,7 +112,7 @@ class AuthScreen extends PureComponent<Props> {
     );
   };
 
-  handleEnter = () => {
+  handleSignIn = () => {
     const { authorized } = this.state;
     const { navigation } = this.props;
     if (authorized) {
@@ -132,16 +136,30 @@ class AuthScreen extends PureComponent<Props> {
       });
 
       API.post('users/login', user)
-        .then((res) => { console.log(123, res); return res.data.token; })
-        .then((token) => { setAuthToken(token); this.props.setToken(token); })
-        .catch((e) => { console.log(666, e); });
+        .then((res) => {
+          console.log(123, res);
+          return res.data.token;
+        })
+        .then((token) => {
+          setAuthToken(token);
+          this.props.setToken(token);
+        })
+        .then(_ => navigation.navigate('Home'))
+        .catch((e) => {
+          console.log(666, e);
+        });
       // .then(_ => API.get('content/?filter=recent&start=0&max_results=10'));
       // .then((res) => { console.log('DATA', res.data); return res.data; })
       // .then(_ => console.log(this.state))
       // .then(res => this.setState({ loading: false }));
 
-      console.log('user is not authorized');
+      // console.log('user is not authorized');
     }
+  };
+
+  //  TODO: implement sign up
+  handleSignUp = () => {
+    console.log('here goes sign up');
   };
 
   render() {
@@ -154,11 +172,18 @@ class AuthScreen extends PureComponent<Props> {
           <InvitationPromptEmail>by email</InvitationPromptEmail>
           <Form>
             {isSignUp && <FormField label="Name" />}
-            <FormField label="Email" refCallback={(el) => { this.emailRef = el; }} />
+            <FormField
+              label="Email"
+              refCallback={(el) => {
+                this.emailRef = el;
+              }}
+            />
             <FormField
               password
               label="Password"
-              refCallback={(el) => { this.passwordRef = el; }}
+              refCallback={(el) => {
+                this.passwordRef = el;
+              }}
             />
           </Form>
           {!isSignUp && (
@@ -166,7 +191,9 @@ class AuthScreen extends PureComponent<Props> {
               <ForgetPasswordText>Forgot password?</ForgetPasswordText>
             </ForgetPasswordButton>
           )}
-          <EnterButton onPress={this.handleEnter}>
+          <EnterButton
+            onPress={isSignUp ? this.handleSignUp : this.handleSignIn}
+          >
             <EnterButtonText>
               {`Sign ${isSignUp ? 'up' : 'in'}`}
             </EnterButtonText>
@@ -207,13 +234,17 @@ class AuthScreen extends PureComponent<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => (
-  bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
     setToken,
-  }, dispatch)
+  },
+  dispatch,
 );
 
-export default connect(() => ({}), mapDispatchToProps)(AuthScreen);
+export default connect(
+  () => ({}),
+  mapDispatchToProps,
+)(AuthScreen);
 
 const EnterButton = styled.TouchableOpacity`
   justify-content: center;
