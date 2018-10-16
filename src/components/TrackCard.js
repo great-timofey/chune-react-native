@@ -3,6 +3,7 @@ import moment from 'moment';
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
+import { setCurrentTrackRequest } from '~redux/player/actions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,18 +13,28 @@ import { colors, components, utils } from '~global';
 type Props = {
   item: Object,
   index: number,
-  callback: Function,
+  togglePlaying: Function,
+  setCurrentTrackRequest: Function,
   currentTrack: Object,
   playbackData: Object,
 };
 
 class TrackCard extends Component<Props> {
+  handlePlayTrack = () => {
+    const { item } = this.props;
+    this.props.setCurrentTrackRequest(item);
+  };
+
   render() {
     const {
-      item, index, callback, currentTrack, playbackData,
+      item,
+      index,
+      setTrackCallback,
+      currentTrack,
+      playbackData,
     } = this.props;
     return (
-      <TrackContainer onPress={() => callback(item)}>
+      <TrackContainer onPress={this.handlePlayTrack}>
         <TrackNumberContainer>
           {currentTrack && currentTrack.id === item.id ? (
             <Icon.Button
@@ -37,7 +48,7 @@ class TrackCard extends Component<Props> {
                 marginLeft: -8,
               }}
               borderRadius={0}
-              onPress={() => callback(item)}
+              onPress={this.handlePlayTrack}
             />
           ) : (
             <TrackText>{index + 1}</TrackText>
@@ -63,10 +74,15 @@ class TrackCard extends Component<Props> {
   }
 }
 
-export default connect(({ player }) => ({
-  currentTrack: player.currentTrack,
-  playbackData: player.playbackData,
-}))(TrackCard);
+const mapDispatchToProps = dispatch => bindActionCreators({ setCurrentTrackRequest }, dispatch);
+
+export default connect(
+  ({ player }) => ({
+    currentTrack: player.currentTrack,
+    playbackData: player.playbackData,
+  }),
+  mapDispatchToProps,
+)(TrackCard);
 
 const TrackText = styled(components.TextRegular)`
   ${props => props.accented && 'margin-bottom: 3'};

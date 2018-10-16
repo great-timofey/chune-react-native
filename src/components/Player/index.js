@@ -43,43 +43,71 @@ type Props = {
 class Player extends Component<Props> {
   state = {
     showTopTracks: true,
-    isPlaying: true,
   };
 
   showTopTracks = () => this.setState({ showTopTracks: true });
 
   showChuneSupply = () => this.setState({ showTopTracks: false });
 
-  handleSkipBack = () => {};
+  handleSkipForward = () => {
+    const {
+      topTracks,
+      chuneSupply,
+      currentTrack,
+      setCurrentTrack,
+      togglePlaying,
+    } = this.props;
+    const { showTopTracks } = this.state;
+    const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+      currentTrack,
+    );
+    if (
+      currentTrackIndex
+      === (showTopTracks ? topTracks.length : chuneSupply.length) - 1
+    ) {
+      setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+      togglePlaying();
+      return;
+    }
+    setCurrentTrack(
+      showTopTracks
+        ? topTracks[currentTrackIndex + 1]
+        : chuneSupply[currentTrackIndex + 1],
+    );
+  };
+
+  handleSkipBack = () => {
+    const {
+      topTracks,
+      chuneSupply,
+      currentTrack,
+      setCurrentTrack,
+      togglePlaying,
+    } = this.props;
+    const { showTopTracks } = this.state;
+    const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+      currentTrack,
+    );
+    // console.log(topTracks.length);
+    if (currentTrackIndex === 0) {
+      setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+      // togglePlaying();
+      return;
+    }
+    setCurrentTrack(
+      showTopTracks
+        ? topTracks[currentTrackIndex - 1]
+        : chuneSupply[currentTrackIndex - 1],
+    );
+  };
 
   handleShuffle = () => {};
-
-  handlePlay = () => {
-    this.props.togglePlaying();
-    this.setState(({ isPlaying }) => ({ isPlaying: !isPlaying }));
-  };
 
   handleRepeat = () => {};
 
   hadleSkipForward = () => {};
 
-  // calculateIfPlaying = (index) => {
-  // const { currentTrack, topTracks, chuneSupply } = this.props;
-  // const { showTopTracks } = this.state;
-  // if (currentTrack) {
-  // return (
-  // currentTrack.id
-  //= == (showTopTracks ? topTracks[index].id : chuneSupply[index].id)
-  // );
-  // }
-  // return false;
-  // };
-
-  renderTrack = ({ item, index }) => {
-    const { currentTrack } = this.props;
-    const { setCurrentTrack } = this.props;
-    return <TrackCard index={index} item={item} callback={setCurrentTrack} />;
-  };
+  renderTrack = ({ item, index }) => <TrackCard index={index} item={item} />;
 
   render() {
     const {
@@ -91,8 +119,9 @@ class Player extends Component<Props> {
       currentTrack,
       getTracks,
       playbackData,
+      togglePlaying,
     } = this.props;
-    const { showTopTracks, isPlaying } = this.state;
+    const { showTopTracks } = this.state;
     return (
       <ViewOverflow>
         <ModalView
@@ -163,10 +192,13 @@ class Player extends Component<Props> {
                 <Control
                   size={21}
                   type={playbackData.playing ? 'pause' : 'play'}
-                  callback={this.handlePlay}
+                  callback={togglePlaying}
                 />
                 <Control size={21} type="repeat" callback={this.handleRepeat} />
-                <Control type="skip-forward" callback={this.hadleSkipForward} />
+                <Control
+                  type="skip-forward"
+                  callback={this.handleSkipForward}
+                />
               </Controls>
             </Dashboard>
           </DashboardContainer>
