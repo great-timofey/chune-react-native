@@ -1,11 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import {
-  Text, FlatList, Platform, ActivityIndicator,
+  Text,
+  FlatList,
+  Platform,
+  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import moment from 'moment';
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import { API } from 'services/chuneAPI';
 // import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
@@ -18,26 +24,26 @@ import { getTracks } from '~redux/player/actions';
 import { colors, components, utils } from '~global';
 
 type Props = {
-  isVisible: Boolean,
+  loading: boolean,
+  isVisible: boolean,
   callback: Function,
+  topTracks: Array,
+  chuneSupply: Array,
 };
 
 class Player extends Component<Props> {
   state = {
-    loading: true,
-    topTracks: [],
-    chuneSupply: [],
     showTopTracks: true,
   };
 
-  componentDidMount() {
-    API.get('tracks/sources/1/')
-      // .then(res => this.setState({ topTracks: res.data }))
-      .then(_ => API.get('tracks/sources/2/'))
-      // .then(res => this.setState({ chuneSupply: res.data }))
-      // .then(res => this.setState({ loading: false }))
-      .catch(err => console.log(err.response));
-  }
+  // componentDidMount() {
+  // API.get('tracks/sources/1/')
+  // // .then(res => this.setState({ topTracks: res.data }))
+  // .then(_ => API.get('tracks/sources/2/'))
+  // // .then(res => this.setState({ chuneSupply: res.data }))
+  // // .then(res => this.setState({ loading: false }))
+  // .catch(err => console.log(err.response));
+  // }
 
   showTopTracks = () => this.setState({ showTopTracks: true });
 
@@ -93,10 +99,10 @@ class Player extends Component<Props> {
   );
 
   render() {
-    const { isVisible, callback } = this.props;
     const {
-      chuneSupply, topTracks, showTopTracks, loading,
-    } = this.state;
+      isVisible, callback, loading, topTracks, chuneSupply,
+    } = this.props;
+    const { showTopTracks } = this.state;
     return (
       <ViewOverflow>
         <ModalView
@@ -108,7 +114,9 @@ class Player extends Component<Props> {
           <PlayerTopPanel callback={callback} />
 
           {loading ? (
-            <ActivityIndicator />
+            <TouchableOpacity onPress={() => this.props.getTracks()}>
+              <Text>get tracks</Text>
+            </TouchableOpacity>
           ) : (
             <Fragment>
               <ToggleTypeContainer>
@@ -170,10 +178,16 @@ class Player extends Component<Props> {
   }
 }
 
-export default connect(({ player }) => ({
-  topTracks: player.tracks,
-  chuneSupply: player.chuneSupply,
-}))(Player);
+const mapDispatchToProps = dispatch => bindActionCreators({ getTracks }, dispatch);
+
+export default connect(
+  ({ player }) => ({
+    loading: player.topTracks.length === 0,
+    topTracks: player.topTracks,
+    chuneSupply: player.chuneSupply,
+  }),
+  mapDispatchToProps,
+)(Player);
 
 const ModalView = styled(Modal)`
   flex: 1;
