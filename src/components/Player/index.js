@@ -20,7 +20,7 @@ import ViewOverflow from 'react-native-view-overflow';
 import Control from 'components/Control';
 import PlayerTopPanel from 'components/PlayerTopPanel';
 
-import { getTracks } from '~redux/player/actions';
+import { getTracks, setCurrentTrack } from '~redux/player/actions';
 import { colors, components, utils } from '~global';
 
 type Props = {
@@ -36,15 +36,6 @@ class Player extends Component<Props> {
     showTopTracks: true,
   };
 
-  // componentDidMount() {
-  // API.get('tracks/sources/1/')
-  // // .then(res => this.setState({ topTracks: res.data }))
-  // .then(_ => API.get('tracks/sources/2/'))
-  // // .then(res => this.setState({ chuneSupply: res.data }))
-  // // .then(res => this.setState({ loading: false }))
-  // .catch(err => console.log(err.response));
-  // }
-
   showTopTracks = () => this.setState({ showTopTracks: true });
 
   showChuneSupply = () => this.setState({ showTopTracks: false });
@@ -59,8 +50,8 @@ class Player extends Component<Props> {
 
   hadleSkipForward = () => {};
 
-  renderTrack = ({ item: { artist_name, title, duration_ms }, index }) => (
-    <TrackContainer>
+  renderTrack = ({ item, index }) => (
+    <TrackContainer onPress={() => this.props.setCurrentTrack(item)}>
       <TrackNumberContainer>
         {index === 0 ? (
           <Icon.Button
@@ -82,17 +73,17 @@ class Player extends Component<Props> {
       </TrackNumberContainer>
       <TrackDescriptionContainer>
         <TrackText numberOfLines={1} ellipsizeMode="tail" accented>
-          {title}
+          {item.title}
         </TrackText>
         <TrackText numberOfLines={1} ellipsizeMode="tail">
-          {artist_name}
+          {item.artist_name}
         </TrackText>
       </TrackDescriptionContainer>
       <TrackPayloadInfoContainer>
         {index === 0 ? (
           <TrackText>Now playing</TrackText>
         ) : (
-          <TrackText>{moment(duration_ms).format('mm:ss')}</TrackText>
+          <TrackText>{moment(item.duration_ms).format('mm:ss')}</TrackText>
         )}
       </TrackPayloadInfoContainer>
     </TrackContainer>
@@ -100,7 +91,12 @@ class Player extends Component<Props> {
 
   render() {
     const {
-      isVisible, callback, loading, topTracks, chuneSupply,
+      isVisible,
+      callback,
+      loading,
+      topTracks,
+      chuneSupply,
+      currentTrack,
     } = this.props;
     const { showTopTracks } = this.state;
     return (
@@ -149,8 +145,10 @@ class Player extends Component<Props> {
             <Cover source={{ uri: 'https://via.placeholder.com/110x110' }} />
             <Dashboard>
               <Description>
-                <DescriptionName>The Kill</DescriptionName>
-                <DescriptionArtist>30 Seconds To Mars</DescriptionArtist>
+                <DescriptionName>{currentTrack.title || '...'}</DescriptionName>
+                <DescriptionArtist>
+                  {currentTrack.artist_name || '......'}
+                </DescriptionArtist>
               </Description>
               <ProgressBar>
                 <Text>here goes progressbar</Text>
@@ -178,13 +176,14 @@ class Player extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ getTracks }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ getTracks, setCurrentTrack }, dispatch);
 
 export default connect(
   ({ player }) => ({
     loading: player.topTracks.length === 0,
     topTracks: player.topTracks,
     chuneSupply: player.chuneSupply,
+    currentTrack: player.currentTrack,
   }),
   mapDispatchToProps,
 )(Player);
