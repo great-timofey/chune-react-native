@@ -4,6 +4,10 @@ export const getTracks = () => ({
   type: TRACKS_ACTIONS.GET_TRACKS,
 });
 
+export const togglePlaying = () => ({
+  type: TRACKS_ACTIONS.TOGGLE_PLAYING,
+});
+
 export const setCurrentTrack = currentTrack => ({
   type: TRACKS_ACTIONS.SET_CURRENT_TRACK,
   payload: { currentTrack },

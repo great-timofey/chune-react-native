@@ -42,6 +42,7 @@ function* setTrackWorker(action) {
       yield Spotify.playURI(`spotify:track:${trackUri}`, 0, 0);
     } else {
       yield Spotify.initialize(spotifyAuthOptions);
+      console.log('spotify has been initialized');
       yield Spotify.getMe();
       yield Spotify.playURI(`spotify:track:${trackUri}`, 0, 0);
     }
@@ -50,7 +51,19 @@ function* setTrackWorker(action) {
   }
 }
 
+function* togglePlayingWorker() {
+  const playback = yield Spotify.getPlaybackStateAsync();
+  try {
+    if (playback) {
+      yield Spotify.setPlaying(!playback.playing);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 function* sagas() {
+  yield takeLatest(TRACKS_ACTIONS.TOGGLE_PLAYING, togglePlayingWorker);
   yield takeLatest(TRACKS_ACTIONS.GET_TRACKS, getTracksWorker);
   yield takeLatest(TRACKS_ACTIONS.SET_CURRENT_TRACK, setTrackWorker);
   yield takeLatest(rehydrate, getTracksWorker);
