@@ -3,7 +3,7 @@ import moment from 'moment';
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
-import { setCurrentTrackRequest } from '~redux/player/actions';
+import { setCurrentTrack } from '~redux/player/actions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,7 +22,7 @@ type Props = {
 class TrackCard extends Component<Props> {
   handlePlayTrack = () => {
     const { item } = this.props;
-    this.props.setCurrentTrackRequest(item);
+    this.props.setCurrentTrack(item);
   };
 
   render() {
@@ -74,7 +74,7 @@ class TrackCard extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ setCurrentTrackRequest }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ setCurrentTrack }, dispatch);
 
 export default connect(
   ({ player }) => ({
