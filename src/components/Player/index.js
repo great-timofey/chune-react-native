@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { API } from '~services/chuneAPI';
-// import TrackPlayer from 'react-native-track-player';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
@@ -24,6 +23,8 @@ import PlayerTopPanel from 'components/PlayerTopPanel';
 import {
   getTracks,
   setCurrentTrack,
+  setCurrentTracks,
+  setCurrentTracksType,
   togglePlaying,
 } from '~redux/player/actions';
 import { colors, components, utils } from '~global';
@@ -42,63 +43,59 @@ type Props = {
 
 class Player extends Component<Props> {
   state = {
-    showTopTracks: true,
+    currentSection: 0,
   };
 
-  showTopTracks = () => this.setState({ showTopTracks: true });
-
-  showChuneSupply = () => this.setState({ showTopTracks: false });
-
   handleSkipForward = () => {
-    const {
-      topTracks,
-      chuneSupply,
-      currentTrack,
-      setCurrentTrack,
-      togglePlaying,
-    } = this.props;
-    const { showTopTracks } = this.state;
-    const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
-      currentTrack,
-    );
-    if (
-      currentTrackIndex
-      === (showTopTracks ? topTracks.length : chuneSupply.length) - 1
-    ) {
-      setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
-      togglePlaying();
-      return;
-    }
-    setCurrentTrack(
-      showTopTracks
-        ? topTracks[currentTrackIndex + 1]
-        : chuneSupply[currentTrackIndex + 1],
-    );
+    // const {
+    // topTracks,
+    // chuneSupply,
+    // currentTrack,
+    // setCurrentTrack,
+    // togglePlaying,
+    // } = this.props;
+    // //const { showTopTracks } = this.state;
+    // const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+    // currentTrack,
+    // );
+    // if (
+    // currentTrackIndex
+    //= == (showTopTracks ? topTracks.length : chuneSupply.length) - 1
+    // ) {
+    // setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+    // togglePlaying();
+    // return;
+    // }
+    // setCurrentTrack(
+    // showTopTracks
+    // ? topTracks[currentTrackIndex + 1]
+    // : chuneSupply[currentTrackIndex + 1],
+    // );
   };
 
   handleSkipBack = () => {
-    const {
-      topTracks,
-      chuneSupply,
-      currentTrack,
-      setCurrentTrack,
-      togglePlaying,
-    } = this.props;
-    const { showTopTracks } = this.state;
-    const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
-      currentTrack,
-    );
-    // console.log(topTracks.length);
-    if (currentTrackIndex === 0) {
-      setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
-      // togglePlaying();
-      return;
-    }
-    setCurrentTrack(
-      showTopTracks
-        ? topTracks[currentTrackIndex - 1]
-        : chuneSupply[currentTrackIndex - 1],
-    );
+    // const {
+    // topTracks,
+    // chuneSupply,
+    // currentTrack,
+    // setCurrentTrack,
+    // togglePlaying,
+    // } = this.props;
+    // const { showTopTracks } = this.state;
+    // const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+    // currentTrack,
+    // );
+    // // console.log(topTracks.length);
+    // if (currentTrackIndex === 0) {
+    // setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+    // // togglePlaying();
+    // return;
+    // }
+    // setCurrentTrack(
+    // showTopTracks
+    // ? topTracks[currentTrackIndex - 1]
+    // : chuneSupply[currentTrackIndex - 1],
+    // );
   };
 
   handleShuffle = () => {};
@@ -114,14 +111,16 @@ class Player extends Component<Props> {
       isVisible,
       callback,
       loading,
-      topTracks,
-      chuneSupply,
+      firstSectionTracks,
+      secondSectionTracks,
       currentTrack,
       getTracks,
       playbackData,
+      currentTracksType,
+      setCurrentTracksType,
       togglePlaying,
     } = this.props;
-    const { showTopTracks } = this.state;
+    const { currentSection } = this.state;
     return (
       <ViewOverflow>
         <ModalView
@@ -140,18 +139,18 @@ class Player extends Component<Props> {
             <Fragment>
               <ToggleTypeContainer>
                 <ToggleTypeButton
-                  onPress={this.showTopTracks}
-                  accented={showTopTracks}
+                  onPress={() => setCurrentTracksType(0)}
+                  accented={currentTracksType === 0}
                 >
-                  <ToggleTypeButtonText accented={showTopTracks}>
+                  <ToggleTypeButtonText accented={currentTracksType === 0}>
                     Top Tracks
                   </ToggleTypeButtonText>
                 </ToggleTypeButton>
                 <ToggleTypeButton
-                  onPress={this.showChuneSupply}
-                  accented={!showTopTracks}
+                  onPress={() => setCurrentTracksType(1)}
+                  accented={currentTracksType === 1}
                 >
-                  <ToggleTypeButtonText accented={!showTopTracks}>
+                  <ToggleTypeButtonText accented={currentTracksType === 1}>
                     Chune Supply
                   </ToggleTypeButtonText>
                 </ToggleTypeButton>
@@ -159,7 +158,11 @@ class Player extends Component<Props> {
               <FlatList
                 renderItem={this.renderTrack}
                 keyExtractor={item => item.id}
-                data={showTopTracks ? topTracks : chuneSupply}
+                data={
+                  currentTracksType === 0
+                    ? firstSectionTracks
+                    : secondSectionTracks
+                }
               />
             </Fragment>
           )}
@@ -208,15 +211,25 @@ class Player extends Component<Props> {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ getTracks, setCurrentTrack, togglePlaying }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    getTracks,
+    setCurrentTrack,
+    setCurrentTracksType,
+    togglePlaying,
+  },
+  dispatch,
+);
 
 export default connect(
   ({ player }) => ({
     playbackData: player.playbackData,
-    loading: player.topTracks.length === 0,
-    topTracks: player.topTracks,
-    chuneSupply: player.chuneSupply,
+    loading: player.first.length === 0 && player.second.length === 0,
+    firstSectionTracks: player.first,
+    secondSectionTracks: player.second,
     currentTrack: player.currentTrack,
+    currentTracksType: player.currentTracksType,
+    tracksTypes: player.tracksTypes,
   }),
   mapDispatchToProps,
 )(Player);
