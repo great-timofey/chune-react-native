@@ -49,7 +49,7 @@ export default class HomeScreen extends PureComponent {
         ...state,
         ...{ content: { featured, contentFeed } },
       })))
-      .then(_ => console.log(this.state))
+      //.then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }));
     // .catch(err => alert(err));
     // Spotify.getMe().then((_) => {
