@@ -4,7 +4,7 @@ export const getTracks = () => ({
   type: TRACKS_ACTIONS.GET_TRACKS,
 });
 
-export const setTracks = tracks => ({
+export const setTracks = ({ topTracks, chuneSupply }) => ({
   type: TRACKS_ACTIONS.SET_TRACKS,
-  payload: { tracks },
+  payload: { topTracks, chuneSupply },
 });

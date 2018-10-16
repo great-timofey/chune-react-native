@@ -3,10 +3,16 @@ import { TRACKS_ACTIONS } from './constants';
 import { createReducer } from '~global/reducerHelper';
 
 const INITIAL_STATE = {
-  tracks: [],
+  topTracks: [],
+  chuneSupply: [],
 };
 
-const setTracksHandler = (_, { tracks }) => R.pipe(R.assoc('tracks', tracks));
+// const setTracksHandler = (state, action) => INITIAL_STATE;
+
+const setTracksHandler = ({ topTracks, chuneSupply }) => R.pipe(
+  R.assoc('topTracks', topTracks),
+  R.assoc('chuneSupply', chuneSupply),
+);
 
 const HANDLERS = {
   [TRACKS_ACTIONS.SET_TRACKS]: setTracksHandler,
