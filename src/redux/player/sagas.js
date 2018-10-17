@@ -31,10 +31,8 @@ function* getTracksWorker() {
   // .catch(err => console.log(err.response));
   try {
     const token = yield select(state => state.auth.token);
-    yield Spotify.initialize(spotifyAuthOptions);
     yield call(setAuthToken, token);
     const isInitialized = yield Spotify.isInitializedAsync();
-    // console.log('is spotify initialized? ', isInitialized);
     if (!isInitialized) {
       yield Spotify.initialize(spotifyAuthOptions);
     }
@@ -88,7 +86,7 @@ function* sagas() {
   yield takeLatest(TRACKS_ACTIONS.GET_TRACKS, getTracksWorker);
   yield takeLatest(TRACKS_ACTIONS.SET_CURRENT_TRACK, setTrackWorker);
   yield takeLatest(TRACKS_ACTIONS.GET_PLAYBACK_DATA, getPlaybackDataWorker);
-  yield takeLatest(rehydrate, getTracksWorker);
+  // yield takeLatest(rehydrate, getTracksWorker);
 }
 
 export default sagas;

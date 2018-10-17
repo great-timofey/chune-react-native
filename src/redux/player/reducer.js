@@ -18,7 +18,9 @@ const setTracksHandler = ({ firstSectionTracks, secondSectionTracks }) => R.pipe
 
 const setTrackHandler = ({ currentTrack }) => R.assoc('currentTrack', currentTrack);
 
-const setPlaybackDataHandler = ({ playbackData }) => R.assoc('playbackData', playbackData);
+const setPlaybackDataHandler = ({ playbackData }) => (playbackData
+  ? R.assoc('playbackData', playbackData)
+  : R.assoc('playbackData', {}));
 
 const setCurrentTracksTypeHandler = ({ index }) => R.assoc('currentTracksType', index);
 
