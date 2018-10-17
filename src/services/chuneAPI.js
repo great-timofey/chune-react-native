@@ -29,6 +29,13 @@ export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET
   response => response && response.data,
 );
 
+export const getContentForYouFirst = (start, end) => API.get(`recs/you/?filter=followed&start=${start}&max_results=${end}`).then(
+  response => response && response.data,
+);
+export const getContentForYouSecond = (start, end) => API.get(`content/?filter=followed&start=${start}&max_results=${end}`).then(
+  response => response && response.data,
+);
+
 export const getTracksOfChosenType = (type) => {
   switch (type) {
     case 'topTracks':
