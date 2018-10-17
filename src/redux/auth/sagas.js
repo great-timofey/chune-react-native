@@ -1,10 +1,10 @@
-import {
-  takeLatest,
-} from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga/effects';
+import { setAuthToken } from '../../services/chuneAPI';
 import { AUTH_ACTIONS } from './constants';
 
-function* setToken() {
-  yield console.log('setToken');
+function* setToken(action) {
+  yield setAuthToken(action.payload.token);
+  console.log('token for chune api has been set');
 }
 
 function* authSaga() {

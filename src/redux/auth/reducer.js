@@ -1,6 +1,6 @@
 import R from 'ramda';
 import { AUTH_ACTIONS } from './constants';
-import { createReducer } from '~global/reducerHelper';
+import { createReducer } from '../../global/reducerHelper';
 
 const INITIAL_STATE = {
   token: '',
@@ -12,9 +12,7 @@ const setTokenHandler = ({ token }) => R.pipe(
   R.assoc('isLoggedIn', true),
 );
 
-const logoutHandler = () => R.pipe(
-  R.always(INITIAL_STATE),
-);
+const logoutHandler = () => R.pipe(R.always(INITIAL_STATE));
 
 const HANDLERS = {
   [AUTH_ACTIONS.LOGOUT]: logoutHandler,

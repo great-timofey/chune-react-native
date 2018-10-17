@@ -1,5 +1,5 @@
 import axios from 'axios';
-import CONFIG from '~global/config';
+import CONFIG from '../global/config';
 
 export const API = axios.create({
   baseURL: CONFIG.API_URL,
@@ -28,6 +28,22 @@ export const getTopTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_TOP).th
 export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_SUPPLY).then(
   response => response && response.data,
 );
+
+export const getContentForYouFirst = (start, end) => API.get(`recs/you/?filter=followed&start=${start}&max_results=${end}`).then(
+  response => response && response.data,
+);
+export const getContentForYouSecond = (start, end) => API.get(`content/?filter=followed&start=${start}&max_results=${end}`).then(
+  response => response && response.data,
+);
+
+export const getTracksOfChosenType = (type) => {
+  switch (type) {
+    case 'topTracks':
+      return getTopTracks();
+    case 'chuneSupply':
+      return getChuneSupplyTracks();
+  }
+};
 
 // API.get('tracks/sources/1/')
 //   .then(res => this.setState({ topTracks: res.data }))

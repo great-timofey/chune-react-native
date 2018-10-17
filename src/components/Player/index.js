@@ -1,94 +1,126 @@
 import React, { Component, Fragment } from 'react';
 import {
-  Text, FlatList, Platform, ActivityIndicator,
+  Text,
+  FlatList,
+  Platform,
+  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import moment from 'moment';
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
-import TrackPlayer from 'react-native-track-player';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import Control from 'components/Control';
-import PlayerTopPanel from 'components/PlayerTopPanel';
+import { API } from '../../services/chuneAPI';
+import Control from '../Control';
+import TrackCard from '../TrackCard';
+import PlayerTopPanel from '../PlayerTopPanel';
 
+import {
+  getTracks,
+  setCurrentTrack,
+  setCurrentTracks,
+  setCurrentTracksType,
+  togglePlaying,
+} from '~redux/player/actions';
 import { colors, components, utils } from '~global';
 
 type Props = {
-  isVisible: Boolean,
+  currentTrack: Object,
+  playbackData: Object,
+  setCurrentTrack: Function,
+  togglePlaying: Function,
+  loading: boolean,
+  isVisible: boolean,
   callback: Function,
+  topTracks: Array,
+  chuneSupply: Array,
 };
 
-export default class Player extends Component<Props> {
+class Player extends Component<Props> {
   state = {
-    loading: true,
-    topTracks: [],
-    chuneSupply: [],
-    showTopTracks: true,
+    currentSection: 0,
   };
 
-  componentDidMount() {
+  handleSkipForward = () => {
+    // const {
+    // topTracks,
+    // chuneSupply,
+    // currentTrack,
+    // setCurrentTrack,
+    // togglePlaying,
+    // } = this.props;
+    // //const { showTopTracks } = this.state;
+    // const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+    // currentTrack,
+    // );
+    // if (
+    // currentTrackIndex
+    //= == (showTopTracks ? topTracks.length : chuneSupply.length) - 1
+    // ) {
+    // setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+    // togglePlaying();
+    // return;
+    // }
+    // setCurrentTrack(
+    // showTopTracks
+    // ? topTracks[currentTrackIndex + 1]
+    // : chuneSupply[currentTrackIndex + 1],
+    // );
+  };
 
-  }
-
-  showTopTracks = () => this.setState({ showTopTracks: true });
-
-  showChuneSupply = () => this.setState({ showTopTracks: false });
-
-  handleSkipBack = () => {};
+  handleSkipBack = () => {
+    // const {
+    // topTracks,
+    // chuneSupply,
+    // currentTrack,
+    // setCurrentTrack,
+    // togglePlaying,
+    // } = this.props;
+    // const { showTopTracks } = this.state;
+    // const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+    // currentTrack,
+    // );
+    // // console.log(topTracks.length);
+    // if (currentTrackIndex === 0) {
+    // setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+    // // togglePlaying();
+    // return;
+    // }
+    // setCurrentTrack(
+    // showTopTracks
+    // ? topTracks[currentTrackIndex - 1]
+    // : chuneSupply[currentTrackIndex - 1],
+    // );
+  };
 
   handleShuffle = () => {};
-
-  handlePlay = () => {};
 
   handleRepeat = () => {};
 
   hadleSkipForward = () => {};
 
-  renderTrack = ({ item: { artist_name, title, duration_ms }, index }) => (
-    <TrackContainer>
-      <TrackNumberContainer>
-        {index === 0 ? (
-          <Icon.Button
-            name="play"
-            size={16}
-            backgroundColor="transparent"
-            color="black"
-            iconStyle={{
-              width: 16,
-              height: 16,
-              marginLeft: -8,
-            }}
-            borderRadius={0}
-            onPress={() => alert('play')}
-          />
-        ) : (
-          <TrackText>{index}</TrackText>
-        )}
-      </TrackNumberContainer>
-      <TrackDescriptionContainer>
-        <TrackText numberOfLines={1} ellipsizeMode="tail" accented>
-          {title}
-        </TrackText>
-        <TrackText numberOfLines={1} ellipsizeMode="tail">
-          {artist_name}
-        </TrackText>
-      </TrackDescriptionContainer>
-      <TrackPayloadInfoContainer>
-        {index === 0 ? (
-          <TrackText>Now playing</TrackText>
-        ) : (
-          <TrackText>{moment(duration_ms).format('mm:ss')}</TrackText>
-        )}
-      </TrackPayloadInfoContainer>
-    </TrackContainer>
-  );
+  renderTrack = ({ item, index }) => <TrackCard index={index} item={item} />;
 
   render() {
-    const { isVisible, callback } = this.props;
     const {
-      chuneSupply, topTracks, showTopTracks, loading,
-    } = this.state;
+      isVisible,
+      callback,
+      loading,
+      firstSectionTracks,
+      secondSectionTracks,
+      currentTrack,
+      getTracks,
+      playbackData,
+      currentTracksType,
+      setCurrentTracksType,
+      togglePlaying,
+    } = this.props;
+    const { currentSection } = this.state;
     return (
       <ViewOverflow>
         <ModalView
@@ -99,41 +131,77 @@ export default class Player extends Component<Props> {
         >
           <PlayerTopPanel callback={callback} />
 
-          {loading
-            ? <ActivityIndicator />
-            : (
-              <Fragment>
-                <ToggleTypeContainer>
-                  <ToggleTypeButton onPress={this.showTopTracks} accented={showTopTracks}>
-                    <ToggleTypeButtonText accented={showTopTracks}>Top Tracks</ToggleTypeButtonText>
-                  </ToggleTypeButton>
-                  <ToggleTypeButton onPress={this.showChuneSupply} accented={!showTopTracks}>
-                    <ToggleTypeButtonText accented={!showTopTracks}>Chune Supply</ToggleTypeButtonText>
-                  </ToggleTypeButton>
-                </ToggleTypeContainer>
-                <FlatList
-                  renderItem={this.renderTrack}
-                  keyExtractor={item => item.id}
-                  data={showTopTracks ? topTracks : chuneSupply}
-                />
-              </Fragment>)}
+          {loading ? (
+            <TouchableOpacity onPress={() => this.props.getTracks()}>
+              <Text>get tracks</Text>
+            </TouchableOpacity>
+          ) : (
+            <Fragment>
+              <ToggleTypeContainer>
+                <ToggleTypeButton
+                  onPress={() => setCurrentTracksType(0)}
+                  accented={currentTracksType === 0}
+                >
+                  <ToggleTypeButtonText accented={currentTracksType === 0}>
+                    Top Tracks
+                  </ToggleTypeButtonText>
+                </ToggleTypeButton>
+                <ToggleTypeButton
+                  onPress={() => setCurrentTracksType(1)}
+                  accented={currentTracksType === 1}
+                >
+                  <ToggleTypeButtonText accented={currentTracksType === 1}>
+                    Chune Supply
+                  </ToggleTypeButtonText>
+                </ToggleTypeButton>
+              </ToggleTypeContainer>
+              <FlatList
+                renderItem={this.renderTrack}
+                keyExtractor={item => item.id}
+                data={
+                  currentTracksType === 0
+                    ? firstSectionTracks
+                    : secondSectionTracks
+                }
+              />
+            </Fragment>
+          )}
 
           <DashboardContainer>
             <Cover source={{ uri: 'https://via.placeholder.com/110x110' }} />
             <Dashboard>
               <Description>
-                <DescriptionName>The Kill</DescriptionName>
-                <DescriptionArtist>30 Seconds To Mars</DescriptionArtist>
+                <DescriptionName>
+                  {(currentTrack && currentTrack.title) || '...'}
+                </DescriptionName>
+                <DescriptionArtist>
+                  {(currentTrack && currentTrack.artist_name) || '......'}
+                </DescriptionArtist>
               </Description>
               <ProgressBar>
                 <Text>here goes progressbar</Text>
               </ProgressBar>
               <Controls>
-                <Control size={21} type="skip-back" callback={this.handleSkipBack} />
-                <Control size={21} type="shuffle" callback={this.handleShuffle} />
-                <Control size={21} type="play" callback={this.handlePlay} />
+                <Control
+                  size={21}
+                  type="skip-back"
+                  callback={this.handleSkipBack}
+                />
+                <Control
+                  size={21}
+                  type="shuffle"
+                  callback={this.handleShuffle}
+                />
+                <Control
+                  size={21}
+                  type={playbackData.playing ? 'pause' : 'play'}
+                  callback={togglePlaying}
+                />
                 <Control size={21} type="repeat" callback={this.handleRepeat} />
-                <Control type="skip-forward" callback={this.hadleSkipForward} />
+                <Control
+                  type="skip-forward"
+                  callback={this.handleSkipForward}
+                />
               </Controls>
             </Dashboard>
           </DashboardContainer>
@@ -142,6 +210,29 @@ export default class Player extends Component<Props> {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    getTracks,
+    setCurrentTrack,
+    setCurrentTracksType,
+    togglePlaying,
+  },
+  dispatch,
+);
+
+export default connect(
+  ({ player }) => ({
+    playbackData: player.playbackData,
+    loading: player.first.length === 0 && player.second.length === 0,
+    firstSectionTracks: player.first,
+    secondSectionTracks: player.second,
+    currentTrack: player.currentTrack,
+    currentTracksType: player.currentTracksType,
+    tracksTypes: player.tracksTypes,
+  }),
+  mapDispatchToProps,
+)(Player);
 
 const ModalView = styled(Modal)`
   flex: 1;
