@@ -26,7 +26,7 @@ const homePersistConfig = {
 const playerPersistConfig = {
   key: 'player',
   storage,
-  blacklist: ['*'],
+  whitelist: ['tracksTypes'],
 };
 
 // create the saga middleware
