@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import { MainCard, ListCard } from '../components/home';
 
 import { colors, components, utils } from '../global';
 import { API, setAuthToken } from '../services/chuneAPI';
 
-export default class HomeScreen extends PureComponent {
+class HomeScreen extends PureComponent {
   state = {
     content: {
       featured: [],
@@ -18,6 +19,7 @@ export default class HomeScreen extends PureComponent {
   };
 
   componentDidMount() {
+    const token = this.props.token;
     const name = 'tim2';
     const email = 'tim2@mail.com';
     const password = 'aA12345';
@@ -34,16 +36,20 @@ export default class HomeScreen extends PureComponent {
     // this.setState({ content: { contentFeed } });
 
     // API.post('users/', user)
-    API.post('users/login', user)
-      .then(res => res.data.token)
-      .then(token => setAuthToken(token))
-      // .then(_ => API.get('recs/home/?filter=recent&start=0&max_results=30'))
-      // .then(_ => API.get('content/?filter=followed&start=0&max_results=10'))
-      // .then((res) => {
-      // console.log('for you', res.data);
-      // return res.data;
-      // })
-      .then(_ => API.get('content/?filter=recent&start=0&max_results=30'))
+    if (token) {
+      setAuthToken(token);
+    } else {
+      API.post('users/login', user)
+        .then(res => res.data.token)
+        .then(tok => setAuthToken(tok));
+    }
+    // .then(_ => API.get('recs/home/?filter=recent&start=0&max_results=30'))
+    // .then(_ => API.get('content/?filter=followed&start=0&max_results=10'))
+    // .then((res) => {
+    // console.log('for you', res.data);
+    // return res.data;
+    // })
+    API.get('content/?filter=recent&start=0&max_results=30')
       .then(res => res.data)
       .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
         ...state,
@@ -51,9 +57,6 @@ export default class HomeScreen extends PureComponent {
       })))
       // .then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }));
-    // .catch(err => alert(err));
-    // Spotify.getMe().then((_) => {
-    // Spotify.playURI('spotify:track:7kQiiHm3jvdz2npYMW7wcE', 0, 0);
   }
 
   renderCard = ({ item: { ...data } }) => <ListCard {...data} />;
@@ -97,6 +100,8 @@ export default class HomeScreen extends PureComponent {
     );
   }
 }
+
+export default connect(({ auth }) => ({ token: auth.token }))(HomeScreen);
 
 const ScreenContainer = styled.View`
   flex: 1;
