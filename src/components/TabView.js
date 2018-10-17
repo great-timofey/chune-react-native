@@ -7,7 +7,9 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Player from './Player';
 import colors from '../global/colors';
 import HomeScreen from '../screens/home';
+import BlogScreen from '../screens/blog';
 import ForYouScreen from '../screens/for-you';
+import ArtistsEventsScreen from '../screens/artists-events';
 import PlayerSwiper from './PlayerSwiper';
 
 export default class TabView extends Component {
@@ -55,8 +57,8 @@ export default class TabView extends Component {
         <ScrollableTabView renderTabBar={this.renderTab}>
           <HomeScreen tabLabel={{ label: 'HOME' }} />
           <ForYouScreen tabLabel={{ label: 'FOR YOU' }} />
-          <HomeScreen tabLabel={{ label: 'ARTISTS & EVENTS' }} />
-          <HomeScreen tabLabel={{ label: 'BLOG' }} />
+          <ArtistsEventsScreen tabLabel={{ label: 'ARTISTS & EVENTS' }} />
+          <BlogScreen tabLabel={{ label: 'BLOG' }} />
         </ScrollableTabView>
         <PlayerSwiper
           isAuthorized={!1}
