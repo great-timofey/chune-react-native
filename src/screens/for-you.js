@@ -19,7 +19,6 @@ import { colors, components, utils } from '../global';
 class ForYouScreen extends PureComponent {
   state = {
     content: {
-      featured: [],
       contentFeed: [],
     },
     loading: false,
@@ -43,14 +42,6 @@ class ForYouScreen extends PureComponent {
         .then(res => res.data.token)
         .then(tok => setAuthToken(tok));
     }
-
-    // getContentForYouSecond(0, 10)
-    // .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
-    // ...state,
-    // ...{ content: { featured, contentFeed } },
-    // })))
-    // .then(res => this.setState({ loading: false }))
-    // .catch(err => console.log(err));
   }
 
   renderCard = ({ item: { ...data } }) => <ListCard {...data} />;
@@ -64,19 +55,19 @@ class ForYouScreen extends PureComponent {
     ) {
       data = await getContentForYouSecond(0, 10);
     }
-    const { featured, content_feed: contentFeed } = data;
+    const { content_feed: contentFeed } = data;
     this.setState(state => ({
       ...state,
-      ...{ content: { featured, contentFeed } },
+      ...{ content: { contentFeed } },
     }));
-    this.setState({ loading: false }, () => console.log(this.state));
+    this.setState({ loading: false });
   };
 
   render() {
     const { loading, content } = this.state;
     return loading ? (
       <ActivityIndicator />
-    ) : content.featured.length === 0 && content.contentFeed.length === 0 ? (
+    ) : content.contentFeed.length === 0 ? (
       <GetDataButton onPress={this.handleGetData}>
         <Text>get data</Text>
       </GetDataButton>
