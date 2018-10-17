@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { colors, components, utils } from '~global';
-import { featuredArticleImageUrl } from 'services/chuneAPI';
+import { colors, components, utils } from '../../global';
+import { featuredArticleImageUrl } from '../../services/chuneAPI';
 
 type Props = {
   main: boolean,
@@ -26,9 +26,9 @@ export default ({ main, data: { url, title, image } }: Props) => (
             {title}
           </Header>
           {main && (
-          <ReadMoreButton>
-            <ReadMoreButtonText>Read More</ReadMoreButtonText>
-          </ReadMoreButton>
+            <ReadMoreButton>
+              <ReadMoreButtonText>Read More</ReadMoreButtonText>
+            </ReadMoreButton>
           )}
         </TextContainer>
       </TextAligner>

@@ -1,6 +1,6 @@
 import R from 'ramda';
 import { TRACKS_ACTIONS } from './constants';
-import { createReducer } from '~global/reducerHelper';
+import { createReducer } from '../../global/reducerHelper';
 
 const INITIAL_STATE = {
   currentTrack: {},
@@ -9,8 +9,6 @@ const INITIAL_STATE = {
   tracksTypes: ['topTracks', 'chuneSupply'],
   first: [],
   second: [],
-  // topTracks: [],
-  // chuneSupply: [],
 };
 
 const setTracksHandler = ({ firstSectionTracks, secondSectionTracks }) => R.pipe(

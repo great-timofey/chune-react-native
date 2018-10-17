@@ -1,5 +1,5 @@
 import axios from 'axios';
-import CONFIG from '~global/config';
+import CONFIG from '../global/config';
 
 export const API = axios.create({
   baseURL: CONFIG.API_URL,
@@ -21,22 +21,22 @@ export const featuredArticleImageUrl = `${CONFIG.API_URL_IMAGES}${
   CONFIG.API.IMAGES.FULL
 }`;
 
-export const getTopTracks = (): Promise => API
-  .get(CONFIG.API.TRACKS.GET_TOP)
-  .then(response => response && response.data);
+export const getTopTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_TOP).then(
+  response => response && response.data,
+);
 
 export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_SUPPLY).then(
   response => response && response.data,
 );
 
-export const getTracksOfChosenType = type => {
-  switch(type) {
+export const getTracksOfChosenType = (type) => {
+  switch (type) {
     case 'topTracks':
       return getTopTracks();
     case 'chuneSupply':
       return getChuneSupplyTracks();
   }
-}
+};
 
 // API.get('tracks/sources/1/')
 //   .then(res => this.setState({ topTracks: res.data }))

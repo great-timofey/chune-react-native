@@ -12,13 +12,13 @@ import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { API } from '~services/chuneAPI';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import Control from 'components/Control';
-import TrackCard from 'components/TrackCard';
-import PlayerTopPanel from 'components/PlayerTopPanel';
+import { API } from '../../services/chuneAPI';
+import Control from '../Control';
+import TrackCard from '../TrackCard';
+import PlayerTopPanel from '../PlayerTopPanel';
 
 import {
   getTracks,

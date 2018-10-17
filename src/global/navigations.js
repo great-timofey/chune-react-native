@@ -9,13 +9,12 @@ import styles from './styles';
 import { platformSelect } from './utils';
 import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 
-import { store } from '~redux/store';
-import AuthScreen from '~screens/auth';
-import HomeScreen from '~screens/home';
-import HomeTabView from '~components/TabView';
-import { userLogout } from '~redux/auth/actions';
+import { store } from '../redux/store';
+import AuthScreen from '../screens/auth';
+import HomeScreen from '../screens/home';
+import HomeTabView from '../components/TabView';
+import { userLogout } from '../redux/auth/actions';
 // export const authStack = generateRoutes(auth);
-
 
 const iconProps = {
   size: 24,
@@ -33,7 +32,11 @@ const headerLeft = (
         'Do you really want to log out?',
         null,
         [
-          { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
           { text: 'OK', onPress: () => store.dispatch(userLogout({})) },
         ],
         { cancelable: false },
@@ -43,11 +46,7 @@ const headerLeft = (
 );
 
 const headerRight = (
-  <Icon.Button
-    {...iconProps}
-    name="search"
-    onPress={() => alert('hi')}
-  />
+  <Icon.Button {...iconProps} name="search" onPress={() => alert('hi')} />
 );
 
 const navigators = {};
@@ -74,14 +73,17 @@ const authStack = {
       headerStyle: {
         borderBottomWidth: 0,
         backgroundColor: colors.accent,
-        ...platformSelect({
-          paddingTop: 20,
-          marginBottom: 4,
-          borderTopWidth: 21,
-          borderTopColor: '#52146C',
-        }, {
-          elevation: 0,
-        }),
+        ...platformSelect(
+          {
+            paddingTop: 20,
+            marginBottom: 4,
+            borderTopWidth: 21,
+            borderTopColor: '#52146C',
+          },
+          {
+            elevation: 0,
+          },
+        ),
       },
     },
   },
@@ -107,14 +109,17 @@ const rootStack = {
       headerStyle: {
         borderBottomWidth: 0,
         backgroundColor: colors.accent,
-        ...platformSelect({
-          paddingTop: 20,
-          marginBottom: 4,
-          borderTopWidth: 21,
-          borderTopColor: '#52146C',
-        }, {
-          elevation: 0,
-        }),
+        ...platformSelect(
+          {
+            paddingTop: 20,
+            marginBottom: 4,
+            borderTopWidth: 21,
+            borderTopColor: '#52146C',
+          },
+          {
+            elevation: 0,
+          },
+        ),
       },
     },
   },
@@ -133,14 +138,10 @@ const rootStack = {
 //   (acc, route) => ({ ...acc, [route]: { screen: scr[route] } }), {}, list,
 // );
 
-const generateStack = (
-  RouteConfigs, StackNavigatorConfig = authConfigs,
-) => createStackNavigator(RouteConfigs, StackNavigatorConfig);
+const generateStack = (RouteConfigs, StackNavigatorConfig = authConfigs) => createStackNavigator(RouteConfigs, StackNavigatorConfig);
 
-export const RootNavigator = generateStack(
-  rootStack, {
-    navigationOptions: { gesturesEnabled: false },
-  },
-);
+export const RootNavigator = generateStack(rootStack, {
+  navigationOptions: { gesturesEnabled: false },
+});
 
 export const Auth = generateStack(authStack);

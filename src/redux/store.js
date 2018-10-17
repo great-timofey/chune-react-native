@@ -4,14 +4,14 @@ import storage from 'redux-persist/lib/storage';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import authReducer from '~redux/auth/reducer';
-import authSagas from '~redux/auth/sagas';
+import authReducer from './auth/reducer';
+import authSagas from './auth/sagas';
 
-import homeReducer from '~redux/home/reducer';
-import homeSagas from '~redux/home/sagas';
+import homeReducer from './home/reducer';
+import homeSagas from './home/sagas';
 
-import playerReducer from '~redux/player/reducer';
-import playerSagas from '~redux/player/sagas';
+import playerReducer from './player/reducer';
+import playerSagas from './player/sagas';
 
 const authPersistConfig = {
   key: 'auth',

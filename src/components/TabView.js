@@ -3,12 +3,11 @@ import React, { Component, Fragment } from 'react';
 
 import TabBar from 'react-native-underline-tabbar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import Player from '~components/Player';
-import PlayerSwiper from '~components/PlayerSwiper';
 
-import colors from '~global/colors';
-import HomeScreen from '~screens/home';
-import AuthScreen from '~screens/auth';
+import Player from './Player';
+import colors from '../global/colors';
+import HomeScreen from '../screens/home';
+import PlayerSwiper from './PlayerSwiper';
 
 export default class TabView extends Component {
   state = {

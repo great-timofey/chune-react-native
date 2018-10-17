@@ -9,13 +9,13 @@ import { LoginManager as FacebookLoginManager } from 'react-native-fbsdk';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
 
-import images from '~global/images';
-import colors from '~global/colors';
-import AuthInput from '~components/AuthInput';
-import { setToken } from '~redux/auth/actions';
+import images from '../global/images';
+import colors from '../global/colors';
+import AuthInput from '../components/AuthInput';
+import { setToken } from '../redux/auth/actions';
 
-import { API, setAuthToken } from 'services/chuneAPI';
-import { spotifyAuthOptions /* googleAuthOptions */ } from '~services/auth';
+import { API, setAuthToken } from '../services/chuneAPI';
+import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
 
 type Props = {
   navigation: Object,

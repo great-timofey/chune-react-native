@@ -3,10 +3,10 @@ import { View, FlatList, ActivityIndicator } from 'react-native';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
-import { MainCard, ListCard } from '~components/home';
+import { MainCard, ListCard } from '../components/home';
 
-import { colors, components, utils } from '~global';
-import { API, setAuthToken } from '~services/chuneAPI';
+import { colors, components, utils } from '../global';
+import { API, setAuthToken } from '../services/chuneAPI';
 
 export default class HomeScreen extends PureComponent {
   state = {
@@ -49,7 +49,7 @@ export default class HomeScreen extends PureComponent {
         ...state,
         ...{ content: { featured, contentFeed } },
       })))
-      //.then(_ => console.log(this.state))
+      // .then(_ => console.log(this.state))
       .then(res => this.setState({ loading: false }));
     // .catch(err => alert(err));
     // Spotify.getMe().then((_) => {

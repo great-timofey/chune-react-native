@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { components, utils } from '~global';
-import device from 'global/device';
+import { components, utils } from '../global';
+import device from '../global/device';
 
 type Props = {
   text: string,

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
-import { setCurrentTrack } from '~redux/player/actions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { colors, components, utils } from '~global';
+import { colors, components, utils } from '../global';
+import { setCurrentTrack } from '../redux/player/actions';
 
 type Props = {
   item: Object,

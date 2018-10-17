@@ -2,14 +2,14 @@ import {
   takeLatest, takeEvery, call, select, put,
 } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/lib/constants';
+import Spotify from 'rn-spotify-sdk';
 import {
   API,
   setAuthToken,
   getTracksOfChosenType,
   // getTopTracks,
   // getChuneSupplyTracks,
-} from 'services/chuneAPI';
-import Spotify from 'rn-spotify-sdk';
+} from '../../services/chuneAPI';
 import {
   setTracks,
   setTracksTypes,
@@ -21,7 +21,7 @@ import {
 } from './actions';
 import { TRACKS_ACTIONS } from './constants';
 import { AUTH_ACTIONS } from '../auth/constants';
-import { spotifyAuthOptions } from '~services/auth';
+import { spotifyAuthOptions } from '../../services/auth';
 
 const rehydrate = ({ type, key }) => type === REHYDRATE && key === 'player';
 

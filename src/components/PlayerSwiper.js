@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Icon from 'react-native-vector-icons/Octicons';
 
-import Control from 'components/Control';
+import Control from './Control';
 import {
   colors, components, utils, images,
 } from '~global';
