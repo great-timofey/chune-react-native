@@ -101,7 +101,7 @@ const rootStack = {
   [HomeScreenName]: {
     screen: HomeTabView,
     navigationOptions: {
-      title: 'Chune',
+      title: 'Chune Supply',
       gesturesEnabled: false,
       headerTitleStyle: { color: 'white', fontFamily: 'Roboto-Regular' },
       headerLeft,
