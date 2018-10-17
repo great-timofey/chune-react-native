@@ -14,7 +14,7 @@ import colors from '../global/colors';
 import AuthInput from '../components/AuthInput';
 import { setToken } from '../redux/auth/actions';
 
-import { API, setAuthToken } from '../services/chuneAPI';
+import { API } from '../services/chuneAPI';
 import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
 
 type Props = {
@@ -53,25 +53,30 @@ class AuthScreen extends PureComponent<Props> {
         const authInfo = await Spotify.getAuthAsync();
 
         if (authInfo && authInfo.accessToken) {
-          this.props.setToken(authInfo.accessToken);
+          // this.props.setToken(authInfo.accessToken);
           const user = await Spotify.getMe();
 
-          console.log(333, { authInfo, user });
-
-          const userInfo = JSON.stringify({
-            email: user && user.email,
-            first_name: user && user.display_name,
-            last_name: user && user.display_name,
-            artists: [],
+          console.log('successfully log in to spotify with user data', {
+            authInfo,
+            user,
           });
 
-          API.post('users/social/login/spotify', userInfo)
-            .then((res) => {
-              console.log(777, 'spotify', res);
-            })
-            .catch((e) => {
-              console.log(555, 'spotify', e);
-            });
+          //  use code below to login with spotify backend endpoint
+
+          // const userInfo = JSON.stringify({
+          // email: user && user.email,
+          // first_name: user && user.display_name,
+          // last_name: user && user.display_name,
+          // artists: [],
+          // });
+
+          // API.post('users/social/login/spotify', userInfo)
+          // .then((res) => {
+          // console.log(777, 'spotify', res);
+          // })
+          // .catch((e) => {
+          // console.log(555, 'spotify', e);
+          // });
         }
         this.setState({ authorized: true });
       } catch (err) {
@@ -114,47 +119,28 @@ class AuthScreen extends PureComponent<Props> {
 
   handleSignIn = () => {
     const { authorized } = this.state;
-    const { navigation } = this.props;
-    if (authorized) {
-      navigation.navigate('Home');
-    } else {
-      // this.props.setToken();
+    const { navigation, setToken } = this.props;
 
-      // const user = JSON.stringify({
-      //   // name,
-      //   // email: this.emailRef.input._getText(),
-      //   // password: this.passwordRef.input._getText(),
-      //   email: 'rstudenov@allmax.team',
-      //   password: 'chune45',
-      // });
-      const user = JSON.stringify({
-        // name,
-        // email: this.emailRef.input._getText(),
-        // password: this.passwordRef.input._getText(),
-        email: 'tim2@mail.com',
-        password: 'aA12345',
+    const user = JSON.stringify({
+      // name,
+      // email: this.emailRef.input._getText(),
+      // password: this.passwordRef.input._getText(),
+      email: 'tim2@mail.com',
+      password: 'aA12345',
+    });
+
+    API.post('users/login', user)
+      .then((res) => {
+        console.log(123, res);
+        return res.data.token;
+      })
+      .then((token) => {
+        setToken(token);
+      })
+      .then(_ => navigation.navigate('Home'))
+      .catch((e) => {
+        console.log(666, e);
       });
-
-      API.post('users/login', user)
-        .then((res) => {
-          console.log(123, res);
-          return res.data.token;
-        })
-        .then((token) => {
-          setAuthToken(token);
-          this.props.setToken(token);
-        })
-        .then(_ => navigation.navigate('Home'))
-        .catch((e) => {
-          console.log(666, e);
-        });
-      // .then(_ => API.get('content/?filter=recent&start=0&max_results=10'));
-      // .then((res) => { console.log('DATA', res.data); return res.data; })
-      // .then(_ => console.log(this.state))
-      // .then(res => this.setState({ loading: false }));
-
-      // console.log('user is not authorized');
-    }
   };
 
   //  TODO: implement sign up
