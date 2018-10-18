@@ -67,9 +67,6 @@ export default ({
             videoId={youtube_id}
             play={false}
             fullscreen
-            onReady={e => console.log('ready')}
-            onChangeState={e => console.log(e.state)}
-            onError={e => console.log('error')}
             style={{ alignSelf: 'stretch', height: 150 }}
           />
         </Container>
