@@ -12,8 +12,8 @@ type Props = {
   image: string,
 };
 
-export default ({ main, data: { url, title, image } }: Props) => (
-  <Container main={main}>
+export default ({ main, data: { url, title, image }, callback }: Props) => (
+  <Container main={main} onPress={() => callback(url)}>
     <BackgroundImage
       resizeMode="cover"
       source={{
@@ -52,7 +52,7 @@ const TextContainer = styled.View`
   padding-horizontal: ${props => (props.main ? '16' : '8')};
 `;
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   ${props => props.main && `height: ${utils.deviceHeight * 0.43}`};
   width: ${props => (props.main ? '100%' : utils.deviceWidth * 0.47)};
 `;

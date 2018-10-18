@@ -12,6 +12,7 @@ import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 import { store } from '../redux/store';
 import AuthScreen from '../screens/auth';
 import HomeScreen from '../screens/home';
+import ModalScreen from '../screens/modal';
 import HomeTabView from '../components/TabView';
 import { userLogout } from '../redux/auth/actions';
 // export const authStack = generateRoutes(auth);
@@ -78,7 +79,7 @@ const authStack = {
             paddingTop: 20,
             marginBottom: 4,
             borderTopWidth: 21,
-            borderTopColor: '#52146C',
+            borderTopColor: colors.statusBar,
           },
           {
             elevation: 0,
@@ -90,6 +91,7 @@ const authStack = {
 };
 
 const authConfigs = {
+  mode: 'modal',
   headerMode: 'none',
   cardStyle: {
     backgroundColor: colors.white,
@@ -122,6 +124,9 @@ const rootStack = {
         ),
       },
     },
+  },
+  ModalScreen: {
+    screen: ModalScreen,
   },
   // [HomeScreenName]: {
   //   screen: HomeScreen,

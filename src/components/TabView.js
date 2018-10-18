@@ -1,4 +1,6 @@
-import { Platform } from 'react-native';
+import {
+  Platform, WebView, Text, TouchableOpacity,
+} from 'react-native';
 import React, { Component, Fragment } from 'react';
 
 import TabBar from 'react-native-underline-tabbar';
@@ -15,6 +17,7 @@ import PlayerSwiper from './PlayerSwiper';
 export default class TabView extends Component {
   state = {
     isPlayerOpen: false,
+    url: '',
   };
 
   togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
@@ -50,25 +53,45 @@ export default class TabView extends Component {
     />
   );
 
+  handleModal = (url) => {
+    const { navigation } = this.props;
+    this.setState({ url });
+    navigation.navigate('ModalScreen', { url });
+  };
+
   render() {
-    const { isPlayerOpen } = this.state;
+    const { isPlayerOpen, url } = this.state;
     return (
       <Fragment>
         <ScrollableTabView renderTabBar={this.renderTab}>
-          <HomeScreen tabLabel={{ label: 'HOME' }} />
-          <ForYouScreen tabLabel={{ label: 'FOR YOU' }} />
-          <ArtistsEventsScreen tabLabel={{ label: 'ARTISTS & EVENTS' }} />
+          <HomeScreen
+            tabLabel={{ label: 'HOME' }}
+            modalCallback={this.handleModal}
+          />
+          <ForYouScreen
+            tabLabel={{ label: 'FOR YOU' }}
+            modalCallback={this.handleModal}
+          />
+          <ArtistsEventsScreen
+            tabLabel={{ label: 'ARTISTS & EVENTS' }}
+            modalCallback={this.handleModal}
+          />
           <BlogScreen tabLabel={{ label: 'BLOG' }} />
         </ScrollableTabView>
-        <PlayerSwiper
-          isAuthorized={!1}
-          header="Top Tracks Chart"
-          showCallback={this.togglePlayer}
-          prevCallback={() => alert('prev')}
-          playCallback={() => alert('play')}
-          nextCallback={() => alert('next')}
-        />
-        <Player isVisible={isPlayerOpen} callback={this.togglePlayer} />
+        {// player is temporary hidden
+        false && (
+          <Fragment>
+            <PlayerSwiper
+              isAuthorized={!1}
+              header="Top Tracks Chart"
+              showCallback={this.togglePlayer}
+              prevCallback={() => alert('prev')}
+              playCallback={() => alert('play')}
+              nextCallback={() => alert('next')}
+            />
+            <Player isVisible={isPlayerOpen} callback={this.togglePlayer} />
+          </Fragment>
+        )}
       </Fragment>
     );
   }

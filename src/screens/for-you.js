@@ -44,7 +44,9 @@ class ForYouScreen extends PureComponent {
     }
   }
 
-  renderCard = ({ item: { ...data } }) => <ListCard {...data} />;
+  renderCard = ({ item: { ...data } }) => (
+    <ListCard {...data} callback={this.props.modalCallback} />
+  );
 
   handleGetData = async () => {
     this.setState({ loading: true });
@@ -55,6 +57,7 @@ class ForYouScreen extends PureComponent {
     ) {
       data = await getContentForYouSecond(0, 10);
     }
+    console.log(data);
     const { content_feed: contentFeed } = data;
     this.setState(state => ({
       ...state,

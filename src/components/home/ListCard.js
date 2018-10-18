@@ -21,13 +21,15 @@ export default ({
   artist_name,
   image,
   type,
+  url,
+  callback,
 }: Props) => {
   switch (type) {
     case 'tweet':
       return <Text>Tweet</Text>;
     case 'article':
       return (
-        <Container>
+        <Container onPress={() => callback(url)}>
           <Picture
             resizeMode="cover"
             source={{
@@ -57,7 +59,7 @@ export default ({
   }
 };
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   width: 100%;
   height: 100;
   margin-bottom: 12;
