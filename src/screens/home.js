@@ -54,7 +54,10 @@ class HomeScreen extends PureComponent {
     }
 
     API.get('content/?filter=recent&start=0&max_results=30')
-      .then(res => res.data)
+      .then((res) => {
+        console.log(res.data);
+        return res.data;
+      })
       .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
         ...state,
         ...{ content: { featured, contentFeed } },

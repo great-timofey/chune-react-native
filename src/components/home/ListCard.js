@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Text } from 'react-native';
 import styled from 'styled-components';
 
+import YouTube from 'react-native-youtube';
 import { colors, components, utils } from '../../global';
 import { homeImagesPrefix } from '../../services/chuneAPI';
 
@@ -22,6 +23,8 @@ export default ({
   image,
   type,
   url,
+  youtube_id,
+  description,
   callback,
 }: Props) => {
   switch (type) {
@@ -29,7 +32,7 @@ export default ({
       return <Text>Tweet</Text>;
     case 'article':
       return (
-        <Container onPress={() => callback(url)}>
+        <TouchableContainer onPress={() => callback(url)}>
           <Picture
             resizeMode="cover"
             source={{
@@ -52,6 +55,23 @@ export default ({
               <MetadataText>{artist_name}</MetadataText>
             </Metadata>
           </TextContainer>
+        </TouchableContainer>
+      );
+    case 'video':
+      return (
+        <Container style={{ height: 170, flexDirection: 'column' }}>
+          <Header numberOfLines={1} ellipsizeMode="tail">
+            {description}
+          </Header>
+          <YouTube
+            videoId={youtube_id}
+            play={false}
+            fullscreen
+            onReady={e => console.log('ready')}
+            onChangeState={e => console.log(e.state)}
+            onError={e => console.log('error')}
+            style={{ alignSelf: 'stretch', height: 150 }}
+          />
         </Container>
       );
     default:
@@ -59,12 +79,16 @@ export default ({
   }
 };
 
-const Container = styled.TouchableOpacity`
+const Container = styled.View`
   width: 100%;
   height: 100;
   margin-bottom: 12;
+  flex-direction: column;
+  background-color: white;
+`;
+
+const TouchableContainer = styled(Container)`
   flex-direction: row;
-  background-color: red;
 `;
 
 const Picture = styled.Image`
