@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
+  Button,
   Text,
   View,
   FlatList,
@@ -13,7 +14,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { API, setAuthToken } from '../services/chuneAPI';
 
-import { colors, components, utils } from '../global';
+import {
+  colors, components, utils, constants,
+} from '../global';
 
 class ArtistsEventsScreen extends PureComponent {
   state = {
@@ -21,6 +24,7 @@ class ArtistsEventsScreen extends PureComponent {
       artists: [],
       recommended: [],
     },
+    showAbout: false,
     loading: false,
   };
 
@@ -44,14 +48,41 @@ class ArtistsEventsScreen extends PureComponent {
     }
   }
 
-  renderRecommendedCard = ({ item: { image_url, name } }) => (
-    <View style={{ width: 200, height: 200, justifyContent: 'flex-end' }}>
+  renderRecommendedCard = ({ item: { image_url, name, genres } }) => (
+    <View
+      style={{
+        width: 200,
+        height: 200,
+        marginHorizontal: 8,
+      }}
+    >
       <ImageBackground
-        style={{ width: '100%', height: '100%' }}
+        style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
         resizeMode="cover"
-        source={{ uri: image_url }}
+        source={{ uri: image_url || constants.NO_IMAGE_ARTIST }}
       >
-        <Text>{name}</Text>
+        <View>
+          <Text style={{ color: 'white', fontSize: 20 }}>{name}</Text>
+          <Text style={{ color: 'white', fontSize: 13 }}>
+            {genres.map(item => item.description).join(',')}
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            title="ABOUT"
+            color="white"
+            onPress={this.props.drillCallback}
+          />
+          <Button
+            title="FOLLOW"
+            color="white"
+            onPress={() => this.handleFollow(name)}
+          />
+        </View>
       </ImageBackground>
     </View>
   );
@@ -72,41 +103,60 @@ class ArtistsEventsScreen extends PureComponent {
     const {
       data: { artists, recommended },
     } = response;
-    console.log(artists, recommended);
     this.setState(state => ({
       ...state,
-      ...{ content: { artists, recommended } },
+      ...{ content: { artists, recommended: recommended.slice(0, 5) } },
     }));
-    this.setState({ loading: false }, () => console.log(this.state));
+    this.setState({ loading: false });
+    console.log(this.state);
+  };
+
+  handleFollow = async (name) => {
+    const response = await API.post(`artists/${name}/`);
+    if (response.status === 200) {
+      alert('Artist has been successfully added to Followed');
+    } else {
+      alert('Error');
+    }
   };
 
   render() {
+    const { showOneArtist } = this.props;
     const { loading, content } = this.state;
+    const empty = content.artists.length === 0 && content.recommended.length === 0;
     return loading ? (
       <ActivityIndicator />
-    ) : content.artists.length === 0 && content.recommended.length === 0 ? (
+    ) : empty ? (
       <GetDataButton onPress={this.handleGetData}>
         <Text>get data</Text>
       </GetDataButton>
     ) : (
       <ScreenContainer>
-        <ScreenScrollContainer>
-          <View>
-            <Text style={{ marginBottom: 10 }}>RECOMMENDED</Text>
-            <FlatList
-              horizontal
-              data={content.recommended}
-              renderItem={this.renderRecommendedCard}
-              keyExtractor={item => `${item.id}`}
-            />
-            <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
-            <FlatList
-              data={content.artists}
-              renderItem={this.renderFollowedCard}
-              keyExtractor={item => `${item.id}`}
-            />
-          </View>
-        </ScreenScrollContainer>
+        {showOneArtist ? (
+          <Text>you are drilled</Text>
+        ) : (
+          <ScreenScrollContainer>
+            <View style={{ paddingTop: 24, marginBottom: 32 }}>
+              <Text style={{ marginBottom: 10, paddingLeft: 16 }}>
+                RECOMMENDED
+              </Text>
+              <FlatList
+                horizontal
+                data={content.recommended}
+                renderItem={this.renderRecommendedCard}
+                keyExtractor={item => `${item.id}`}
+              />
+            </View>
+            <View>
+              <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
+              <FlatList
+                data={content.artists}
+                renderItem={this.renderFollowedCard}
+                keyExtractor={item => `${item.id}`}
+              />
+            </View>
+          </ScreenScrollContainer>
+        )}
       </ScreenContainer>
     );
   }
