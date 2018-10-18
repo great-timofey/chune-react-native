@@ -1,0 +1,3 @@
+export const COMMON_ACTIONS = {
+  TOGGLE_DRILL: 'TOGGLE_DRILL',
+};

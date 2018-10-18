@@ -1,7 +1,6 @@
-import {
-  Platform, WebView, Text, TouchableOpacity,
-} from 'react-native';
+import { Platform, Text } from 'react-native';
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import TabBar from 'react-native-underline-tabbar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -10,15 +9,34 @@ import Player from './Player';
 import colors from '../global/colors';
 import HomeScreen from '../screens/home';
 import BlogScreen from '../screens/blog';
-import ForYouScreen from '../screens/for-you';
-import ArtistsEventsScreen from '../screens/artists-events';
 import PlayerSwiper from './PlayerSwiper';
+import ForYouScreen from '../screens/for-you';
+import { headerLeft } from '../global/navigations';
+import { toggleDrill } from '../redux/common/actions';
+import ArtistsEventsScreen from '../screens/artists-events';
 
-export default class TabView extends Component {
-  state = {
-    isPlayerOpen: false,
-    url: '',
+type Props = {
+  navigation: Object,
+  toggleDrill: Function,
+  isDrilled: boolean,
+};
+
+class TabView extends Component<Props> {
+  static navigationOptions = ({ navigation: { state } }) => {
+    const name = state && state.params && state.params.iconName;
+    const callback = state && state.params && state.params.handleDrill;
+    return { headerLeft: () => headerLeft(name, callback) };
   };
+
+  state = {
+    url: '',
+    isPlayerOpen: false,
+  };
+
+  componentDidMount() {
+    const { navigation } = this.props;
+    navigation.setParams({ handleDrill: this.handleDrill });
+  }
 
   togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
     isPlayerOpen: !isPlayerOpen,
@@ -59,8 +77,19 @@ export default class TabView extends Component {
     navigation.navigate('ModalScreen', { url });
   };
 
+  handleDrill = () => {
+    const { navigation, isDrilled, toggleDrill } = this.props;
+    const iconName = isDrilled ? '' : 'arrow-back';
+    navigation.setParams({
+      iconName,
+      key: 'Home',
+    });
+    toggleDrill();
+  };
+
   render() {
-    const { isPlayerOpen, url } = this.state;
+    const { isDrilled } = this.props;
+    const { isPlayerOpen } = this.state;
     return (
       <Fragment>
         <ScrollableTabView renderTabBar={this.renderTab}>
@@ -75,6 +104,8 @@ export default class TabView extends Component {
           <ArtistsEventsScreen
             tabLabel={{ label: 'ARTISTS & EVENTS' }}
             modalCallback={this.handleModal}
+            drillCallback={this.handleDrill}
+            showOneArtist={isDrilled}
           />
           <BlogScreen tabLabel={{ label: 'BLOG' }} />
         </ScrollableTabView>
@@ -96,3 +127,8 @@ export default class TabView extends Component {
     );
   }
 }
+
+export default connect(
+  ({ common }) => ({ isDrilled: common.isDrilled }),
+  { toggleDrill },
+)(TabView);

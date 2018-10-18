@@ -13,6 +13,8 @@ import homeSagas from './home/sagas';
 import playerReducer from './player/reducer';
 import playerSagas from './player/sagas';
 
+import commonReducer from './common/reducer';
+
 const authPersistConfig = {
   key: 'auth',
   storage,
@@ -37,6 +39,7 @@ export const store = createStore(
   combineReducers({
     auth: persistReducer(authPersistConfig, authReducer),
     player: persistReducer(playerPersistConfig, playerReducer),
+    common: commonReducer,
     // home: persistReducer(homePersistConfig, homeReducer),
   }),
   composeWithDevTools(applyMiddleware(...middleware)),
