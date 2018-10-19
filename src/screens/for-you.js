@@ -57,7 +57,6 @@ class ForYouScreen extends PureComponent {
     ) {
       data = await getContentForYouSecond(0, 10);
     }
-    console.log(data);
     const { content_feed: contentFeed } = data;
     this.setState(state => ({
       ...state,

@@ -190,7 +190,6 @@ class ArtistsEventsScreen extends Component<Props> {
     } else {
       alert('Error');
     }
-    console.log(this.state);
     this.setState({ loading: false });
   };
 

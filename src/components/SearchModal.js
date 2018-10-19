@@ -25,10 +25,6 @@ class SearchModal extends Component<Props> {
     query: '',
   };
 
-  componentWillUnmount() {
-    console.log('adf');
-  }
-
   handleSearch = () => {
     API.get(`artists/search/${this.state.query}/`).then(({ data: options }) => this.setState({ options }));
   };
