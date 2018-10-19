@@ -99,7 +99,7 @@ class ArtistsEventsScreen extends Component<Props> {
           justifyContent: 'space-between',
         }}
         resizeMode="cover"
-        source={{ uri: image_url || constants.NO_IMAGE_ARTIST_RECOMMENDED }}
+        source={{ uri: image_url || utils.getPlaceholder(200) }}
       >
         <View>
           <Text style={{ color: 'white', fontSize: 20 }}>{name}</Text>
@@ -131,7 +131,7 @@ class ArtistsEventsScreen extends Component<Props> {
         onPress={() => this.handleEnter(name)}
       >
         <Image
-          source={{ uri: image_url || constants.NO_IMAGE_ARTIST_FOLLOWED }}
+          source={{ uri: image_url || utils.getPlaceholder(40) }}
           style={{ width: 40, height: 40, borderRadius: 20 }}
         />
         <Text>{name}</Text>
