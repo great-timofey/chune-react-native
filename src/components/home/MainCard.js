@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default ({ main, data: { url, title, image }, callback }: Props) => (
-  <Container main={main} onPress={() => callback(url)}>
+  <Container main={main} onPress={() => callback(url)} activeOpacity={1}>
     <BackgroundImage
       resizeMode="cover"
       source={{

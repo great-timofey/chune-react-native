@@ -84,8 +84,12 @@ const Container = styled.View`
   background-color: white;
 `;
 
-const TouchableContainer = styled(Container)`
+const TouchableContainer = styled.TouchableOpacity`
+  width: 100%;
+  height: 100;
+  margin-bottom: 12;
   flex-direction: row;
+  background-color: white;
 `;
 
 const Picture = styled.Image`
