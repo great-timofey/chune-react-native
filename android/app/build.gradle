@@ -146,6 +146,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-youtube')
+    compile project(':react-native-track-player')
+    compile project(':react-native-google-signin')
     compile project(':react-native-view-overflow')
     compile project(':react-native-fbsdk')
     compile project(':react-native-events')

@@ -12,6 +12,8 @@ target 'MyApp' do
   target 'MyApp-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'react-native-youtube', :path => '../node_modules/react-native-youtube'
+
   end
 
   target 'MyAppTests' do
