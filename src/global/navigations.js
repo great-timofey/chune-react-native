@@ -117,12 +117,6 @@ const rootStack = {
   },
 };
 
-// export const routesList: Array<string> = [...auth, ...main];
-
-// const generateRoutes = list => R.reduce(
-//   (acc, route) => ({ ...acc, [route]: { screen: scr[route] } }), {}, list,
-// );
-
 const generateStack = (RouteConfigs, StackNavigatorConfig = authConfigs) => createStackNavigator(RouteConfigs, StackNavigatorConfig);
 
 export const RootNavigator = generateStack(rootStack, {
