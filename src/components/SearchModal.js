@@ -50,7 +50,11 @@ class SearchModal extends Component<Props> {
     const { isVisible, showCallback, loading } = this.props;
     return (
       <ViewOverflow>
-        <ModalView isVisible={isVisible}>
+        <ModalView
+          isVisible={isVisible}
+          animationInTiming={1}
+          animationOutTiming={1}
+        >
           <TextInput
             style={{ height: 50, width: 100, borderColor: 'grey' }}
             onChangeText={query => this.setState({ query })}
