@@ -11,7 +11,6 @@ import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 
 import { store } from '../redux/store';
 import AuthScreen from '../screens/auth';
-import HomeScreen from '../screens/home';
 import ModalScreen from '../screens/modal';
 import HomeTabView from '../components/TabView';
 import { userLogout } from '../redux/auth/actions';
@@ -24,24 +23,29 @@ const iconProps = {
   backgroundColor: colors.transparent,
 };
 
-const headerLeft = (
+export const headerLeft = (iconName, callback) => (
   <Icon.Button
     {...iconProps}
-    name="menu"
+    name={iconName || 'menu'}
     onPress={() => {
-      Alert.alert(
-        'Do you really want to log out?',
-        null,
-        [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          { text: 'OK', onPress: () => store.dispatch(userLogout({})) },
-        ],
-        { cancelable: false },
-      );
+      iconName
+        ? callback()
+        : Alert.alert(
+          'Do you really want to log out?',
+          null,
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () => store.dispatch(userLogout({})),
+            },
+          ],
+          { cancelable: false },
+        );
     }}
   />
 );
@@ -65,28 +69,6 @@ export function setNavigatior(routeName: string, navigator) {
 const authStack = {
   [AuthScreenName]: {
     screen: AuthScreen,
-    navigationOptions: {
-      title: 'Chune',
-      gesturesEnabled: false,
-      headerTitleStyle: { color: 'white', fontFamily: 'Roboto-Regular' },
-      headerLeft,
-      headerRight,
-      headerStyle: {
-        borderBottomWidth: 0,
-        backgroundColor: colors.accent,
-        ...platformSelect(
-          {
-            paddingTop: 20,
-            marginBottom: 4,
-            borderTopWidth: 21,
-            borderTopColor: colors.statusBar,
-          },
-          {
-            elevation: 0,
-          },
-        ),
-      },
-    },
   },
 };
 
@@ -106,7 +88,6 @@ const rootStack = {
       title: 'Chune Supply',
       gesturesEnabled: false,
       headerTitleStyle: { color: 'white', fontFamily: 'Roboto-Regular' },
-      headerLeft,
       headerRight,
       headerStyle: {
         borderBottomWidth: 0,
@@ -128,13 +109,6 @@ const rootStack = {
   ModalScreen: {
     screen: ModalScreen,
   },
-  // [HomeScreenName]: {
-  //   screen: HomeScreen,
-  //   navigationOptions: {
-  //     gesturesEnabled: false,
-  //     headerLeft: null,
-  //   },
-  // },
 };
 
 // export const routesList: Array<string> = [...auth, ...main];

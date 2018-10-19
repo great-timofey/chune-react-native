@@ -20,8 +20,8 @@ type Props = {
 
 class TrackCard extends Component<Props> {
   handlePlayTrack = () => {
-    const { item } = this.props;
-    this.props.setCurrentTrack(item);
+    const { item, setCurrentTrack } = this.props;
+    setCurrentTrack(item);
   };
 
   render() {

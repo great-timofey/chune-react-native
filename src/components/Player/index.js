@@ -26,8 +26,8 @@ import {
   setCurrentTracks,
   setCurrentTracksType,
   togglePlaying,
-} from '~redux/player/actions';
-import { colors, components, utils } from '~global';
+} from '../../redux/player/actions';
+import { colors, components, utils } from '../../global';
 
 type Props = {
   currentTrack: Object,
