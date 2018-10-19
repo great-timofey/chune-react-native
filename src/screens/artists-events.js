@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  ScrollView,
   TouchableOpacity,
   Button,
   Text,
@@ -9,9 +10,9 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { ListCard } from '../components/home';
 
 import { API, setAuthToken } from '../services/chuneAPI';
@@ -30,14 +31,14 @@ type Props = {
 class ArtistsEventsScreen extends Component<Props> {
   state = {
     content: {
-      artists: [],
+      followed: [],
       recommended: [],
     },
     artistContent: {
       media: [],
       events: [],
     },
-    currentArtist: '',
+    displayMediaType: '',
     showArtistMedia: true,
     loading: false,
   };
@@ -67,7 +68,20 @@ class ArtistsEventsScreen extends Component<Props> {
   );
 
   renderArtistEvents = ({ item: { ...data } }) => (
-    <Text>{data.description}</Text>
+    <View
+      style={{
+        backgroundColor: 'white',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        marginBottom: 10,
+      }}
+    >
+      <Text>{data.datetime}</Text>
+      <Text>{`${data.venue.city}, ${data.venue.country}`}</Text>
+      <TouchableOpacity onPress={() => this.props.modalCallback(data.url)}>
+        <Text style={{ color: colors.accent }}>BUY TICKETS</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   renderRecommendedCard = ({ item: { image_url, name, genres } }) => (
@@ -97,7 +111,7 @@ class ArtistsEventsScreen extends Component<Props> {
           <Button
             title="ABOUT"
             color="white"
-            onPress={() => this.handleAbout(name)}
+            onPress={() => this.handleEnter(name)}
           />
           <Button
             title="FOLLOW"
@@ -114,7 +128,7 @@ class ArtistsEventsScreen extends Component<Props> {
     return (
       <TouchableOpacity
         style={{ width: '100%', height: 50, justifyContent: 'center' }}
-        onPress={() => drillCallback(name)}
+        onPress={() => this.handleEnter(name)}
       >
         <Image
           source={{ uri: image_url || constants.NO_IMAGE_ARTIST_FOLLOWED }}
@@ -133,7 +147,9 @@ class ArtistsEventsScreen extends Component<Props> {
     } = response;
     this.setState(state => ({
       ...state,
-      ...{ content: { artists, recommended: recommended.slice(0, 5) } },
+      ...{
+        content: { followed: artists, recommended: recommended.slice(0, 5) },
+      },
     }));
     this.setState({ loading: false });
   };
@@ -147,14 +163,15 @@ class ArtistsEventsScreen extends Component<Props> {
     }
   };
 
-  handleAbout = async (name) => {
+  handleEnter = async (name) => {
     const { drillCallback } = this.props;
     this.setState({ loading: true });
 
     const artistResponse = await API.get(`artists/${name}/`);
+    // console.log(artistResponse.data);
     const artistId = artistResponse.data.artist.id;
     const eventsResponse = await API.get(
-      `/artists/${artistId}/events/2018-09-01/2018-10-01/`,
+      `/artists/${artistId}/events/2018-05-01/2018-10-01/`,
     );
     if (artistResponse.status === 200 && eventsResponse.status === 200) {
       const {
@@ -173,19 +190,30 @@ class ArtistsEventsScreen extends Component<Props> {
     } else {
       alert('Error');
     }
+    console.log(this.state);
     this.setState({ loading: false });
   };
 
-  toggleShowArtistMediaOrEvents = () => this.setState(({ showArtistMedia }) => ({
-    showArtistMedia: !showArtistMedia,
-  }));
+  showArtistMedia = () => this.setState({ showArtistMedia: true });
+
+  showArtistEvents = () => this.setState({ showArtistMedia: false });
+
+  getCurrentArtist = (artistName) => {
+    const { content } = this.state;
+    const isRecommended = content.recommended.find(
+      item => item.name === artistName,
+    );
+    return (
+      isRecommended || content.followed.find(item => item.name === artistName)
+    );
+  };
 
   render() {
     const { artist } = this.props;
     const {
       loading, content, artistContent, showArtistMedia,
     } = this.state;
-    const empty = !content.artists.length && !content.recommended.length;
+    const empty = !content.followed.length && !content.recommended.length;
     return loading ? (
       <ActivityIndicator />
     ) : empty ? (
@@ -195,16 +223,68 @@ class ArtistsEventsScreen extends Component<Props> {
     ) : (
       <ScreenContainer>
         {artist ? (
-          <View style={{ paddingTop: 24, marginBottom: 32 }}>
-            <Text style={{ marginBottom: 10, paddingLeft: 16 }}>{artist}</Text>
-            <Button
-              onPress={this.toggleShowArtistMediaOrEvents}
-              title="Media"
-            />
-            <Button
-              onPress={this.toggleShowArtistMediaOrEvents}
-              title="Events"
-            />
+          <View style={{ paddingTop: 25 }}>
+            <View style={{ marginBottom: 25 }}>
+              <View style={{ flexDirection: 'row', marginBottom: 25 }}>
+                <Image
+                  style={{ width: 120, height: 120 }}
+                  source={{
+                    uri:
+                      this.getCurrentArtist(artist).image_url
+                      || utils.getPlaceholder(120),
+                  }}
+                />
+                <View style={{ justifyContent: 'space-between' }}>
+                  <Text
+                    style={{ marginBottom: 10, paddingLeft: 16, fontSize: 18 }}
+                  >
+                    {artist}
+                  </Text>
+                  <TouchableOpacity onPress={() => this.handleFollow(artist)}>
+                    <Text
+                      style={{
+                        marginBottom: 10,
+                        paddingLeft: 16,
+                        fontSize: 18,
+                        color: colors.accent,
+                      }}
+                    >
+                      FOLLOW
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <ArtistDisplayModeButton
+                  accented={showArtistMedia}
+                  onPress={this.showArtistMedia}
+                >
+                  <ArtistDisplayModeButtonText accented={showArtistMedia}>
+                    Media
+                  </ArtistDisplayModeButtonText>
+                </ArtistDisplayModeButton>
+                <ArtistDisplayModeButton
+                  accented={!showArtistMedia}
+                  onPress={this.showArtistEvents}
+                >
+                  <ArtistDisplayModeButtonText accented={!showArtistMedia}>
+                    Events
+                  </ArtistDisplayModeButtonText>
+                </ArtistDisplayModeButton>
+              </View>
+            </View>
+            {showArtistMedia && (
+              <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
+                <Text style={{ color: 'grey' }}>
+                  {this.state.displayMediaType || 'All Events'}
+                </Text>
+              </TouchableOpacity>
+            )}
             <FlatList
               data={
                 showArtistMedia ? artistContent.media : artistContent.events
@@ -233,7 +313,7 @@ class ArtistsEventsScreen extends Component<Props> {
             <View>
               <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
               <FlatList
-                data={content.artists}
+                data={content.followed}
                 renderItem={this.renderFollowedCard}
                 keyExtractor={item => `${item.id}`}
               />
@@ -249,9 +329,9 @@ export default connect(({ auth }) => ({ token: auth.token }))(
   ArtistsEventsScreen,
 );
 
-const ScreenContainer = styled.View`
+const ScreenContainer = styled.ScrollView`
   flex: 1;
-  justify-content: space-between;
+  padding-horizontal: 8;
 `;
 
 const ScreenScrollContainer = styled.ScrollView``;
@@ -259,4 +339,20 @@ const ScreenScrollContainer = styled.ScrollView``;
 const GetDataButton = styled.TouchableOpacity`
   width: 100%;
   justify-content: center;
+`;
+
+const ArtistDisplayModeButton = styled.TouchableOpacity`
+  width: 160;
+  height: 40;
+  border-radius: 20;
+  justify-content: center;
+  align-items: center;
+  ${({ accented }) => !accented && 'border-width: 2'};
+  ${({ accented }) => !accented && `border-color: ${colors.accent}`};
+  ${({ accented }) => accented && `background-color: ${colors.accent}`};
+`;
+
+const ArtistDisplayModeButtonText = styled(components.TextMedium)`
+  font-size: 16;
+  color: ${({ accented }) => (accented ? 'white' : colors.accent)};
 `;
