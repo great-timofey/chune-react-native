@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Text } from 'react-native';
+import { Text, WebView } from 'react-native';
 import styled from 'styled-components';
 
 import YouTube from 'react-native-youtube';
@@ -23,13 +23,18 @@ export default ({
   image,
   type,
   url,
+
   youtube_id,
   description,
   callback,
 }: Props) => {
   switch (type) {
     case 'tweet':
-      return <Text>Tweet</Text>;
+      return (
+        <Container>
+          <Text>Tweet</Text>
+        </Container>
+      );
     case 'article':
       return (
         <TouchableContainer onPress={() => callback(url)}>
