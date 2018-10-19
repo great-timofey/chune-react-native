@@ -281,7 +281,7 @@ class ArtistsEventsScreen extends Component<Props> {
             {showArtistMedia && (
               <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
                 <Text style={{ color: 'grey' }}>
-                  {this.state.displayMediaType || 'All Events'}
+                  {this.state.displayMediaType || 'All Media'}
                 </Text>
               </TouchableOpacity>
             )}

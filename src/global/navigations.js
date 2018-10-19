@@ -51,7 +51,11 @@ export const headerLeft = (iconName, callback) => (
 );
 
 const headerRight = (
-  <Icon.Button {...iconProps} name="search" onPress={() => alert('hi')} />
+  <Icon.Button
+    {...iconProps}
+    name="search"
+    onPress={() => store.dispatch({ type: 'TOGGLE_SEARCH' })}
+  />
 );
 
 const navigators = {};

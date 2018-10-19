@@ -1,19 +1,25 @@
-import { Platform, Text } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
 
+import { connect } from 'react-redux';
 import TabBar from 'react-native-underline-tabbar';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import Player from './Player';
 import colors from '../global/colors';
+import SearchModal from './SearchModal';
 import HomeScreen from '../screens/home';
 import BlogScreen from '../screens/blog';
 import PlayerSwiper from './PlayerSwiper';
+import { height } from '../global/device';
 import ForYouScreen from '../screens/for-you';
 import { headerLeft } from '../global/navigations';
-import { toggleDrill } from '../redux/common/actions';
 import ArtistsEventsScreen from '../screens/artists-events';
+import {
+  toggleDrill,
+  toggleSearch,
+  tabNavigate,
+} from '../redux/common/actions';
 
 type Props = {
   navigation: Object,
@@ -25,13 +31,15 @@ class TabView extends Component<Props> {
   static navigationOptions = ({ navigation: { state } }) => {
     const name = state && state.params && state.params.iconName;
     const callback = state && state.params && state.params.handleDrill;
-    return { headerLeft: () => headerLeft(name, callback) };
+    return {
+      headerLeft: () => headerLeft(name, callback),
+    };
   };
 
   state = {
     url: '',
-    isPlayerOpen: false,
     currentArtist: '',
+    isPlayerOpen: false,
   };
 
   componentDidMount() {
@@ -79,22 +87,42 @@ class TabView extends Component<Props> {
   };
 
   handleDrill = (artist) => {
-    const { navigation, isDrilled, toggleDrill } = this.props;
+    const {
+      navigation,
+      isDrilled,
+      toggleDrill,
+      tabNavigate,
+      activeTabIndex,
+    } = this.props;
     this.setState({ currentArtist: artist || '' });
     const iconName = isDrilled ? '' : 'arrow-back';
     navigation.setParams({
       iconName,
       key: 'Home',
     });
+    if (activeTabIndex !== 2) {
+      tabNavigate(2);
+    }
     toggleDrill();
   };
 
+  handleChangeTab = ({ i }) => this.props.tabNavigate(i);
+
   render() {
-    const { isDrilled } = this.props;
     const { isPlayerOpen, currentArtist } = this.state;
+    const {
+      isDrilled,
+      isSearchOpen,
+      toggleSearch,
+      activeTabIndex,
+    } = this.props;
     return (
       <Fragment>
-        <ScrollableTabView renderTabBar={this.renderTab}>
+        <ScrollableTabView
+          page={activeTabIndex}
+          onChangeTab={this.handleChangeTab}
+          renderTabBar={this.renderTab}
+        >
           <HomeScreen
             tabLabel={{ label: 'HOME' }}
             modalCallback={this.handleModal}
@@ -111,6 +139,11 @@ class TabView extends Component<Props> {
           />
           <BlogScreen tabLabel={{ label: 'BLOG' }} />
         </ScrollableTabView>
+        <SearchModal
+          drillCallback={this.handleDrill}
+          isVisible={isSearchOpen}
+          showCallback={toggleSearch}
+        />
         {// player is temporary hidden
         false && (
           <Fragment>
@@ -131,6 +164,10 @@ class TabView extends Component<Props> {
 }
 
 export default connect(
-  ({ common }) => ({ isDrilled: common.isDrilled }),
-  { toggleDrill },
+  ({ common }) => ({
+    isDrilled: common.isDrilled,
+    isSearchOpen: common.isSearchOpen,
+    activeTabIndex: common.activeTabIndex,
+  }),
+  { toggleDrill, toggleSearch, tabNavigate },
 )(TabView);
