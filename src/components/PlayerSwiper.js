@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import Control from './Control';
 import {
   colors, components, utils, images,
-} from '~global';
+} from '../global';
 import PlayerTopPanel from './PlayerTopPanel';
 
 type Props = {
