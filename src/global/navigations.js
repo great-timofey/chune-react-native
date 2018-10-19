@@ -1,6 +1,6 @@
 import R from 'ramda';
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -51,11 +51,13 @@ export const headerLeft = (iconName, callback) => (
 );
 
 const headerRight = (
-  <Icon.Button
-    {...iconProps}
-    name="search"
-    onPress={() => store.dispatch({ type: 'TOGGLE_SEARCH' })}
-  />
+  <View style={{ paddingRight: 10 }}>
+    <Icon.Button
+      {...iconProps}
+      name="search"
+      onPress={() => store.dispatch({ type: 'TOGGLE_SEARCH' })}
+    />
+  </View>
 );
 
 const navigators = {};
