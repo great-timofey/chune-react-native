@@ -31,6 +31,7 @@ class TabView extends Component<Props> {
   state = {
     url: '',
     isPlayerOpen: false,
+    currentArtist: '',
   };
 
   componentDidMount() {
@@ -77,8 +78,9 @@ class TabView extends Component<Props> {
     navigation.navigate('ModalScreen', { url });
   };
 
-  handleDrill = () => {
+  handleDrill = (artist) => {
     const { navigation, isDrilled, toggleDrill } = this.props;
+    this.setState({ currentArtist: artist || '' });
     const iconName = isDrilled ? '' : 'arrow-back';
     navigation.setParams({
       iconName,
@@ -89,7 +91,7 @@ class TabView extends Component<Props> {
 
   render() {
     const { isDrilled } = this.props;
-    const { isPlayerOpen } = this.state;
+    const { isPlayerOpen, currentArtist } = this.state;
     return (
       <Fragment>
         <ScrollableTabView renderTabBar={this.renderTab}>
@@ -105,7 +107,7 @@ class TabView extends Component<Props> {
             tabLabel={{ label: 'ARTISTS & EVENTS' }}
             modalCallback={this.handleModal}
             drillCallback={this.handleDrill}
-            showOneArtist={isDrilled}
+            artist={currentArtist || false}
           />
           <BlogScreen tabLabel={{ label: 'BLOG' }} />
         </ScrollableTabView>

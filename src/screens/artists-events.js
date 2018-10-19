@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  TouchableOpacity,
   Button,
   Text,
   View,
@@ -10,8 +11,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
-
 import { connect } from 'react-redux';
+import { ListCard } from '../components/home';
+
 import { API, setAuthToken } from '../services/chuneAPI';
 
 import {
@@ -31,6 +33,12 @@ class ArtistsEventsScreen extends Component<Props> {
       artists: [],
       recommended: [],
     },
+    artistContent: {
+      media: [],
+      events: [],
+    },
+    currentArtist: '',
+    showArtistMedia: true,
     loading: false,
   };
 
@@ -54,53 +62,68 @@ class ArtistsEventsScreen extends Component<Props> {
     }
   }
 
-  renderRecommendedCard = ({ item: { image_url, name, genres } }) => {
-    const { drillCallback } = this.props;
-    return (
-      <View
-        style={{
-          width: 200,
-          height: 200,
-          marginHorizontal: 8,
-        }}
-      >
-        <ImageBackground
-          style={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'space-between',
-          }}
-          resizeMode="cover"
-          source={{ uri: image_url || constants.NO_IMAGE_ARTIST_RECOMMENDED }}
-        >
-          <View>
-            <Text style={{ color: 'white', fontSize: 20 }}>{name}</Text>
-            <Text style={{ color: 'white', fontSize: 13 }}>
-              {genres.map(item => item.description).join(',')}
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Button title="ABOUT" color="white" onPress={drillCallback} />
-            <Button
-              title="FOLLOW"
-              color="white"
-              onPress={() => this.handleFollow(name)}
-            />
-          </View>
-        </ImageBackground>
-      </View>
-    );
-  };
+  renderArtistMedia = ({ item: { ...data } }) => (
+    <ListCard {...data} callback={this.props.modalCallback} />
+  );
 
-  renderFollowedCard = ({ item: { image_url, name } }) => (
-    <View style={{ width: '100%', height: 50, justifyContent: 'center' }}>
-      <Image
-        source={{ uri: image_url || constants.NO_IMAGE_ARTIST_FOLLOWED }}
-        style={{ width: 40, height: 40, borderRadius: 20 }}
-      />
-      <Text>{name}</Text>
+  renderArtistEvents = ({ item: { ...data } }) => (
+    <Text>{data.description}</Text>
+  );
+
+  renderRecommendedCard = ({ item: { image_url, name, genres } }) => (
+    <View
+      style={{
+        width: 200,
+        height: 200,
+        marginHorizontal: 8,
+      }}
+    >
+      <ImageBackground
+        style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
+        resizeMode="cover"
+        source={{ uri: image_url || constants.NO_IMAGE_ARTIST_RECOMMENDED }}
+      >
+        <View>
+          <Text style={{ color: 'white', fontSize: 20 }}>{name}</Text>
+          <Text style={{ color: 'white', fontSize: 13 }}>
+            {genres.map(item => item.description).join(',')}
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            title="ABOUT"
+            color="white"
+            onPress={() => this.handleAbout(name)}
+          />
+          <Button
+            title="FOLLOW"
+            color="white"
+            onPress={() => this.handleFollow(name)}
+          />
+        </View>
+      </ImageBackground>
     </View>
   );
+
+  renderFollowedCard = ({ item: { image_url, name } }) => {
+    const { drillCallback } = this.props;
+    return (
+      <TouchableOpacity
+        style={{ width: '100%', height: 50, justifyContent: 'center' }}
+        onPress={() => drillCallback(name)}
+      >
+        <Image
+          source={{ uri: image_url || constants.NO_IMAGE_ARTIST_FOLLOWED }}
+          style={{ width: 40, height: 40, borderRadius: 20 }}
+        />
+        <Text>{name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   handleGetData = async () => {
     this.setState({ loading: true });
@@ -124,9 +147,44 @@ class ArtistsEventsScreen extends Component<Props> {
     }
   };
 
+  handleAbout = async (name) => {
+    const { drillCallback } = this.props;
+    this.setState({ loading: true });
+
+    const artistResponse = await API.get(`artists/${name}/`);
+    const artistId = artistResponse.data.artist.id;
+    const eventsResponse = await API.get(
+      `/artists/${artistId}/events/2018-09-01/2018-10-01/`,
+    );
+    if (artistResponse.status === 200 && eventsResponse.status === 200) {
+      const {
+        data: { content: media },
+      } = artistResponse;
+
+      const { data } = eventsResponse;
+      const events = data.data.length ? data.data : [];
+
+      this.setState(state => ({
+        ...state,
+        ...{ artistContent: { media, events } },
+      }));
+
+      drillCallback(name);
+    } else {
+      alert('Error');
+    }
+    this.setState({ loading: false });
+  };
+
+  toggleShowArtistMediaOrEvents = () => this.setState(({ showArtistMedia }) => ({
+    showArtistMedia: !showArtistMedia,
+  }));
+
   render() {
-    const { showOneArtist } = this.props;
-    const { loading, content } = this.state;
+    const { artist } = this.props;
+    const {
+      loading, content, artistContent, showArtistMedia,
+    } = this.state;
     const empty = !content.artists.length && !content.recommended.length;
     return loading ? (
       <ActivityIndicator />
@@ -136,8 +194,29 @@ class ArtistsEventsScreen extends Component<Props> {
       </GetDataButton>
     ) : (
       <ScreenContainer>
-        {showOneArtist ? (
-          <Text>you are drilled</Text>
+        {artist ? (
+          <View style={{ paddingTop: 24, marginBottom: 32 }}>
+            <Text style={{ marginBottom: 10, paddingLeft: 16 }}>{artist}</Text>
+            <Button
+              onPress={this.toggleShowArtistMediaOrEvents}
+              title="Media"
+            />
+            <Button
+              onPress={this.toggleShowArtistMediaOrEvents}
+              title="Events"
+            />
+            <FlatList
+              data={
+                showArtistMedia ? artistContent.media : artistContent.events
+              }
+              renderItem={
+                showArtistMedia
+                  ? this.renderArtistMedia
+                  : this.renderArtistEvents
+              }
+              keyExtractor={item => `${item.id}`}
+            />
+          </View>
         ) : (
           <ScreenScrollContainer>
             <View style={{ paddingTop: 24, marginBottom: 32 }}>
