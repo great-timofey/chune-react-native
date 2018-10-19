@@ -8,7 +8,7 @@ import { colors } from '../global';
 
 export default class ModalScreen extends Component {
   static navigationOptions = {
-    header: null,
+    header: <View style={{ height: 20, backgroundColor: '#52146C' }} />,
   };
 
   render() {
@@ -20,7 +20,7 @@ export default class ModalScreen extends Component {
           style={{
             width: 30,
             height: 30,
-            top: 10,
+            top: 20,
             right: 10,
             zIndex: 1,
             position: 'absolute',
