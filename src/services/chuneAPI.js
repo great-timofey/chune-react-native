@@ -21,6 +21,7 @@ export const clearAuthToken = () => {
 export const homeImagesPrefix = `${CONFIG.API_URL_IMAGES}${
   CONFIG.API.IMAGES.MEDIUM
 }`;
+
 export const featuredArticleImageUrl = `${CONFIG.API_URL_IMAGES}${
   CONFIG.API.IMAGES.FULL
 }`;
@@ -41,9 +42,25 @@ export const getContentForYouFirst = (start = 0, end = 10) => API.get(`recs/you/
   response => response && response.data,
 );
 
+export const getArtistData = artist => API.get(`artists/${artist}/`).then(response => response && response.data);
+
+export const followArtist = artist => API.post(`artists/${artist}/`).then(response => response && response.data);
+
+export const unfollowArtist = artist => API.delete(`artists/${artist}/`).then(response => response && response.data);
+
+export const getArtistEvents = (
+  artistId,
+  startDate = '2018-05-01',
+  finishDate = '2018-10-01',
+) => API.get(`/artists/${artistId}/events/${startDate}/${finishDate}/`).then(
+  response => response && response.data,
+);
+
 export const getContentForYouSecond = (start = 0, end = 10) => API.get(`content/?filter=followed&start=${start}&max_results=${end}`).then(
   response => response && response.data,
 );
+
+export const getContentFollowedRecommended = () => API.get('artists/').then(response => response && response.data);
 
 export const getTracksOfChosenType = (type) => {
   switch (type) {
@@ -53,10 +70,3 @@ export const getTracksOfChosenType = (type) => {
       return getChuneSupplyTracks();
   }
 };
-
-// API.get('tracks/sources/1/')
-//   .then(res => this.setState({ topTracks: res.data }))
-//   .then(_ => API.get('tracks/sources/2/'))
-//   .then(res => this.setState({ chuneSupply: res.data }))
-//   .then(res => this.setState({ loading: false }))
-//   .catch(err => console.log(err.response));
