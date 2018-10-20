@@ -2,10 +2,11 @@ import React, { PureComponent } from 'react';
 import {
   Text, View, FlatList, ActivityIndicator,
 } from 'react-native';
+
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
-import { connect } from 'react-redux';
 import { MainCard, ListCard } from '../components/home';
 import {
   API,

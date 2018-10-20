@@ -1,31 +1,30 @@
 import React, { Component } from 'react';
 import {
-  ScrollView,
-  TouchableOpacity,
-  Button,
   Text,
   View,
-  FlatList,
-  ActivityIndicator,
   Image,
+  Button,
+  FlatList,
   ImageBackground,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
+
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
-import { ListCard } from '../components/home';
-
-import { API, setAuthToken } from '../services/chuneAPI';
 
 import {
   colors, components, utils, constants,
 } from '../global';
+import { ListCard } from '../components/home';
+import { API, setAuthToken } from '../services/chuneAPI';
 
 type Props = {
+  token: string,
   navigation: Object,
   showOneArtist: boolean,
   drillCallback: Function,
-  token: string,
 };
 
 class ArtistsEventsScreen extends Component<Props> {
@@ -63,26 +62,33 @@ class ArtistsEventsScreen extends Component<Props> {
     }
   }
 
-  renderArtistMedia = ({ item: { ...data } }) => (
-    <ListCard {...data} callback={this.props.modalCallback} />
-  );
+  renderArtistMedia = ({ item: { ...data } }) => {
+    const { modalCallback } = this.props;
+    return <ListCard {...data} callback={modalCallback} />;
+  };
 
-  renderArtistEvents = ({ item: { ...data } }) => (
-    <View
-      style={{
-        backgroundColor: 'white',
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        marginBottom: 10,
-      }}
-    >
-      <Text>{data.datetime}</Text>
-      <Text>{`${data.venue.city}, ${data.venue.country}`}</Text>
-      <TouchableOpacity onPress={() => this.props.modalCallback(data.url)}>
-        <Text style={{ color: colors.accent }}>BUY TICKETS</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  renderArtistEvents = ({ item: { ...data } }) => {
+    const { modalCallback } = this.props;
+    const {
+      venue: { city, country },
+    } = data;
+    return (
+      <View
+        style={{
+          backgroundColor: 'white',
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          marginBottom: 10,
+        }}
+      >
+        <Text>{data.datetime}</Text>
+        <Text>{`${city}, ${country}`}</Text>
+        <TouchableOpacity onPress={() => modalCallback(data.url)}>
+          <Text style={{ color: colors.accent }}>BUY TICKETS</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   renderRecommendedCard = ({ item: { image_url, name, genres } }) => (
     <View
@@ -123,21 +129,18 @@ class ArtistsEventsScreen extends Component<Props> {
     </View>
   );
 
-  renderFollowedCard = ({ item: { image_url, name } }) => {
-    const { drillCallback } = this.props;
-    return (
-      <TouchableOpacity
-        style={{ width: '100%', height: 50, justifyContent: 'center' }}
-        onPress={() => this.handleEnter(name)}
-      >
-        <Image
-          source={{ uri: image_url || utils.getPlaceholder(40) }}
-          style={{ width: 40, height: 40, borderRadius: 20 }}
-        />
-        <Text>{name}</Text>
-      </TouchableOpacity>
-    );
-  };
+  renderFollowedCard = ({ item: { image_url, name } }) => (
+    <TouchableOpacity
+      style={{ width: '100%', height: 50, justifyContent: 'center' }}
+      onPress={() => this.handleEnter(name)}
+    >
+      <Image
+        source={{ uri: image_url || utils.getPlaceholder(40) }}
+        style={{ width: 40, height: 40, borderRadius: 20 }}
+      />
+      <Text>{name}</Text>
+    </TouchableOpacity>
+  );
 
   handleGetData = async () => {
     this.setState({ loading: true });

@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import {
-  View,
-  FlatList,
-  ActivityIndicator,
-  WebView,
   Text,
+  View,
+  WebView,
+  FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
