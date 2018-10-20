@@ -1,11 +1,12 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { setAuthToken } from '../../services/chuneAPI';
 import { AUTH_ACTIONS } from './constants';
-import { getDataHome } from '../data/actions';
+import { getDataHome, getDataForYou } from '../data/actions';
 
 function* setToken(action) {
   yield call(setAuthToken, action.payload.token);
   yield put(getDataHome());
+  yield put(getDataForYou());
   console.log('token for chune api has been set');
 }
 

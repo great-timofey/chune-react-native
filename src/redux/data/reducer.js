@@ -28,10 +28,13 @@ const dataHomeHandler = ({ featured = [], contentFeed = [] }) => R.pipe(
   R.assocPath(['home', 'contentFeed'], contentFeed),
 );
 
+const dataForYouHandler = ({ contentFeed = [] }) => R.pipe(R.assocPath(['forYou', 'contentFeed'], contentFeed));
+
 const logoutHandler = () => R.pipe(R.always(INITIAL_STATE));
 
 const HANDLERS = {
   [DATA_ACTIONS.GET_DATA_HOME_SUCCESS]: dataHomeHandler,
+  [DATA_ACTIONS.GET_DATA_FOR_YOU_SUCCESS]: dataForYouHandler,
   [AUTH_ACTIONS.LOGOUT]: logoutHandler,
 };
 

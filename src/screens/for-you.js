@@ -1,6 +1,10 @@
 import React, { PureComponent } from 'react';
 import {
-  Text, View, FlatList, ActivityIndicator,
+  Text,
+  View,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -14,98 +18,44 @@ import {
   getContentForYouFirst,
   getContentForYouSecond,
 } from '../services/chuneAPI';
+import { getDataForYou } from '../redux/data/actions';
 
 import { colors, components, utils } from '../global';
 
 class ForYouScreen extends PureComponent {
-  state = {
-    content: {
-      contentFeed: [],
-    },
-    loading: false,
-  };
-
-  componentDidMount() {
-    const token = this.props.token;
-    const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      // name,
-      email,
-      password,
-    });
-
-    if (token) {
-      setAuthToken(token);
-    } else {
-      API.post('users/login', user)
-        .then(res => res.data.token)
-        .then(tok => setAuthToken(tok));
-    }
-  }
-
-  renderCard = ({ item: { ...data } }) => (
-    <ListCard {...data} callback={this.props.modalCallback} />
-  );
-
-  handleGetData = async () => {
-    this.setState({ loading: true });
-    let data = await getContentForYouFirst(0, 10);
-    if (
-      data[Object.keys(data)[0]].length === 0
-      && data[Object.keys(data)[1]].length === 0
-    ) {
-      data = await getContentForYouSecond(0, 10);
-    }
-    const { content_feed: contentFeed } = data;
-    this.setState(state => ({
-      ...state,
-      ...{ content: { contentFeed } },
-    }));
-    this.setState({ loading: false });
+  renderCard = ({ item: { ...data } }) => {
+    const { modalCallback } = this.props;
+    return <ListCard {...data} callback={modalCallback} />;
   };
 
   render() {
-    const { loading, content } = this.state;
+    const {
+      loading, contentFeed, getDataForYou, modalCallback,
+    } = this.props;
     return loading ? (
       <ActivityIndicator />
-    ) : content.contentFeed.length === 0 ? (
-      <GetDataButton onPress={this.handleGetData}>
-        <Text>get data</Text>
-      </GetDataButton>
     ) : (
-      <ScreenContainer>
-        <ScreenScrollContainer>
-          <View
-            style={{
-              //  other cards container
-              paddingHorizontal: 8,
-              paddingTop: 8,
-            }}
-          >
-            <FlatList
-              data={content.contentFeed}
-              renderItem={this.renderCard}
-              keyExtractor={item => item.id}
-            />
-          </View>
-        </ScreenScrollContainer>
-      </ScreenContainer>
+      <FlatList
+        style={{
+          paddingHorizontal: 8,
+          paddingTop: 8,
+        }}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getDataForYou} />
+        }
+        data={contentFeed}
+        renderItem={this.renderCard}
+        keyExtractor={item => item.id}
+      />
     );
   }
 }
 
-export default connect(({ auth }) => ({ token: auth.token }))(ForYouScreen);
-
-const ScreenContainer = styled.View`
-  flex: 1;
-  justify-content: space-between;
-`;
-
-const ScreenScrollContainer = styled.ScrollView``;
-
-const GetDataButton = styled.TouchableOpacity`
-  width: 100%;
-  justify-content: center;
-`;
+export default connect(
+  ({ auth, data: { forYou } }) => ({
+    token: auth.token,
+    contentFeed: forYou.contentFeed,
+    loading: !forYou.contentFeed.length,
+  }),
+  { getDataForYou },
+)(ForYouScreen);

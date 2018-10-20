@@ -8,3 +8,12 @@ export const setDataHome = (featured, contentFeed) => ({
   type: DATA_ACTIONS.GET_DATA_HOME_SUCCESS,
   payload: { featured, contentFeed },
 });
+
+export const getDataForYou = () => ({
+  type: DATA_ACTIONS.GET_DATA_FOR_YOU_REQUEST,
+});
+
+export const setDataForYou = contentFeed => ({
+  type: DATA_ACTIONS.GET_DATA_FOR_YOU_SUCCESS,
+  payload: { contentFeed },
+});
