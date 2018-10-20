@@ -7,9 +7,9 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 
 import { MainCard, ListCard } from '../components/home';
 
@@ -26,7 +26,7 @@ class HomeScreen extends PureComponent {
   };
 
   componentDidMount() {
-    const token = this.props.token;
+    const { token } = this.props;
     const name = 'tim2';
     const email = 'tim2@mail.com';
     const password = 'aA12345';
@@ -35,14 +35,6 @@ class HomeScreen extends PureComponent {
       email,
       password,
     });
-
-    /*
-    const raw = '{"id":"AvzorXK","title":"Listen To Anderson .Paak & Kendrick Lamars Must Hear Smooth New Collab Tints","artist_name":"Kendrick Lamar","published_on":"2018-10-04T17:09:54Z","image":"d9ee37aabae9bf20b5a01bee48777b1ca12d5aaa.jpg","url":"http://thissongissick.com/post/anderson-paak-kendrick-lamar-tints","source_name":"This Song Is Sick","type":"article"}';
-
-    const contentFeed = [JSON.parse(raw)];
-    console.log(contentFeed);
-    this.setState({ content: { contentFeed } });
-    */
 
     // API.post('users/', user)
     if (token) {
@@ -54,10 +46,7 @@ class HomeScreen extends PureComponent {
     }
 
     API.get('content/?filter=recent&start=0&max_results=30')
-      .then((res) => {
-        console.log(res.data);
-        return res.data;
-      })
+      .then(res => res.data)
       .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
         ...state,
         ...{ content: { featured, contentFeed } },
@@ -65,9 +54,10 @@ class HomeScreen extends PureComponent {
       .then(res => this.setState({ loading: false }));
   }
 
-  renderCard = ({ item: { ...data } }) => (
-    <ListCard {...data} callback={this.props.modalCallback} />
-  );
+  renderCard = ({ item: { ...data } }) => {
+    const { modalCallback } = this.props;
+    return <ListCard {...data} callback={modalCallback} />;
+  };
 
   render() {
     const { modalCallback } = this.props;
@@ -118,7 +108,6 @@ class HomeScreen extends PureComponent {
 
 export default connect(({ auth }) => ({ token: auth.token }))(HomeScreen);
 
-// <WebView source={{ uri: this.state.currentUrl }} />
 const ScreenContainer = styled.View`
   flex: 1;
   justify-content: space-between;

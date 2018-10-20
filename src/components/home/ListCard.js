@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import { Text, WebView } from 'react-native';
 import styled from 'styled-components';
+import { Text, WebView } from 'react-native';
 
 import YouTube from 'react-native-youtube';
 import { colors, components, utils } from '../../global';
@@ -15,7 +15,7 @@ type Props = {
   type: string,
 };
 
-export default ({
+const ListCard = ({
   title,
   source_name,
   published_on,
@@ -23,7 +23,6 @@ export default ({
   image,
   type,
   url,
-
   youtube_id,
   description,
   callback,
@@ -80,6 +79,8 @@ export default ({
       return <Text>{type}</Text>;
   }
 };
+
+export default ListCard;
 
 const Container = styled.View`
   width: 100%;

@@ -9,8 +9,12 @@ type Props = {
 };
 
 // validation function : onChangeText={value => validation(value)}
-export default ({
-  label, password, error, validation, refCallback,
+const AuthInput = ({
+  label,
+  password,
+  error,
+  validation,
+  refCallback,
 }: Props) => (
   <TextField
     ref={refCallback}
@@ -25,3 +29,5 @@ export default ({
     error={error}
   />
 );
+
+export default AuthInput;

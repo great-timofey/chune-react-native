@@ -341,7 +341,7 @@ const GetDataButton = styled.TouchableOpacity`
 `;
 
 const ArtistDisplayModeButton = styled.TouchableOpacity`
-  width: 160;
+  width: 45%;
   height: 40;
   border-radius: 20;
   justify-content: center;
