@@ -103,19 +103,21 @@ function* getDataForYouWorker() {
 }
 
 function* getDataArtistsEventsSingleWorker() {
-  /* try {
+  try {
+    yield put(artistsEventsControlLoading(true));
+
     const name = 'tim2';
     const email = 'tim2@mail.com';
     const password = 'aA12345';
     const user = JSON.stringify({
-      // name,
+      name,
       email,
       password,
     });
 
     const token = yield select(state => state.auth.token);
     yield call(setAuthToken, token);
-    [> const jsonToken = JSON.stringify({ token });
+    /* const jsonToken = JSON.stringify({ token });
      const rest = yield call(verifyAuthToken, jsonToken);
      console.log('response', rest);
      if (response.status === 400) {
@@ -125,22 +127,16 @@ function* getDataArtistsEventsSingleWorker() {
 
       const content = yield call(getHomeContent);
       console.log(content);
-     } <]
-    this.setState({ loading: true });
-    const response = yield call(getContentFollowedRecommended);
-    const {
-      data: { artists, recommended },
-    } = response;
-    this.setState(state => ({
-      ...state,
-      ...{
-        content: { followed: artists, recommended: recommended.slice(0, 5) },
-      },
-    }));
-    this.setState({ loading: false });
+     } */
+    // this.setState({ loading: true });
+    const { artists: followed, recommended } = yield call(
+      getContentFollowedRecommended,
+    );
+    yield put(setDataArtistsEventsOverall(followed, recommended.slice(0, 5)));
+    yield put(artistsEventsControlLoading(false));
   } catch (err) {
     console.log(err);
-  } */
+  }
 }
 
 function* getDataArtistsEventsOverallWorker() {
@@ -221,7 +217,7 @@ function* sagas() {
   );
   yield takeLatest(DATA_ACTIONS.FOLLOW_ARTIST_REQUEST, artistFollowingWorker);
   yield takeLatest(DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST, artistFollowingWorker);
-  yield takeLatest(rehydrate, getDataArtistsEventsOverallWorker);
+  // yield takeLatest(rehydrate, getDataArtistsEventsSingleWorker);
 }
 
 export default sagas;

@@ -5,6 +5,7 @@ import {
   Image,
   Button,
   FlatList,
+  RefreshControl,
   ImageBackground,
   TouchableOpacity,
   ActivityIndicator,
@@ -35,37 +36,13 @@ type Props = {
 
 class ArtistsEventsScreen extends Component<Props> {
   state = {
-    /* content: {
-      followed: [],
-      recommended: [],
-    },
-    artistContent: {
+    /* artistContent: {
       media: [],
       events: [],
     }, */
     displayMediaType: '',
     showArtistMedia: true,
   };
-
-  componentDidMount() {
-    const { token } = this.props;
-    const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      // name,
-      email,
-      password,
-    });
-
-    if (token) {
-      setAuthToken(token);
-    } else {
-      API.post('users/login', user)
-        .then(res => res.data.token)
-        .then(tok => setAuthToken(tok));
-    }
-  }
 
   renderArtistMedia = ({ item: { ...data } }) => {
     const { modalCallback } = this.props;
@@ -137,7 +114,7 @@ class ArtistsEventsScreen extends Component<Props> {
   renderFollowedCard = ({ item: { image_url, name } }) => (
     <TouchableOpacity
       style={{ width: '100%', height: 50, justifyContent: 'center' }}
-      onPress={() => this.handleUnfollow(name)}
+      onPress={() => this.handleEnter(name)}
     >
       <Image
         source={{ uri: image_url || utils.getPlaceholder(40) }}
@@ -150,23 +127,11 @@ class ArtistsEventsScreen extends Component<Props> {
   handleUnfollow = (name) => {
     const { requestArtistUnfollow } = this.props;
     requestArtistUnfollow(name);
-    /* const response = await API.post(`artists/${name}/`);
-    if (response.status === 200) {
-      alert('Artist has been successfully added to Followed');
-    } else {
-      alert('Error');
-    } */
   };
 
   handleFollow = (name) => {
     const { requestArtistFollow } = this.props;
     requestArtistFollow(name);
-    /* const response = await API.post(`artists/${name}/`);
-    if (response.status === 200) {
-      alert('Artist has been successfully added to Followed');
-    } else {
-      alert('Error');
-    } */
   };
 
   handleEnter = async (name) => {
@@ -217,115 +182,105 @@ class ArtistsEventsScreen extends Component<Props> {
     const { showArtistMedia, displayMediaType } = this.state;
     const {
       loading,
-      currentArtist,
       artistContent,
+      currentArtist,
       overallContent,
+      getDataArtistsEventsSingle,
+      getDataArtistsEventsOverall,
     } = this.props;
     return loading ? (
       <ActivityIndicator />
-    ) : (
-      <ScreenContainer>
-        {currentArtist ? (
-          <View style={{ paddingTop: 25 }}>
-            <View style={{ marginBottom: 25 }}>
-              <View style={{ flexDirection: 'row', marginBottom: 25 }}>
-                <Image
-                  style={{ width: 120, height: 120 }}
-                  source={{
-                    uri:
-                      this.getCurrentArtist(currentArtist).image_url
-                      || utils.getPlaceholder(120),
-                  }}
-                />
-                <View style={{ justifyContent: 'space-between' }}>
-                  <Text
-                    style={{ marginBottom: 10, paddingLeft: 16, fontSize: 18 }}
-                  >
-                    {currentArtist}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => this.handleFollow(currentArtist)}
-                  >
-                    <Text
-                      style={{
-                        marginBottom: 10,
-                        paddingLeft: 16,
-                        fontSize: 18,
-                        color: colors.accent,
-                      }}
-                    >
-                      FOLLOW
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
+    ) : currentArtist ? (
+      <View style={{ paddingTop: 25 }}>
+        <View style={{ marginBottom: 25 }}>
+          <View style={{ flexDirection: 'row', marginBottom: 25 }}>
+            <Image
+              style={{ width: 120, height: 120 }}
+              source={{
+                uri:
+                  this.getCurrentArtist(currentArtist).image_url
+                  || utils.getPlaceholder(120),
+              }}
+            />
+            <View style={{ justifyContent: 'space-between' }}>
+              <Text style={{ marginBottom: 10, paddingLeft: 16, fontSize: 18 }}>
+                {currentArtist}
+              </Text>
+              <TouchableOpacity
+                onPress={() => this.handleFollow(currentArtist)}
               >
-                <ArtistDisplayModeButton
-                  accented={showArtistMedia}
-                  onPress={this.showArtistMedia}
+                <Text
+                  style={{
+                    marginBottom: 10,
+                    paddingLeft: 16,
+                    fontSize: 18,
+                    color: colors.accent,
+                  }}
                 >
-                  <ArtistDisplayModeButtonText accented={showArtistMedia}>
-                    Media
-                  </ArtistDisplayModeButtonText>
-                </ArtistDisplayModeButton>
-                <ArtistDisplayModeButton
-                  accented={!showArtistMedia}
-                  onPress={this.showArtistEvents}
-                >
-                  <ArtistDisplayModeButtonText accented={!showArtistMedia}>
-                    Events
-                  </ArtistDisplayModeButtonText>
-                </ArtistDisplayModeButton>
-              </View>
-            </View>
-            {showArtistMedia && (
-              <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                <Text style={{ color: 'grey' }}>
-                  {displayMediaType || 'All Media'}
+                  FOLLOW
                 </Text>
               </TouchableOpacity>
-            )}
-            <FlatList
-              data={
-                showArtistMedia ? artistContent.media : artistContent.events
-              }
-              renderItem={
-                showArtistMedia
-                  ? this.renderArtistMedia
-                  : this.renderArtistEvents
-              }
-              keyExtractor={item => `${item.id}`}
-            />
+            </View>
           </View>
-        ) : (
-          <ScreenScrollContainer>
-            <View style={{ paddingTop: 24, marginBottom: 32 }}>
-              <Text style={{ marginBottom: 10, paddingLeft: 16 }}>
-                RECOMMENDED
-              </Text>
-              <FlatList
-                horizontal
-                data={overallContent.recommended}
-                renderItem={this.renderRecommendedCard}
-                keyExtractor={item => `${item.id}`}
-              />
-            </View>
-            <View>
-              <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
-              <FlatList
-                data={overallContent.followed}
-                renderItem={this.renderFollowedCard}
-                keyExtractor={item => `${item.id}`}
-              />
-            </View>
-          </ScreenScrollContainer>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <ArtistDisplayModeButton
+              accented={showArtistMedia}
+              onPress={this.showArtistMedia}
+            >
+              <ArtistDisplayModeButtonText accented={showArtistMedia}>
+                Media
+              </ArtistDisplayModeButtonText>
+            </ArtistDisplayModeButton>
+            <ArtistDisplayModeButton
+              accented={!showArtistMedia}
+              onPress={this.showArtistEvents}
+            >
+              <ArtistDisplayModeButtonText accented={!showArtistMedia}>
+                Events
+              </ArtistDisplayModeButtonText>
+            </ArtistDisplayModeButton>
+          </View>
+        </View>
+        {showArtistMedia && (
+          <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
+            <Text style={{ color: 'grey' }}>
+              {displayMediaType || 'All Media'}
+            </Text>
+          </TouchableOpacity>
         )}
-      </ScreenContainer>
+        <FlatList
+          data={showArtistMedia ? artistContent.media : artistContent.events}
+          renderItem={
+            showArtistMedia ? this.renderArtistMedia : this.renderArtistEvents
+          }
+          keyExtractor={item => `${item.id}`}
+        />
+      </View>
+    ) : (
+      <ScreenScrollContainer>
+        <View style={{ paddingTop: 24, marginBottom: 32 }}>
+          <Text style={{ marginBottom: 10, paddingLeft: 16 }}>RECOMMENDED</Text>
+          <FlatList
+            horizontal
+            data={overallContent.recommended}
+            renderItem={this.renderRecommendedCard}
+            keyExtractor={item => `${item.id}`}
+          />
+        </View>
+        <View style={{ paddingHorizontal: 8 }}>
+          <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
+          <FlatList
+            data={overallContent.followed}
+            renderItem={this.renderFollowedCard}
+            keyExtractor={item => `${item.id}`}
+          />
+        </View>
+      </ScreenScrollContainer>
     );
   }
 }
@@ -342,34 +297,24 @@ const mapDispatchToProps = dispatch => bindActionCreators(
 
 export default connect(
   ({
-    auth,
+    auth: { token },
     data: {
       artistsEvents: {
         currentArtist, overallContent, artistContent, loading,
       },
     },
   }) => ({
+    token,
     loading,
     currentArtist,
     artistContent,
     overallContent,
-    token: auth.token,
   }),
   mapDispatchToProps,
 )(ArtistsEventsScreen);
 
-const ScreenContainer = styled.ScrollView`
-  flex: 1;
-  padding-horizontal: 8;
-`;
-
 const ScreenScrollContainer = styled.ScrollView``;
 
-/* const GetDataButton = styled.TouchableOpacity`
-  width: 100%;
-  justify-content: center;
-`;
-*/
 const ArtistDisplayModeButton = styled.TouchableOpacity`
   width: 45%;
   height: 40;
