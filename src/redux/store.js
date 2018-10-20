@@ -51,7 +51,7 @@ export default function configureStore() {
   // run sagas
   sagaMiddleware.run(authSagas);
   sagaMiddleware.run(playerSagas);
-  // sagaMiddleware.run(dataSagas);
+  sagaMiddleware.run(dataSagas);
 
   return {
     store,

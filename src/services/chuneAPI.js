@@ -6,6 +6,10 @@ export const API = axios.create({
   headers: CONFIG.HEADERS,
 });
 
+export const verifyAuthToken = (token) => {
+  API.post('token/verify', token).then(response => response && response.data);
+};
+
 export const setAuthToken = (token) => {
   API.defaults.headers.common.Authorization = `JWT ${token}`;
 };
@@ -29,9 +33,14 @@ export const getChuneSupplyTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET
   response => response && response.data,
 );
 
+export const getHomeContent = (start = 0, end = 20) => API.get(`content/?filter=recent&start=${start}&max_results=${end}`).then(
+  response => response && response.data,
+);
+
 export const getContentForYouFirst = (start, end) => API.get(`recs/you/?filter=followed&start=${start}&max_results=${end}`).then(
   response => response && response.data,
 );
+
 export const getContentForYouSecond = (start, end) => API.get(`content/?filter=followed&start=${start}&max_results=${end}`).then(
   response => response && response.data,
 );

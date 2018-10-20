@@ -1,78 +1,43 @@
 import React, { PureComponent } from 'react';
 import {
-  Text,
   View,
-  WebView,
   FlatList,
-  TouchableOpacity,
+  RefreshControl,
   ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { bindActionCreators } from 'redux';
 
+import { getDataHome } from '../redux/data/actions';
+import { colors, components, utils } from '../global';
 import { MainCard, ListCard } from '../components/home';
 
-import { colors, components, utils } from '../global';
-import { API, setAuthToken } from '../services/chuneAPI';
-
 class HomeScreen extends PureComponent {
-  state = {
-    content: {
-      featured: [],
-      contentFeed: [],
-    },
-    loading: true,
-  };
-
-  componentDidMount() {
-    const { token } = this.props;
-    const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      // name,
-      email,
-      password,
-    });
-
-    // API.post('users/', user)
-    if (token) {
-      setAuthToken(token);
-    } else {
-      API.post('users/login', user)
-        .then(res => res.data.token)
-        .then(tok => setAuthToken(tok));
-    }
-
-    API.get('content/?filter=recent&start=0&max_results=30')
-      .then(res => res.data)
-      .then(({ featured, content_feed: contentFeed }) => this.setState(state => ({
-        ...state,
-        ...{ content: { featured, contentFeed } },
-      })))
-      .then(res => this.setState({ loading: false }));
-  }
-
   renderCard = ({ item: { ...data } }) => {
     const { modalCallback } = this.props;
     return <ListCard {...data} callback={modalCallback} />;
   };
 
   render() {
-    const { modalCallback } = this.props;
-    const { loading, content } = this.state;
+    const {
+      loading,
+      featured,
+      contentFeed,
+      getDataHome,
+      modalCallback,
+    } = this.props;
     return (
       <ScreenContainer>
         {loading ? (
           <ActivityIndicator />
         ) : (
-          <ScreenScrollContainer>
-            <MainCard
-              main
-              data={content.featured[0]}
-              callback={modalCallback}
-            />
+          <ScreenScrollContainer
+            refreshControl={
+              <RefreshControl refreshing={loading} onRefresh={getDataHome} />
+            }
+          >
+            <MainCard main data={featured[0]} callback={modalCallback} />
             <View
               style={{
                 //  other cards container
@@ -90,11 +55,11 @@ class HomeScreen extends PureComponent {
                   paddingBottom: 8,
                 }}
               >
-                <MainCard data={content.featured[1]} callback={modalCallback} />
-                <MainCard data={content.featured[2]} callback={modalCallback} />
+                <MainCard data={featured[1]} callback={modalCallback} />
+                <MainCard data={featured[2]} callback={modalCallback} />
               </View>
               <FlatList
-                data={content.contentFeed}
+                data={contentFeed}
                 renderItem={this.renderCard}
                 keyExtractor={item => item.id}
               />
@@ -106,7 +71,15 @@ class HomeScreen extends PureComponent {
   }
 }
 
-export default connect(({ auth }) => ({ token: auth.token }))(HomeScreen);
+export default connect(
+  ({ auth, data: { home } }) => ({
+    token: auth.token,
+    contentFeed: home.contentFeed,
+    featured: home.featured,
+    loading: !home.featured.length && !home.contentFeed.length,
+  }),
+  { getDataHome },
+)(HomeScreen);
 
 const ScreenContainer = styled.View`
   flex: 1;
