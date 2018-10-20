@@ -37,11 +37,11 @@ export const getHomeContent = (start = 0, end = 20) => API.get(`content/?filter=
   response => response && response.data,
 );
 
-export const getContentForYouFirst = (start, end) => API.get(`recs/you/?filter=followed&start=${start}&max_results=${end}`).then(
+export const getContentForYouFirst = (start = 0, end = 10) => API.get(`recs/you/?filter=followed&start=${start}&max_results=${end}`).then(
   response => response && response.data,
 );
 
-export const getContentForYouSecond = (start, end) => API.get(`content/?filter=followed&start=${start}&max_results=${end}`).then(
+export const getContentForYouSecond = (start = 0, end = 10) => API.get(`content/?filter=followed&start=${start}&max_results=${end}`).then(
   response => response && response.data,
 );
 
