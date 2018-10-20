@@ -12,10 +12,12 @@ const INITIAL_STATE = {
     contentFeed: [],
   },
   artistsEvents: {
-    content: {
+    loading: true,
+    overallContent: {
       followed: [],
       recommended: [],
     },
+    currentArtist: null,
     artistContent: {
       media: [],
       events: [],
@@ -30,11 +32,27 @@ const dataHomeHandler = ({ featured = [], contentFeed = [] }) => R.pipe(
 
 const dataForYouHandler = ({ contentFeed = [] }) => R.pipe(R.assocPath(['forYou', 'contentFeed'], contentFeed));
 
+const dataArtistsEventsSingleHandler = ({ artist, media = [], events = [] }) => R.pipe(
+  R.assocPath(['artistsEvents', 'currentArtist'], artist),
+  R.assocPath(['artistsEvents', 'artistContent', 'media'], media),
+  R.assocPath(['artistsEvents', 'artistContent', 'events'], events),
+);
+
+const dataArtistsEventsOverallHandler = ({ followed = [], recommended = [] }) => R.pipe(
+  R.assocPath(['artistsEvents', 'overallContent', 'followed'], followed),
+  R.assocPath(['artistsEvents', 'overallContent', 'recommended'], recommended),
+);
+
+const dataArtistsEventsLoadingHandler = ({ loading }) => R.pipe(R.assocPath(['artistsEvents', 'loading'], loading));
+
 const logoutHandler = () => R.pipe(R.always(INITIAL_STATE));
 
 const HANDLERS = {
   [DATA_ACTIONS.GET_DATA_HOME_SUCCESS]: dataHomeHandler,
   [DATA_ACTIONS.GET_DATA_FOR_YOU_SUCCESS]: dataForYouHandler,
+  [DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_OVERALL_SUCCESS]: dataArtistsEventsOverallHandler,
+  [DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_SINGLE_SUCCESS]: dataArtistsEventsSingleHandler,
+  [DATA_ACTIONS.ARTISTS_EVENTS_CONTROL_LOADING]: dataArtistsEventsLoadingHandler,
   [AUTH_ACTIONS.LOGOUT]: logoutHandler,
 };
 

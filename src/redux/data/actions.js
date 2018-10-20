@@ -17,3 +17,36 @@ export const setDataForYou = contentFeed => ({
   type: DATA_ACTIONS.GET_DATA_FOR_YOU_SUCCESS,
   payload: { contentFeed },
 });
+
+export const getDataArtistsEventsSingle = () => ({
+  type: DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_SINGLE_REQUEST,
+});
+
+export const setDataArtistsEventsSingle = (artist, media, events) => ({
+  type: DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_SINGLE_SUCCESS,
+  payload: { artist, media, events },
+});
+
+export const getDataArtistsEventsOverall = () => ({
+  type: DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_OVERALL_REQUEST,
+});
+
+export const setDataArtistsEventsOverall = (followed, recommended) => ({
+  type: DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_OVERALL_SUCCESS,
+  payload: { followed, recommended },
+});
+
+export const artistsEventsControlLoading = loading => ({
+  type: DATA_ACTIONS.ARTISTS_EVENTS_CONTROL_LOADING,
+  payload: { loading },
+});
+
+export const requestArtistFollow = artist => ({
+  type: DATA_ACTIONS.FOLLOW_ARTIST_REQUEST,
+  payload: { artist },
+});
+
+export const requestArtistUnfollow = artist => ({
+  type: DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST,
+  payload: { artist },
+});
