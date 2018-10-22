@@ -19,7 +19,7 @@ import {
   colors, components, utils, constants,
 } from '../global';
 import { ListCard } from '../components/home';
-import { API, setAuthToken } from '../services/chuneAPI';
+import FollowedArtistCard from '../components/FollowedArtistCard';
 import {
   requestArtistFollow,
   requestArtistUnfollow,
@@ -36,10 +36,6 @@ type Props = {
 
 class ArtistsEventsScreen extends Component<Props> {
   state = {
-    /* artistContent: {
-      media: [],
-      events: [],
-    }, */
     displayMediaType: '',
     showArtistMedia: true,
   };
@@ -111,8 +107,15 @@ class ArtistsEventsScreen extends Component<Props> {
     </View>
   );
 
-  renderFollowedCard = ({ item: { image_url, name } }) => (
-    <TouchableOpacity
+  renderFollowedCard = ({ item: { image_url, name, genres }, index }) => (
+    <FollowedArtistCard
+      genre={(genres[0] && genres[0].description) || 'none'}
+      name={name}
+      imageUrl={image_url}
+      enterCallback={this.handleEnter}
+      unfollowCallback={this.handleUnfollow}
+    />
+    /* <TouchableOpacity
       style={{
         height: 50,
         width: '100%',
@@ -124,7 +127,7 @@ class ArtistsEventsScreen extends Component<Props> {
       onPress={() => this.handleEnter(name)}
     >
       <Image
-        source={{ uri: image_url || utils.getPlaceholder(40) }}
+        source={{ uri: image_url || utils.getplaceholder(40) }}
         style={{
           width: 40,
           height: 40,
@@ -133,7 +136,7 @@ class ArtistsEventsScreen extends Component<Props> {
         }}
       />
       <Text>{name}</Text>
-    </TouchableOpacity>
+    </TouchableOpacity> */
   );
 
   handleUnfollow = (name) => {
@@ -257,10 +260,13 @@ class ArtistsEventsScreen extends Component<Props> {
             keyExtractor={item => `${item.id}`}
           />
         </View>
-        <View style={{ paddingHorizontal: 8 }}>
-          <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
+        <View
+          style={{ paddingHorizontal: 8, alignItems: 'center', fontSize: 16 }}
+        >
+          <Text style={{ marginBottom: 10 }}>Currently Followed Artists</Text>
         </View>
         <FlatList
+          contentContainerStyle={{ alignItems: 'center' }}
           data={overallContent.followed}
           renderItem={this.renderFollowedCard}
           keyExtractor={item => `${item.id}`}
