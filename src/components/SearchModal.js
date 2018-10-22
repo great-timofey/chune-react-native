@@ -1,32 +1,26 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
   FlatList,
   Platform,
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import moment from 'moment';
+
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
-import { utils, components } from '../global';
 
-import { API } from '../services/chuneAPI';
-import { toggleSearch } from '../redux/common/actions';
 import {
   requestSearchArtist,
   setSearchArtistResult,
   getDataArtistsEventsSingle,
 } from '../redux/data/actions';
+import { utils, components, colors } from '../global';
+import { toggleSearch } from '../redux/common/actions';
 
-class SearchModal extends Component {
+class SearchModal extends PureComponent {
   state = {
     query: '',
   };
@@ -95,7 +89,7 @@ class SearchModal extends Component {
           </ClearButtonView>
           {loading ? (
             <LoadingView>
-              <ActivityIndicator />
+              <ActivityIndicator color={colors.accent} />
             </LoadingView>
           ) : (
             <FlatList data={results} renderItem={this.renderOption} />
