@@ -222,10 +222,14 @@ function* searchArtistWorker({ payload: { artistName } }) {
   try {
     yield delay(300);
     yield put(setSearchArtistLoading(true));
-    const token = yield select(state => state.auth.token);
-    yield call(setAuthToken, token);
-    const response = yield searchArtist(artistName);
-    yield put(setSearchArtistResult(response));
+    if (artistName !== '') {
+      const token = yield select(state => state.auth.token);
+      yield call(setAuthToken, token);
+      const response = yield searchArtist(artistName);
+      yield put(setSearchArtistResult(response));
+    } else {
+      yield put(setSearchArtistResult([]));
+    }
     yield put(setSearchArtistLoading(false));
   } catch (err) {
     yield put(setSearchArtistResult([]));
