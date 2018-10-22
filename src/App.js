@@ -4,6 +4,7 @@ import { StatusBar } from 'react-native';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import configureStore from './redux/store';
+import GlobalLoader from './components/GlobalLoader';
 import { connected as AppNavigator } from './navigation';
 
 const { store, persistor } = configureStore();
@@ -13,6 +14,7 @@ export default () => (
     <PersistGate loading={null} persistor={persistor}>
       <StatusBar barStyle="light-content" backgroundColor="#52146C" />
       <AppNavigator />
+      <GlobalLoader />
     </PersistGate>
   </Provider>
 );

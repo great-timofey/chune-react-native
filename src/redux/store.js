@@ -23,6 +23,7 @@ const authPersistConfig = {
 const dataPersistConfig = {
   key: 'data',
   storage,
+  whitelist: ['home', 'forYou'],
 };
 
 const playerPersistConfig = {

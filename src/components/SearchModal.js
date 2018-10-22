@@ -41,8 +41,8 @@ class SearchModal extends PureComponent {
 
   handleChooseOption = (artistName) => {
     const { getDataArtistsEventsSingle, drillCallback } = this.props;
+    drillCallback();
     getDataArtistsEventsSingle(artistName);
-    drillCallback(artistName);
     this.handleClose();
   };
 

@@ -26,8 +26,8 @@ type Props = {
 class TabView extends Component<Props> {
   static navigationOptions = ({ navigation: { state } }) => {
     const name = state && state.params && state.params.iconName;
-    const undrillCallback = state && state.params && state.params.handleUndrill;
     const drawerCallback = state && state.params && state.params.handleDrawer;
+    const undrillCallback = state && state.params && state.params.handleUndrill;
     return {
       headerLeft: () => headerLeft(name, undrillCallback, drawerCallback),
     };
@@ -102,11 +102,18 @@ class TabView extends Component<Props> {
       iconName: 'arrow-back',
       key: 'Home',
     });
-    if (activeTabIndex !== 2) tabNavigate(2);
+    // if (activeTabIndex !== 2) tabNavigate(2);
   };
 
   handleUndrill = () => {
-    const { navigation, setDataArtistsEventsSingle } = this.props;
+    const {
+      navigation,
+      setDataArtistsEventsSingle,
+      artistsEventsLoading,
+    } = this.props;
+    if (artistsEventsLoading) {
+      return null;
+    }
     navigation.setParams({
       iconName: 'menu',
       key: 'Home',
@@ -173,6 +180,7 @@ export default connect(
     isSearchOpen: common.isSearchOpen,
     activeTabIndex: common.activeTabIndex,
     currentArtist: artistsEvents.currentArtist,
+    artistsEventsLoading: artistsEvents.loading,
   }),
   {
     toggleDrill,

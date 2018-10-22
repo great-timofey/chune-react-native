@@ -35,33 +35,12 @@ import {
   setDataArtistsEventsOverall,
   artistsEventsControlLoading,
 } from './actions';
+import { tabNavigate, toggleGlobalLoading } from '../common/actions';
 
 const rehydrate = ({ type, key }) => type === REHYDRATE && key === 'data';
 
 function* getDataHomeWorker() {
   try {
-    const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      // name,
-      email,
-      password,
-    });
-
-    const token = yield select(state => state.auth.token);
-    yield call(setAuthToken, token);
-    /* const jsonToken = JSON.stringify({ token });
-     const rest = yield call(verifyAuthToken, jsonToken);
-     console.log('response', rest);
-     if (response.status === 400) {
-      alert('');
-    } else {
-      yield call(setAuthToken, token);
-
-      const content = yield call(getHomeContent);
-      console.log(content);
-     } */
     const { featured, content_feed: contentFeed } = yield call(getHomeContent);
     yield put(setDataHome(featured, contentFeed));
   } catch (err) {
@@ -71,28 +50,6 @@ function* getDataHomeWorker() {
 
 function* getDataForYouWorker() {
   try {
-    const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      // name,
-      email,
-      password,
-    });
-
-    const token = yield select(state => state.auth.token);
-    yield call(setAuthToken, token);
-    /* const jsonToken = JSON.stringify({ token });
-     const rest = yield call(verifyAuthToken, jsonToken);
-     console.log('response', rest);
-     if (response.status === 400) {
-      alert('');
-    } else {
-      yield call(setAuthToken, token);
-
-      const content = yield call(getHomeContent);
-      console.log(content);
-     } */
     let data = yield call(getContentForYouFirst);
     if (
       data[Object.keys(data)[0]].length === 0
@@ -108,31 +65,15 @@ function* getDataForYouWorker() {
 }
 
 function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
+  const isLoading = yield select(state => state.common.loading);
+  const currentTabIndex = yield select(state => state.common.activeTabIndex);
+  const isNeedOfGlobalLoading = currentTabIndex !== 2;
   try {
-    yield put(artistsEventsControlLoading(true));
-
-    /* const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      name,
-      email,
-      password,
-    }); */
-
-    const token = yield select(state => state.auth.token);
-    yield call(setAuthToken, token);
-    /* const jsonToken = JSON.stringify({ token });
-     const rest = yield call(verifyAuthToken, jsonToken);
-     console.log('response', rest);
-     if (response.status === 400) {
-      alert('');
+    if (isNeedOfGlobalLoading) {
+      yield put(toggleGlobalLoading());
     } else {
-      yield call(setAuthToken, token);
-
-      const content = yield call(getHomeContent);
-      console.log(content);
-     } */
+      yield put(artistsEventsControlLoading(true));
+    }
 
     const artistResponse = yield call(getArtistData, artistName);
     const { artist, content: media } = artistResponse;
@@ -147,55 +88,45 @@ function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
         events.slice(0, 20),
       ),
     );
+    if (currentTabIndex !== 2) {
+      yield put(tabNavigate(2));
+    }
+    if (isNeedOfGlobalLoading) {
+      yield put(toggleGlobalLoading());
+    } else {
+      yield put(artistsEventsControlLoading(false));
+    }
   } catch (err) {
     alert('Error artist data');
-  } finally {
-    yield put(artistsEventsControlLoading(false));
+    if (isNeedOfGlobalLoading && isLoading) {
+      yield put(toggleGlobalLoading());
+    } else {
+      yield put(artistsEventsControlLoading(false));
+    }
   }
 }
 
 function* getDataArtistsEventsOverallWorker() {
   try {
-    yield put(artistsEventsControlLoading(true));
-
-    const name = 'tim2';
-    const email = 'tim2@mail.com';
-    const password = 'aA12345';
-    const user = JSON.stringify({
-      name,
-      email,
-      password,
-    });
-
-    const token = yield select(state => state.auth.token);
-    yield call(setAuthToken, token);
-    /* const jsonToken = JSON.stringify({ token });
-     const rest = yield call(verifyAuthToken, jsonToken);
-     console.log('response', rest);
-     if (response.status === 400) {
-      alert('');
-    } else {
-      yield call(setAuthToken, token);
-
-      const content = yield call(getHomeContent);
-      console.log(content);
-     } */
-    // this.setState({ loading: true });
-    const { artists: followed, recommended } = yield call(
-      getContentFollowedRecommended,
-    );
-    yield put(setDataArtistsEventsOverall(followed, recommended.slice(0, 5)));
-    yield put(artistsEventsControlLoading(false));
+    const isAuthIn = yield select(state => state.auth.isLoggedIn);
+    if (isAuthIn) {
+      yield put(artistsEventsControlLoading(true));
+      const { artists: followed, recommended } = yield call(
+        getContentFollowedRecommended,
+      );
+      yield put(setDataArtistsEventsOverall(followed, recommended.slice(0, 5)));
+      yield put(artistsEventsControlLoading(false));
+    }
   } catch (err) {
     console.log(err);
+  } finally {
+    yield put(artistsEventsControlLoading(false));
   }
 }
 
 function* artistFollowingWorker({ type, payload: { artist } }) {
   try {
     yield put(artistsEventsControlLoading(true));
-    const token = yield select(state => state.auth.token);
-    yield call(setAuthToken, token);
     if (type === DATA_ACTIONS.FOLLOW_ARTIST_REQUEST) {
       const response = yield call(followArtist, artist);
       const successful = response === 'success';
@@ -227,8 +158,6 @@ function* searchArtistWorker({ payload: { artistName } }) {
     yield delay(300);
     yield put(setSearchArtistLoading(true));
     if (artistName !== '') {
-      const token = yield select(state => state.auth.token);
-      yield call(setAuthToken, token);
       const response = yield searchArtist(artistName);
       yield put(setSearchArtistResult(response));
     } else {
@@ -256,7 +185,7 @@ function* sagas() {
   yield takeLatest(DATA_ACTIONS.FOLLOW_ARTIST_REQUEST, artistFollowingWorker);
   yield takeLatest(DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST, artistFollowingWorker);
   yield takeLatest(DATA_ACTIONS.SEARCH_ARTIST_REQUEST, searchArtistWorker);
-  // yield takeLatest(rehydrate, getDataArtistsEventsSingleWorker);
+  yield takeLatest(rehydrate, getDataArtistsEventsOverallWorker);
 }
 
 export default sagas;
