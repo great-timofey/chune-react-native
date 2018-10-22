@@ -16,7 +16,14 @@ const FollowedArtistCard = ({
   unfollowCallback,
   genre,
 }: Props) => (
-  <Container>
+  <Container
+    style={{
+      shadowRadius: 3,
+      shadowColor: 'black',
+      shadowOffset: { height: 0, width: 0 },
+      shadowOpacity: 0.75,
+    }}
+  >
     <Cover source={{ uri: imageUrl || utils.getPlaceholder(40) }} />
     <DescriptionContainer>
       <Genre>{genre}</Genre>
@@ -80,11 +87,13 @@ const ControlsContainer = styled.View`
 
 const MoreButton = styled.TouchableOpacity`
   margin-right: 20;
+  font-weight: bold;
 `;
 
 const UnfollowButton = styled.TouchableOpacity``;
 
 const ControlButtonText = styled(components.TextRegular)`
   font-size: 15;
+  font-weight: bold;
   color: ${colors.accent};
 `;

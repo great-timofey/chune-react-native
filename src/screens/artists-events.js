@@ -20,6 +20,7 @@ import {
 } from '../global';
 import { ListCard } from '../components/home';
 import FollowedArtistCard from '../components/FollowedArtistCard';
+import RecommendedArtistCard from '../components/RecommendedArtistCard';
 import {
   requestArtistFollow,
   requestArtistUnfollow,
@@ -68,8 +69,19 @@ class ArtistsEventsScreen extends Component<Props> {
     );
   };
 
-  renderRecommendedCard = ({ item: { image_url, name, genres } }) => (
-    <View
+  renderRecommendedCard = ({
+    item: {
+      image_url, name, genres, enterCallback, followCallback,
+    },
+  }) => (
+    <RecommendedArtistCard
+      name={name}
+      genre={(genres[0] && genres[0].description) || 'none'}
+      imageUrl={image_url}
+      followCallback={this.handleFollow}
+      enterCallback={this.handleEnter}
+    />
+    /* <View
       style={{
         width: 200,
         height: 200,
@@ -104,7 +116,7 @@ class ArtistsEventsScreen extends Component<Props> {
           />
         </View>
       </ImageBackground>
-    </View>
+    </View> */
   );
 
   renderFollowedCard = ({ item: { image_url, name, genres }, index }) => (
@@ -252,7 +264,16 @@ class ArtistsEventsScreen extends Component<Props> {
     ) : (
       <ScreenScrollContainer>
         <View style={{ paddingTop: 24, marginBottom: 32 }}>
-          <Text style={{ marginBottom: 10, paddingLeft: 16 }}>RECOMMENDED</Text>
+          <Text
+            style={{
+              marginBottom: 10,
+              paddingLeft: 16,
+              fontSize: 20,
+              fontFamily: 'Roboto-Regular',
+            }}
+          >
+            Recommended Artists
+          </Text>
           <FlatList
             horizontal
             data={overallContent.recommended}
@@ -263,7 +284,15 @@ class ArtistsEventsScreen extends Component<Props> {
         <View
           style={{ paddingHorizontal: 8, alignItems: 'center', fontSize: 16 }}
         >
-          <Text style={{ marginBottom: 10 }}>Currently Followed Artists</Text>
+          <Text
+            style={{
+              marginBottom: 10,
+              fontSize: 20,
+              fontFamily: 'Roboto-Regular',
+            }}
+          >
+            Currently Followed Artists
+          </Text>
         </View>
         <FlatList
           contentContainerStyle={{ alignItems: 'center' }}
