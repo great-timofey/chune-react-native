@@ -1,7 +1,7 @@
-import { Image } from 'react-native';
+import React, { PureComponent } from 'react';
+import { Image, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import React, { PureComponent } from 'react';
 
 import Spotify from 'rn-spotify-sdk';
 import styled from 'styled-components';
@@ -152,6 +152,7 @@ class AuthScreen extends PureComponent<Props> {
     const { isSignUp } = this.state;
     return (
       <KeyboardAwareScrollView extraScrollHeight={100}>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" />
         <MainContent>
           <Logo source={images.logoChune} reducedMargin={isSignUp} />
           <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
