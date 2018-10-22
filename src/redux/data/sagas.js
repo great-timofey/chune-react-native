@@ -138,6 +138,8 @@ function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
     const { artist, content: media } = artistResponse;
     const artistEventsResponse = yield call(getArtistEvents, artist.id);
     const { data: events } = artistEventsResponse;
+    // console.log(artistResponse);
+    // console.log(artistEventsResponse);
     yield put(
       setDataArtistsEventsSingle(
         artist,
@@ -145,10 +147,9 @@ function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
         events.slice(0, 20),
       ),
     );
-    yield put(artistsEventsControlLoading(false));
   } catch (err) {
     alert('Error artist data');
-    yield put(setDataArtistsEventsSingle(null));
+  } finally {
     yield put(artistsEventsControlLoading(false));
   }
 }
@@ -193,6 +194,8 @@ function* getDataArtistsEventsOverallWorker() {
 function* artistFollowingWorker({ type, payload: { artist } }) {
   try {
     yield put(artistsEventsControlLoading(true));
+    const token = yield select(state => state.auth.token);
+    yield call(setAuthToken, token);
     if (type === DATA_ACTIONS.FOLLOW_ARTIST_REQUEST) {
       const response = yield call(followArtist, artist);
       const successful = response === 'success';
@@ -212,10 +215,10 @@ function* artistFollowingWorker({ type, payload: { artist } }) {
       );
       if (successful) yield put(getDataArtistsEventsOverall());
     }
-    yield put(artistsEventsControlLoading(false));
   } catch (err) {
-    yield put(artistsEventsControlLoading(false));
     console.log(err);
+  } finally {
+    yield put(artistsEventsControlLoading(false));
   }
 }
 
@@ -231,11 +234,11 @@ function* searchArtistWorker({ payload: { artistName } }) {
     } else {
       yield put(setSearchArtistResult([]));
     }
-    yield put(setSearchArtistLoading(false));
   } catch (err) {
     yield put(setSearchArtistResult([]));
-    yield put(setSearchArtistLoading(false));
     console.log(err);
+  } finally {
+    yield put(setSearchArtistLoading(false));
   }
 }
 
