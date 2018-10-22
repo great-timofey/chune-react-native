@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import { Text, WebView } from 'react-native';
+import { Text, WebView, View } from 'react-native';
 
 import YouTube from 'react-native-youtube';
 import { colors, components, utils } from '../../global';
@@ -16,17 +16,24 @@ type Props = {
 };
 
 const ListCard = ({
-  title,
-  source_name,
-  published_on,
-  artist_name,
-  image,
-  type,
   url,
+  type,
+  title,
+  image,
+  callback,
   youtube_id,
   description,
-  callback,
+  source_name,
+  artist_name,
+  published_on,
+  channel_name,
 }: Props) => {
+  const getDate = rawDate => moment(rawDate)
+    .format('D MMM, YYYY')
+    .toUpperCase();
+
+  const uppercaseSource = source => source.toUpperCase();
+
   switch (type) {
     case 'tweet':
       return (
@@ -51,11 +58,7 @@ const ListCard = ({
             <From>dewd</From>
             <Metadata>
               <MetadataText>{source_name}</MetadataText>
-              <MetadataText>
-                {moment(published_on)
-                  .format('D MMM')
-                  .toUpperCase()}
-              </MetadataText>
+              <MetadataText>{getDate(published_on)}</MetadataText>
               <MetadataText>{artist_name}</MetadataText>
             </Metadata>
           </TextContainer>
@@ -63,17 +66,42 @@ const ListCard = ({
       );
     case 'video':
       return (
-        <Container style={{ height: 170, flexDirection: 'column' }}>
-          <Header numberOfLines={1} ellipsizeMode="tail">
+        <VideoContainer>
+          <View
+            style={{
+              paddingTop: 5,
+              paddingHorizontal: 5,
+              marginBottom: 5,
+              flexDirection: 'row',
+            }}
+          >
+            <VideoHeader numberOfLines={1} ellipsizeMode="tail">
+              {uppercaseSource(`via ${channel_name}`)}
+            </VideoHeader>
+            <VideoHeader
+              numberOfLines={1}
+              style={{ marginLeft: 10 }}
+              ellipsizeMode="tail"
+            >
+              {getDate(published_on)}
+            </VideoHeader>
+          </View>
+          <VideoHeader
+            style={{
+              paddingHorizontal: 5,
+            }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             {description}
-          </Header>
+          </VideoHeader>
           <YouTube
             videoId={youtube_id}
             play={false}
             fullscreen
             style={{ alignSelf: 'stretch', height: 150 }}
           />
-        </Container>
+        </VideoContainer>
       );
     default:
       return <Text>{type}</Text>;
@@ -85,9 +113,15 @@ export default ListCard;
 const Container = styled.View`
   width: 100%;
   height: 100;
+  border-radius: 5;
   margin-bottom: 12;
   flex-direction: column;
   background-color: white;
+`;
+
+const VideoContainer = styled(Container)`
+  height: auto;
+  flex-direction: column;
 `;
 
 const TouchableContainer = styled.TouchableOpacity`
@@ -109,10 +143,15 @@ const TextContainer = styled.View`
   padding-horizontal: 12;
   background-color: white;
 `;
+
 const Header = styled(components.TextRegular)`
   font-size: 16;
   margin-bottom: 3;
   color: ${colors.black};
+`;
+
+const VideoHeader = styled(Header)`
+  font-weight: bold;
 `;
 
 const Description = styled(components.TextRegular)`
