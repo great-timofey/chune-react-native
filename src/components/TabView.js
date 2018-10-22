@@ -15,11 +15,7 @@ import { height } from '../global/device';
 import ForYouScreen from '../screens/for-you';
 import { headerLeft } from '../global/navigations';
 import ArtistsEventsScreen from '../screens/artists-events';
-import {
-  toggleDrill,
-  toggleSearch,
-  tabNavigate,
-} from '../redux/common/actions';
+import { toggleDrill, tabNavigate } from '../redux/common/actions';
 import { setDataArtistsEventsSingle } from '../redux/data/actions';
 
 type Props = {
@@ -126,12 +122,7 @@ class TabView extends Component<Props> {
 
   render() {
     const { isPlayerOpen } = this.state;
-    const {
-      isDrilled,
-      isSearchOpen,
-      toggleSearch,
-      activeTabIndex,
-    } = this.props;
+    const { isDrilled, isSearchOpen, activeTabIndex } = this.props;
     return (
       <Fragment>
         <ScrollableTabView
@@ -156,7 +147,6 @@ class TabView extends Component<Props> {
         </ScrollableTabView>
         <SearchModal
           isVisible={isSearchOpen}
-          showCallback={toggleSearch}
           drillCallback={this.handleDrill}
         />
         {// player is temporary hidden
@@ -186,7 +176,6 @@ export default connect(
   }),
   {
     toggleDrill,
-    toggleSearch,
     tabNavigate,
     setDataArtistsEventsSingle,
   },

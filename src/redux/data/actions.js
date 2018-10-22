@@ -52,6 +52,11 @@ export const requestArtistUnfollow = artist => ({
   payload: { artist },
 });
 
+export const setSearchArtistLoading = value => ({
+  type: DATA_ACTIONS.SEARCH_ARTIST_SET_LOADING,
+  payload: { value },
+});
+
 export const requestSearchArtist = artistName => ({
   type: DATA_ACTIONS.SEARCH_ARTIST_REQUEST,
   payload: { artistName },

@@ -1,6 +1,7 @@
 import {
   takeLatest, takeEvery, call, select, put,
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { REHYDRATE } from 'redux-persist/lib/constants';
 
 import {
@@ -27,6 +28,7 @@ import {
   setDataForYou,
   requestSearchArtist,
   setSearchArtistResult,
+  setSearchArtistLoading,
   getDataArtistsEventsSingle,
   setDataArtistsEventsSingle,
   getDataArtistsEventsOverall,
@@ -136,7 +138,13 @@ function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
     const { artist, content: media } = artistResponse;
     const artistEventsResponse = yield call(getArtistEvents, artist.id);
     const { data: events } = artistEventsResponse;
-    yield put(setDataArtistsEventsSingle(artist, media, events));
+    yield put(
+      setDataArtistsEventsSingle(
+        artist,
+        media.slice(0, 20),
+        events.slice(0, 20),
+      ),
+    );
     yield put(artistsEventsControlLoading(false));
   } catch (err) {
     alert('Error artist data');
@@ -212,12 +220,16 @@ function* artistFollowingWorker({ type, payload: { artist } }) {
 
 function* searchArtistWorker({ payload: { artistName } }) {
   try {
+    yield delay(300);
+    yield put(setSearchArtistLoading(true));
     const token = yield select(state => state.auth.token);
     yield call(setAuthToken, token);
     const response = yield searchArtist(artistName);
     yield put(setSearchArtistResult(response));
+    yield put(setSearchArtistLoading(false));
   } catch (err) {
     yield put(setSearchArtistResult([]));
+    yield put(setSearchArtistLoading(false));
     console.log(err);
   }
 }

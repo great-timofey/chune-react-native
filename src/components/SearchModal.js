@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import {
+  View,
   Text,
   TextInput,
   FlatList,
@@ -18,68 +19,92 @@ import ViewOverflow from 'react-native-view-overflow';
 import { utils } from '../global';
 
 import { API } from '../services/chuneAPI';
+import { toggleSearch } from '../redux/common/actions';
 import {
   requestSearchArtist,
   setSearchArtistResult,
   getDataArtistsEventsSingle,
 } from '../redux/data/actions';
 
-class SearchModal extends Component<Props> {
+class SearchModal extends Component {
   state = {
-    // options: [],
     query: '',
   };
 
-  handleSearch = () => {
-    this.props.requestSearchArtist(this.state.query);
-    // API.get(`artists/search/${this.state.query}/`).then(({ data: options }) => this.setState({ options }));
+  handleSearch = (query) => {
+    const { requestSearchArtist } = this.props;
+    this.setState({ query }, () => requestSearchArtist(query));
   };
 
-  handleClear = () => {
+  handleClose = () => {
+    const { setSearchArtistResult, toggleSearch } = this.props;
     this.setState({ query: '' });
-    this.props.setSearchArtistResult([]);
+    setSearchArtistResult([]);
+    toggleSearch();
   };
 
   handleChooseOption = (artistName) => {
-    this.props.showCallback();
-    this.props.getDataArtistsEventsSingle(artistName);
-    this.props.drillCallback(artistName);
-    this.handleClear();
+    const { getDataArtistsEventsSingle, drillCallback } = this.props;
+    getDataArtistsEventsSingle(artistName);
+    toggleSearch();
+    drillCallback(artistName);
+    this.handleClose();
   };
 
-  renderOption = ({ item }) => (
-    <TouchableOpacity onPress={() => this.handleChooseOption(item.name)}>
-      <Text>{item.name}</Text>
+  renderOption = ({ item: { name } }) => (
+    <TouchableOpacity onPress={() => this.handleChooseOption(name)}>
+      <Text>{name}</Text>
     </TouchableOpacity>
   );
 
   render() {
     const { query } = this.state;
     const {
-      isVisible, showCallback, loading, options,
+      isSearchOpen, toggleSearch, loading, results,
     } = this.props;
     return (
       <ViewOverflow>
         <ModalView
-          isVisible={isVisible}
+          isVisible={isSearchOpen}
           animationInTiming={1}
           animationOutTiming={1}
         >
-          <TextInput
-            style={{ height: 50, width: 100, borderColor: 'grey' }}
-            onChangeText={query => this.setState({ query })}
+          <SearchField
+            autoFocus
+            placeholder="Search to find and follow artist"
+            onChangeText={this.handleSearch}
             value={query}
           />
-          <TouchableOpacity onPress={this.handleClear}>
-            <Text>clear</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.handleSearch}>
-            <Text>search</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={showCallback}>
-            <Text>close</Text>
-          </TouchableOpacity>
-          <FlatList data={options} renderItem={this.renderOption} />
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              top: 0,
+              right: 5,
+              zIndex: 1,
+              position: 'absolute',
+            }}
+          >
+            <Icon.Button
+              name="x"
+              size={20}
+              color="black"
+              backgroundColor="transparent"
+              onPress={this.handleClose}
+              iconStyle={{
+                width: 20,
+                height: 20,
+                padding: 0,
+                marginRight: 0,
+              }}
+              borderRadius={0}
+            />
+          </View>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <FlatList data={results} renderItem={this.renderOption} />
+          )}
         </ModalView>
       </ViewOverflow>
     );
@@ -87,8 +112,22 @@ class SearchModal extends Component<Props> {
 }
 
 export default connect(
-  ({ data: { search } }) => ({ options: search.results }),
-  { getDataArtistsEventsSingle, requestSearchArtist, setSearchArtistResult },
+  ({
+    common: { isSearchOpen },
+    data: {
+      search: { loading, results },
+    },
+  }) => ({
+    isSearchOpen,
+    loading,
+    results,
+  }),
+  {
+    getDataArtistsEventsSingle,
+    requestSearchArtist,
+    setSearchArtistResult,
+    toggleSearch,
+  },
 )(SearchModal);
 
 const ModalView = styled(Modal)`
@@ -109,4 +148,11 @@ const ModalView = styled(Modal)`
       justifyContent: 'flex-start',
     },
   })};
+`;
+
+const SearchField = styled.TextInput`
+  height: 40;
+  width: 100%;
+  font-size: 18;
+  padding-left: 20;
 `;

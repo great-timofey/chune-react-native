@@ -24,6 +24,7 @@ const INITIAL_STATE = {
     },
   },
   search: {
+    loading: false,
     results: [],
   },
 };
@@ -48,7 +49,9 @@ const dataArtistsEventsOverallHandler = ({ followed = [], recommended = [] }) =>
 
 const dataArtistsEventsLoadingHandler = ({ loading }) => R.pipe(R.assocPath(['artistsEvents', 'loading'], loading));
 
-const searchHandler = ({ results = [] }) => R.pipe(R.assocPath(['search', 'results'], results));
+const searchResultsHandler = ({ results = [] }) => R.pipe(R.assocPath(['search', 'results'], results));
+
+const searchLoadingHandler = ({ value }) => R.assocPath(['search', 'loading'], value);
 
 const logoutHandler = () => R.pipe(R.always(INITIAL_STATE));
 
@@ -58,7 +61,8 @@ const HANDLERS = {
   [DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_OVERALL_SUCCESS]: dataArtistsEventsOverallHandler,
   [DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_SINGLE_SUCCESS]: dataArtistsEventsSingleHandler,
   [DATA_ACTIONS.ARTISTS_EVENTS_CONTROL_LOADING]: dataArtistsEventsLoadingHandler,
-  [DATA_ACTIONS.SEARCH_ARTIST_SUCCESS]: searchHandler,
+  [DATA_ACTIONS.SEARCH_ARTIST_SUCCESS]: searchResultsHandler,
+  [DATA_ACTIONS.SEARCH_ARTIST_SET_LOADING]: searchLoadingHandler,
   [AUTH_ACTIONS.LOGOUT]: logoutHandler,
 };
 
