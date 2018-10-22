@@ -65,7 +65,6 @@ function* getDataForYouWorker() {
 }
 
 function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
-  const isLoading = yield select(state => state.common.loading);
   const currentTabIndex = yield select(state => state.common.activeTabIndex);
   const isNeedOfGlobalLoading = currentTabIndex !== 2;
   try {
@@ -98,6 +97,7 @@ function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
     }
   } catch (err) {
     alert('Error artist data');
+    const isLoading = yield select(state => state.common.loading);
     if (isNeedOfGlobalLoading && isLoading) {
       yield put(toggleGlobalLoading());
     } else {
