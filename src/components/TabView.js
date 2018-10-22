@@ -20,6 +20,7 @@ import {
   toggleSearch,
   tabNavigate,
 } from '../redux/common/actions';
+import { setDataArtistsEventsSingle } from '../redux/data/actions';
 
 type Props = {
   navigation: Object,
@@ -30,7 +31,7 @@ type Props = {
 class TabView extends Component<Props> {
   static navigationOptions = ({ navigation: { state } }) => {
     const name = state && state.params && state.params.iconName;
-    const callback = state && state.params && state.params.handleDrill;
+    const callback = state && state.params && state.params.handleUndrill;
     return {
       headerLeft: () => headerLeft(name, callback),
     };
@@ -38,13 +39,12 @@ class TabView extends Component<Props> {
 
   state = {
     url: '',
-    currentArtist: '',
     isPlayerOpen: false,
   };
 
   componentDidMount() {
     const { navigation } = this.props;
-    navigation.setParams({ handleDrill: this.handleDrill });
+    navigation.setParams({ handleUndrill: this.handleUndrill });
   }
 
   togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
@@ -86,30 +86,40 @@ class TabView extends Component<Props> {
     navigation.navigate('ModalScreen', { url });
   };
 
-  handleDrill = (artist) => {
-    const {
-      navigation,
-      isDrilled,
-      toggleDrill,
-      tabNavigate,
-      activeTabIndex,
-    } = this.props;
-    this.setState({ currentArtist: artist || '' });
-    const iconName = isDrilled ? '' : 'arrow-back';
+  calculateLeftHeaderAction = () => {
+    const { navigation, currentArtist } = this.props;
+    const iconName = currentArtist ? 'arrow-back' : 'menu';
     navigation.setParams({
       iconName,
       key: 'Home',
     });
-    if (activeTabIndex !== 2) {
-      tabNavigate(2);
-    }
-    toggleDrill();
   };
 
-  handleChangeTab = ({ i }) => this.props.tabNavigate(i);
+  handleDrill = (artist) => {
+    const { navigation, activeTabIndex, tabNavigate } = this.props;
+    navigation.setParams({
+      iconName: 'arrow-back',
+      key: 'Home',
+    });
+    if (activeTabIndex !== 2) tabNavigate(2);
+  };
+
+  handleUndrill = () => {
+    const { navigation, setDataArtistsEventsSingle } = this.props;
+    navigation.setParams({
+      iconName: 'menu',
+      key: 'Home',
+    });
+    setDataArtistsEventsSingle(null);
+  };
+
+  handleChangeTab = ({ i: index }) => {
+    const { tabNavigate } = this.props;
+    tabNavigate(index);
+  };
 
   render() {
-    const { isPlayerOpen, currentArtist } = this.state;
+    const { isPlayerOpen } = this.state;
     const {
       isDrilled,
       isSearchOpen,
@@ -135,14 +145,13 @@ class TabView extends Component<Props> {
             tabLabel={{ label: 'ARTISTS & EVENTS' }}
             modalCallback={this.handleModal}
             drillCallback={this.handleDrill}
-            artist={currentArtist || false}
           />
           <BlogScreen tabLabel={{ label: 'BLOG' }} />
         </ScrollableTabView>
         <SearchModal
-          drillCallback={this.handleDrill}
           isVisible={isSearchOpen}
           showCallback={toggleSearch}
+          drillCallback={this.handleDrill}
         />
         {// player is temporary hidden
         false && (
@@ -164,10 +173,15 @@ class TabView extends Component<Props> {
 }
 
 export default connect(
-  ({ common }) => ({
-    isDrilled: common.isDrilled,
+  ({ common, data: { artistsEvents } }) => ({
     isSearchOpen: common.isSearchOpen,
     activeTabIndex: common.activeTabIndex,
+    currentArtist: artistsEvents.currentArtist,
   }),
-  { toggleDrill, toggleSearch, tabNavigate },
+  {
+    toggleDrill,
+    toggleSearch,
+    tabNavigate,
+    setDataArtistsEventsSingle,
+  },
 )(TabView);

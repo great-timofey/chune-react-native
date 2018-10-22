@@ -113,12 +113,24 @@ class ArtistsEventsScreen extends Component<Props> {
 
   renderFollowedCard = ({ item: { image_url, name } }) => (
     <TouchableOpacity
-      style={{ width: '100%', height: 50, justifyContent: 'center' }}
+      style={{
+        height: 50,
+        width: '100%',
+        paddingLeft: 16,
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: 'white',
+      }}
       onPress={() => this.handleEnter(name)}
     >
       <Image
         source={{ uri: image_url || utils.getPlaceholder(40) }}
-        style={{ width: 40, height: 40, borderRadius: 20 }}
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          marginRight: 10,
+        }}
       />
       <Text>{name}</Text>
     </TouchableOpacity>
@@ -134,34 +146,10 @@ class ArtistsEventsScreen extends Component<Props> {
     requestArtistFollow(name);
   };
 
-  handleEnter = async (name) => {
-    const { drillCallback } = this.props;
-    this.setState({ loading: true });
-
-    const artistResponse = await API.get(`artists/${name}/`);
-    // console.log(artistResponse.data);
-    const artistId = artistResponse.data.artist.id;
-    const eventsResponse = await API.get(
-      `/artists/${artistId}/events/2018-05-01/2018-10-01/`,
-    );
-    if (artistResponse.status === 200 && eventsResponse.status === 200) {
-      const {
-        data: { content: media },
-      } = artistResponse;
-
-      const { data } = eventsResponse;
-      const events = data.data.length ? data.data : [];
-
-      this.setState(state => ({
-        ...state,
-        ...{ artistContent: { media, events } },
-      }));
-
-      drillCallback(name);
-    } else {
-      alert('Error');
-    }
-    this.setState({ loading: false });
+  handleEnter = (name) => {
+    const { getDataArtistsEventsSingle, drillCallback } = this.props;
+    getDataArtistsEventsSingle(name);
+    drillCallback(name);
   };
 
   showArtistMedia = () => this.setState({ showArtistMedia: true });
@@ -169,13 +157,13 @@ class ArtistsEventsScreen extends Component<Props> {
   showArtistEvents = () => this.setState({ showArtistMedia: false });
 
   getCurrentArtist = (artistName) => {
-    const { content } = this.state;
+    /* const { content } = this.state;
     const isRecommended = content.recommended.find(
       item => item.name === artistName,
     );
     return (
       isRecommended || content.followed.find(item => item.name === artistName)
-    );
+    ); */
   };
 
   render() {
@@ -191,76 +179,83 @@ class ArtistsEventsScreen extends Component<Props> {
     return loading ? (
       <ActivityIndicator />
     ) : currentArtist ? (
-      <View style={{ paddingTop: 25 }}>
-        <View style={{ marginBottom: 25 }}>
-          <View style={{ flexDirection: 'row', marginBottom: 25 }}>
-            <Image
-              style={{ width: 120, height: 120 }}
-              source={{
-                uri:
-                  this.getCurrentArtist(currentArtist).image_url
-                  || utils.getPlaceholder(120),
+      <ScreenScrollContainer>
+        <View style={{ paddingTop: 25, paddingHorizontal: 8 }}>
+          <View style={{ marginBottom: 25, paddingHorizontal: 8 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginBottom: 25,
               }}
-            />
-            <View style={{ justifyContent: 'space-between' }}>
-              <Text style={{ marginBottom: 10, paddingLeft: 16, fontSize: 18 }}>
-                {currentArtist}
-              </Text>
-              <TouchableOpacity
-                onPress={() => this.handleFollow(currentArtist)}
-              >
+            >
+              <Image
+                style={{ width: 120, height: 120 }}
+                source={{
+                  uri: currentArtist.image_url || utils.getPlaceholder(120),
+                }}
+              />
+              <View style={{ justifyContent: 'space-between' }}>
                 <Text
-                  style={{
-                    marginBottom: 10,
-                    paddingLeft: 16,
-                    fontSize: 18,
-                    color: colors.accent,
-                  }}
+                  style={{ marginBottom: 10, paddingLeft: 16, fontSize: 18 }}
                 >
-                  FOLLOW
+                  {currentArtist.name}
                 </Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.handleFollow(currentArtist.name)}
+                >
+                  <Text
+                    style={{
+                      marginBottom: 10,
+                      paddingLeft: 16,
+                      fontSize: 18,
+                      color: colors.accent,
+                    }}
+                  >
+                    FOLLOW
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <ArtistDisplayModeButton
+                accented={showArtistMedia}
+                onPress={this.showArtistMedia}
+              >
+                <ArtistDisplayModeButtonText accented={showArtistMedia}>
+                  Media
+                </ArtistDisplayModeButtonText>
+              </ArtistDisplayModeButton>
+              <ArtistDisplayModeButton
+                accented={!showArtistMedia}
+                onPress={this.showArtistEvents}
+              >
+                <ArtistDisplayModeButtonText accented={!showArtistMedia}>
+                  Events
+                </ArtistDisplayModeButtonText>
+              </ArtistDisplayModeButton>
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <ArtistDisplayModeButton
-              accented={showArtistMedia}
-              onPress={this.showArtistMedia}
-            >
-              <ArtistDisplayModeButtonText accented={showArtistMedia}>
-                Media
-              </ArtistDisplayModeButtonText>
-            </ArtistDisplayModeButton>
-            <ArtistDisplayModeButton
-              accented={!showArtistMedia}
-              onPress={this.showArtistEvents}
-            >
-              <ArtistDisplayModeButtonText accented={!showArtistMedia}>
-                Events
-              </ArtistDisplayModeButtonText>
-            </ArtistDisplayModeButton>
-          </View>
+          {showArtistMedia && (
+            <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
+              <Text style={{ color: 'grey' }}>
+                {displayMediaType || 'All Media'}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <FlatList
+            data={showArtistMedia ? artistContent.media : artistContent.events}
+            renderItem={
+              showArtistMedia ? this.renderArtistMedia : this.renderArtistEvents
+            }
+            keyExtractor={item => `${item.id}`}
+          />
         </View>
-        {showArtistMedia && (
-          <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-            <Text style={{ color: 'grey' }}>
-              {displayMediaType || 'All Media'}
-            </Text>
-          </TouchableOpacity>
-        )}
-        <FlatList
-          data={showArtistMedia ? artistContent.media : artistContent.events}
-          renderItem={
-            showArtistMedia ? this.renderArtistMedia : this.renderArtistEvents
-          }
-          keyExtractor={item => `${item.id}`}
-        />
-      </View>
+      </ScreenScrollContainer>
     ) : (
       <ScreenScrollContainer>
         <View style={{ paddingTop: 24, marginBottom: 32 }}>
@@ -274,12 +269,12 @@ class ArtistsEventsScreen extends Component<Props> {
         </View>
         <View style={{ paddingHorizontal: 8 }}>
           <Text style={{ marginBottom: 10 }}>FOLLOWED</Text>
-          <FlatList
-            data={overallContent.followed}
-            renderItem={this.renderFollowedCard}
-            keyExtractor={item => `${item.id}`}
-          />
         </View>
+        <FlatList
+          data={overallContent.followed}
+          renderItem={this.renderFollowedCard}
+          keyExtractor={item => `${item.id}`}
+        />
       </ScreenScrollContainer>
     );
   }
@@ -316,7 +311,7 @@ export default connect(
 const ScreenScrollContainer = styled.ScrollView``;
 
 const ArtistDisplayModeButton = styled.TouchableOpacity`
-  width: 45%;
+  width: 49%;
   height: 40;
   border-radius: 20;
   justify-content: center;

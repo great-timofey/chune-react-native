@@ -14,6 +14,7 @@ import AuthScreen from '../screens/auth';
 import ModalScreen from '../screens/modal';
 import HomeTabView from '../components/TabView';
 import { userLogout } from '../redux/auth/actions';
+import { setDataArtistsEventsSingle } from '../redux/data/actions';
 // export const authStack = generateRoutes(auth);
 
 const iconProps = {
@@ -23,12 +24,12 @@ const iconProps = {
   backgroundColor: colors.transparent,
 };
 
-export const headerLeft = (iconName, callback) => (
+export const headerLeft = (iconName = 'menu', callback) => (
   <Icon.Button
     {...iconProps}
-    name={iconName || 'menu'}
+    name={iconName}
     onPress={() => {
-      iconName
+      iconName === 'arrow-back'
         ? callback()
         : Alert.alert(
           'Do you really want to log out?',

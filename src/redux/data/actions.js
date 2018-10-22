@@ -18,8 +18,9 @@ export const setDataForYou = contentFeed => ({
   payload: { contentFeed },
 });
 
-export const getDataArtistsEventsSingle = () => ({
+export const getDataArtistsEventsSingle = artistName => ({
   type: DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_SINGLE_REQUEST,
+  payload: { artistName },
 });
 
 export const setDataArtistsEventsSingle = (artist, media, events) => ({
@@ -49,4 +50,14 @@ export const requestArtistFollow = artist => ({
 export const requestArtistUnfollow = artist => ({
   type: DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST,
   payload: { artist },
+});
+
+export const requestSearchArtist = artistName => ({
+  type: DATA_ACTIONS.SEARCH_ARTIST_REQUEST,
+  payload: { artistName },
+});
+
+export const setSearchArtistResult = results => ({
+  type: DATA_ACTIONS.SEARCH_ARTIST_SUCCESS,
+  payload: { results },
 });

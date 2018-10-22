@@ -62,6 +62,10 @@ export const getContentForYouSecond = (start = 0, end = 10) => API.get(`content/
 
 export const getContentFollowedRecommended = () => API.get('artists/').then(response => response && response.data);
 
+export const searchArtist = request => API.get(`artists/search/${request}/`).then(
+  response => response && response.data,
+);
+
 export const getTracksOfChosenType = (type) => {
   switch (type) {
     case 'topTracks':

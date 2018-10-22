@@ -5,6 +5,7 @@ import { REHYDRATE } from 'redux-persist/lib/constants';
 
 import {
   API,
+  searchArtist,
   getTopTracks,
   setAuthToken,
   followArtist,
@@ -24,6 +25,8 @@ import {
   setDataHome,
   getDataForYou,
   setDataForYou,
+  requestSearchArtist,
+  setSearchArtistResult,
   getDataArtistsEventsSingle,
   setDataArtistsEventsSingle,
   getDataArtistsEventsOverall,
@@ -102,18 +105,18 @@ function* getDataForYouWorker() {
   }
 }
 
-function* getDataArtistsEventsSingleWorker() {
+function* getDataArtistsEventsSingleWorker({ payload: { artistName } }) {
   try {
     yield put(artistsEventsControlLoading(true));
 
-    const name = 'tim2';
+    /* const name = 'tim2';
     const email = 'tim2@mail.com';
     const password = 'aA12345';
     const user = JSON.stringify({
       name,
       email,
       password,
-    });
+    }); */
 
     const token = yield select(state => state.auth.token);
     yield call(setAuthToken, token);
@@ -128,14 +131,17 @@ function* getDataArtistsEventsSingleWorker() {
       const content = yield call(getHomeContent);
       console.log(content);
      } */
-    // this.setState({ loading: true });
-    const { artists: followed, recommended } = yield call(
-      getContentFollowedRecommended,
-    );
-    yield put(setDataArtistsEventsOverall(followed, recommended.slice(0, 5)));
+
+    const artistResponse = yield call(getArtistData, artistName);
+    const { artist, content: media } = artistResponse;
+    const artistEventsResponse = yield call(getArtistEvents, artist.id);
+    const { data: events } = artistEventsResponse;
+    yield put(setDataArtistsEventsSingle(artist, media, events));
     yield put(artistsEventsControlLoading(false));
   } catch (err) {
-    console.log(err);
+    alert('Error artist data');
+    yield put(setDataArtistsEventsSingle(null));
+    yield put(artistsEventsControlLoading(false));
   }
 }
 
@@ -204,6 +210,18 @@ function* artistFollowingWorker({ type, payload: { artist } }) {
   }
 }
 
+function* searchArtistWorker({ payload: { artistName } }) {
+  try {
+    const token = yield select(state => state.auth.token);
+    yield call(setAuthToken, token);
+    const response = yield searchArtist(artistName);
+    yield put(setSearchArtistResult(response));
+  } catch (err) {
+    yield put(setSearchArtistResult([]));
+    console.log(err);
+  }
+}
+
 function* sagas() {
   yield takeLatest(DATA_ACTIONS.GET_DATA_HOME_REQUEST, getDataHomeWorker);
   yield takeLatest(DATA_ACTIONS.GET_DATA_FOR_YOU_REQUEST, getDataForYouWorker);
@@ -217,6 +235,7 @@ function* sagas() {
   );
   yield takeLatest(DATA_ACTIONS.FOLLOW_ARTIST_REQUEST, artistFollowingWorker);
   yield takeLatest(DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST, artistFollowingWorker);
+  yield takeLatest(DATA_ACTIONS.SEARCH_ARTIST_REQUEST, searchArtistWorker);
   // yield takeLatest(rehydrate, getDataArtistsEventsSingleWorker);
 }
 

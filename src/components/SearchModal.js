@@ -18,36 +18,46 @@ import ViewOverflow from 'react-native-view-overflow';
 import { utils } from '../global';
 
 import { API } from '../services/chuneAPI';
+import {
+  requestSearchArtist,
+  setSearchArtistResult,
+  getDataArtistsEventsSingle,
+} from '../redux/data/actions';
 
 class SearchModal extends Component<Props> {
   state = {
-    options: [],
+    // options: [],
     query: '',
   };
 
   handleSearch = () => {
-    API.get(`artists/search/${this.state.query}/`).then(({ data: options }) => this.setState({ options }));
+    this.props.requestSearchArtist(this.state.query);
+    // API.get(`artists/search/${this.state.query}/`).then(({ data: options }) => this.setState({ options }));
   };
 
   handleClear = () => {
-    this.setState({ options: [], query: '' });
+    this.setState({ query: '' });
+    this.props.setSearchArtistResult([]);
+  };
+
+  handleChooseOption = (artistName) => {
+    this.props.showCallback();
+    this.props.getDataArtistsEventsSingle(artistName);
+    this.props.drillCallback(artistName);
+    this.handleClear();
   };
 
   renderOption = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        this.props.showCallback();
-        this.props.drillCallback(item.name);
-        this.handleClear();
-      }}
-    >
+    <TouchableOpacity onPress={() => this.handleChooseOption(item.name)}>
       <Text>{item.name}</Text>
     </TouchableOpacity>
   );
 
   render() {
-    const { options, query } = this.state;
-    const { isVisible, showCallback, loading } = this.props;
+    const { query } = this.state;
+    const {
+      isVisible, showCallback, loading, options,
+    } = this.props;
     return (
       <ViewOverflow>
         <ModalView
@@ -76,7 +86,10 @@ class SearchModal extends Component<Props> {
   }
 }
 
-export default SearchModal;
+export default connect(
+  ({ data: { search } }) => ({ options: search.results }),
+  { getDataArtistsEventsSingle, requestSearchArtist, setSearchArtistResult },
+)(SearchModal);
 
 const ModalView = styled(Modal)`
   top: 0;
