@@ -31,9 +31,10 @@ type Props = {
 class TabView extends Component<Props> {
   static navigationOptions = ({ navigation: { state } }) => {
     const name = state && state.params && state.params.iconName;
-    const callback = state && state.params && state.params.handleUndrill;
+    const undrillCallback = state && state.params && state.params.handleUndrill;
+    const drawerCallback = state && state.params && state.params.handleDrawer;
     return {
-      headerLeft: () => headerLeft(name, callback),
+      headerLeft: () => headerLeft(name, undrillCallback, drawerCallback),
     };
   };
 
@@ -44,8 +45,13 @@ class TabView extends Component<Props> {
 
   componentDidMount() {
     const { navigation } = this.props;
-    navigation.setParams({ handleUndrill: this.handleUndrill });
+    navigation.setParams({
+      handleUndrill: this.handleUndrill,
+      handleDrawer: this.handleDrawer,
+    });
   }
+
+  handleDrawer = () => this.props.navigation.openDrawer();
 
   togglePlayer = () => this.setState(({ isPlayerOpen }) => ({
     isPlayerOpen: !isPlayerOpen,
@@ -86,16 +92,16 @@ class TabView extends Component<Props> {
     navigation.navigate('ModalScreen', { url });
   };
 
-  calculateLeftHeaderAction = () => {
+  /* calculateLeftHeaderAction = () => {
     const { navigation, currentArtist } = this.props;
     const iconName = currentArtist ? 'arrow-back' : 'menu';
     navigation.setParams({
       iconName,
       key: 'Home',
     });
-  };
+  }; */
 
-  handleDrill = (artist) => {
+  handleDrill = () => {
     const { navigation, activeTabIndex, tabNavigate } = this.props;
     navigation.setParams({
       iconName: 'arrow-back',

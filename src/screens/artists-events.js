@@ -149,22 +149,12 @@ class ArtistsEventsScreen extends Component<Props> {
   handleEnter = (name) => {
     const { getDataArtistsEventsSingle, drillCallback } = this.props;
     getDataArtistsEventsSingle(name);
-    drillCallback(name);
+    drillCallback();
   };
 
   showArtistMedia = () => this.setState({ showArtistMedia: true });
 
   showArtistEvents = () => this.setState({ showArtistMedia: false });
-
-  getCurrentArtist = (artistName) => {
-    /* const { content } = this.state;
-    const isRecommended = content.recommended.find(
-      item => item.name === artistName,
-    );
-    return (
-      isRecommended || content.followed.find(item => item.name === artistName)
-    ); */
-  };
 
   render() {
     const { showArtistMedia, displayMediaType } = this.state;
