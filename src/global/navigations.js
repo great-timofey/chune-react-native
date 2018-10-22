@@ -1,6 +1,6 @@
 import R from 'ramda';
 import React from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, View, Text } from 'react-native';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -10,13 +10,14 @@ import { platformSelect } from './utils';
 import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 
 import { store } from '../redux/store';
-// import FAQScreen from '../screens/faq';
+import FAQScreen from '../screens/faq';
 import AuthScreen from '../screens/auth';
 import ModalScreen from '../screens/modal';
-// import DrawerMenuScreen from '../screens/modal';
 import HomeTabView from '../components/TabView';
-// import TermsConditionsScreen from '../screens/t&c';
+import SideDrawer from '../components/SideDrawer';
+import TermsConditionsScreen from '../screens/t&c';
 import { userLogout } from '../redux/auth/actions';
+import { toggleSearch } from '../redux/common/actions';
 import PrivacyPolicyScreen from '../screens/privacyPolicy';
 import { setDataArtistsEventsSingle } from '../redux/data/actions';
 // export const authStack = generateRoutes(auth);
@@ -38,22 +39,6 @@ export const headerLeft = (
     name={iconName}
     onPress={() => {
       iconName === 'arrow-back' ? undrillCallback() : drawerCallback();
-      /* Alert.alert(
-          'Do you really want to log out?',
-          null,
-          [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {
-              text: 'OK',
-              onPress: () => store.dispatch(userLogout({})),
-            },
-          ],
-          { cancelable: false },
-        ); */
     }}
   />
 );
@@ -63,7 +48,7 @@ const headerRight = (
     <Icon.Button
       {...iconProps}
       name="search"
-      onPress={() => store.dispatch({ type: 'TOGGLE_SEARCH' })}
+      onPress={() => store.dispatch(toggleSearch())}
     />
   </View>
 );
@@ -131,40 +116,81 @@ export const RootNavigator = generateStack(rootStack, {
   navigationOptions: { gesturesEnabled: false },
 });
 
-export const MainNavigator = createDrawerNavigator({
-  Home: {
-    screen: RootNavigator,
+const TermsConditionsNavigator = createStackNavigator(
+  {
+    TermsConditions: { screen: TermsConditionsScreen },
   },
-  // 'Terms and Conditions': {
-  // screen: TermsConditionsScreen,
-  // },
-  'Privacy Policy': {
-    screen: PrivacyPolicyScreen,
-    navigationOptions: {
-      title: 'Chune Supply',
-      gesturesEnabled: false,
-      headerTitleStyle: { color: 'white', fontFamily: 'Roboto-Regular' },
-      headerRight,
-      headerStyle: {
-        borderBottomWidth: 0,
-        backgroundColor: colors.accent,
-        ...platformSelect(
-          {
-            paddingTop: 20,
-            marginBottom: 4,
-            borderTopWidth: 21,
-            borderTopColor: '#52146C',
-          },
-          {
-            elevation: 0,
-          },
-        ),
-      },
+  {
+    navigationOptions: ({ navigation }) => ({
+      initialRouteName: 'TermsConditions',
+      headerTitle: 'Terms and Conditions',
+      headerLeft: () => (
+        <Icon.Button
+          {...iconProps}
+          name="arrow-back"
+          onPress={() => navigation.navigate('Home')}
+        />
+      ),
+    }),
+  },
+);
+
+const PrivacyPolicyNavigator = createStackNavigator(
+  {
+    'Privacy Policy': { screen: PrivacyPolicyScreen },
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      initialRouteName: 'PrivacyPolicy',
+      headerTitle: 'Privacy Policy',
+      headerLeft: () => (
+        <Icon.Button
+          {...iconProps}
+          name="arrow-back"
+          onPress={() => navigation.navigate('Home')}
+        />
+      ),
+    }),
+  },
+);
+
+const FAQNavigator = createStackNavigator(
+  {
+    FAQScreen: { screen: FAQScreen },
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      initialRouteName: 'FAQ',
+      headerTitle: 'FAQ',
+      headerLeft: () => (
+        <Icon.Button
+          {...iconProps}
+          name="arrow-back"
+          onPress={() => navigation.navigate('Home')}
+        />
+      ),
+    }),
+  },
+);
+
+export const MainNavigator = createDrawerNavigator(
+  {
+    Home: {
+      screen: RootNavigator,
+    },
+    'Terms and Conditions': {
+      screen: TermsConditionsNavigator,
+    },
+    FAQ: {
+      screen: FAQNavigator,
+    },
+    'Privacy Policy': {
+      screen: PrivacyPolicyNavigator,
     },
   },
-  // FAQ: {
-  // screen: FAQScreen,
-  // },
-});
+  {
+    contentComponent: SideDrawer,
+  },
+);
 
 export const Auth = generateStack(authStack);
