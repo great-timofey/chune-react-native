@@ -50,8 +50,8 @@ export const unfollowArtist = artist => API.delete(`artists/${artist}/`).then(re
 
 export const getArtistEvents = (
   artistId,
-  startDate = '2018-05-01',
-  finishDate = '2018-10-01',
+  startDate = '2018-11-01',
+  finishDate = '2019-05-01',
 ) => API.get(`/artists/${artistId}/events/${startDate}/${finishDate}/`).then(
   response => response && response.data,
 );
