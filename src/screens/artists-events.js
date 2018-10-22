@@ -146,35 +146,70 @@ class ArtistsEventsScreen extends Component<Props> {
             <View style={{ marginBottom: 25, paddingHorizontal: 8 }}>
               <View
                 style={{
-                  flexDirection: 'row',
-                  marginBottom: 25,
+                  marginBottom: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Image
-                  style={{ width: 120, height: 120 }}
+                  style={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 60,
+                    marginBottom: 10,
+                  }}
                   source={{
                     uri: currentArtist.image_url || utils.getPlaceholder(120),
                   }}
                 />
-                <View style={{ justifyContent: 'space-between' }}>
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <Text
-                    style={{ marginBottom: 10, paddingLeft: 16, fontSize: 18 }}
+                    style={{
+                      fontSize: 22,
+                      marginBottom: 10,
+                      fontWeight: 'bold',
+                      fontFamily: 'Roboto-Medium',
+                    }}
                   >
-                    {currentArtist.name}
+                    {currentArtist.name.toUpperCase()}
                   </Text>
                   <TouchableOpacity
+                    style={[
+                      {
+                        alignItems: 'center',
+                        paddingVertical: 10,
+                        paddingHorizontal: 15,
+                        backgroundColor: colors.accent,
+                        borderWidth: 1,
+                        borderColor: 'transparent',
+                        borderRadius: 5,
+                      },
+                      isFollowed && {
+                        backgroundColor: 'transparent',
+                        borderColor: 'rbga(255, 255, 255, 0.9)',
+                      },
+                    ]}
                     onPress={() => (isFollowed ? this.handleUnfollow() : this.handleFollow())
                     }
                   >
                     <Text
-                      style={{
-                        fontSize: 18,
-                        paddingLeft: 16,
-                        marginBottom: 10,
-                        fontWeight: 'bold',
-                        color: colors.accent,
-                        fontFamily: 'Roboto-Medium',
-                      }}
+                      style={[
+                        {
+                          fontSize: 16,
+                          color: 'white',
+                          fontWeight: 'bold',
+                          fontFamily: 'Roboto-Medium',
+                        },
+                        isFollowed && {
+                          color: colors.accent,
+                          fontWeight: 'normal',
+                        },
+                      ]}
                     >
                       {isFollowed ? 'UNFOLLOW' : 'FOLLOW'}
                     </Text>
