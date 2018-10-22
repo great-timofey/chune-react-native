@@ -16,7 +16,7 @@ import { bindActionCreators } from 'redux';
 
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
-import { utils } from '../global';
+import { utils, components } from '../global';
 
 import { API } from '../services/chuneAPI';
 import { toggleSearch } from '../redux/common/actions';
@@ -48,15 +48,14 @@ class SearchModal extends Component {
   handleChooseOption = (artistName) => {
     const { getDataArtistsEventsSingle, drillCallback } = this.props;
     getDataArtistsEventsSingle(artistName);
-    toggleSearch();
     drillCallback(artistName);
     this.handleClose();
   };
 
   renderOption = ({ item: { name } }) => (
-    <TouchableOpacity onPress={() => this.handleChooseOption(name)}>
-      <Text>{name}</Text>
-    </TouchableOpacity>
+    <ResultButton onPress={() => this.handleChooseOption(name)}>
+      <ResultButtonText>{name}</ResultButtonText>
+    </ResultButton>
   );
 
   render() {
@@ -67,26 +66,18 @@ class SearchModal extends Component {
     return (
       <ViewOverflow>
         <ModalView
-          isVisible={isSearchOpen}
           animationInTiming={1}
           animationOutTiming={1}
+          isVisible={isSearchOpen}
+          onBackdropPress={this.handleClose}
         >
           <SearchField
             autoFocus
-            placeholder="Search to find and follow artist"
-            onChangeText={this.handleSearch}
             value={query}
+            onChangeText={this.handleSearch}
+            placeholder="Search to find and follow artist"
           />
-          <View
-            style={{
-              width: 30,
-              height: 30,
-              top: 0,
-              right: 5,
-              zIndex: 1,
-              position: 'absolute',
-            }}
-          >
+          <ClearButtonView>
             <Icon.Button
               name="x"
               size={20}
@@ -101,9 +92,11 @@ class SearchModal extends Component {
               }}
               borderRadius={0}
             />
-          </View>
+          </ClearButtonView>
           {loading ? (
-            <ActivityIndicator />
+            <LoadingView>
+              <ActivityIndicator />
+            </LoadingView>
           ) : (
             <FlatList data={results} renderItem={this.renderOption} />
           )}
@@ -135,8 +128,10 @@ export default connect(
 const ModalView = styled(Modal)`
   top: 0;
   flex: 1;
+  padding-left: 20;
   position: absolute;
   background-color: white;
+  align-items: flex-start;
   width: ${utils.deviceWidth};
   ${Platform.select({
     android: {
@@ -146,8 +141,6 @@ const ModalView = styled(Modal)`
     ios: {
       top: 10,
       left: -19,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
     },
   })};
 `;
@@ -156,5 +149,28 @@ const SearchField = styled.TextInput`
   height: 40;
   width: 100%;
   font-size: 18;
-  padding-left: 20;
+`;
+
+const ClearButtonView = styled.View`
+  top: 0;
+  right: 5;
+  width: 30;
+  height: 30;
+  z-index: 1;
+  position: absolute;
+`;
+
+const LoadingView = styled.View`
+  position: absolute;
+  top: 10;
+  right: 30;
+`;
+
+const ResultButton = styled.TouchableOpacity`
+  height: 20;
+  margin-bottom: 5;
+`;
+
+const ResultButtonText = styled(components.TextRegular)`
+  font-size: 17;
 `;
