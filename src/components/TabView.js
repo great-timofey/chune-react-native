@@ -21,7 +21,6 @@ import { setDataArtistsEventsSingle } from '../redux/data/actions';
 type Props = {
   navigation: Object,
   toggleDrill: Function,
-  isDrilled: boolean,
 };
 
 class TabView extends Component<Props> {
@@ -88,14 +87,14 @@ class TabView extends Component<Props> {
     navigation.navigate('ModalScreen', { url });
   };
 
-  /* calculateLeftHeaderAction = () => {
+  calculateLeftHeaderAction = (index) => {
     const { navigation, currentArtist } = this.props;
-    const iconName = currentArtist ? 'arrow-back' : 'menu';
+    const iconName = currentArtist && index === 2 ? 'arrow-back' : 'menu';
     navigation.setParams({
       iconName,
       key: 'Home',
     });
-  }; */
+  };
 
   handleDrill = () => {
     const { navigation, activeTabIndex, tabNavigate } = this.props;
@@ -117,12 +116,13 @@ class TabView extends Component<Props> {
 
   handleChangeTab = ({ i: index }) => {
     const { tabNavigate } = this.props;
+    this.calculateLeftHeaderAction(index);
     tabNavigate(index);
   };
 
   render() {
     const { isPlayerOpen } = this.state;
-    const { isDrilled, isSearchOpen, activeTabIndex } = this.props;
+    const { isSearchOpen, activeTabIndex } = this.props;
     return (
       <Fragment>
         <ScrollableTabView
