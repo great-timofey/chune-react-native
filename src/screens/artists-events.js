@@ -81,42 +81,6 @@ class ArtistsEventsScreen extends Component<Props> {
       followCallback={this.handleFollow}
       enterCallback={this.handleEnter}
     />
-    /* <View
-      style={{
-        width: 200,
-        height: 200,
-        marginHorizontal: 8,
-      }}
-    >
-      <ImageBackground
-        style={{
-          width: '100%',
-          height: '100%',
-          justifyContent: 'space-between',
-        }}
-        resizeMode="cover"
-        source={{ uri: image_url || utils.getPlaceholder(200) }}
-      >
-        <View>
-          <Text style={{ color: 'white', fontSize: 20 }}>{name}</Text>
-          <Text style={{ color: 'white', fontSize: 13 }}>
-            {genres.map(item => item.description).join(',')}
-          </Text>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Button
-            title="ABOUT"
-            color="white"
-            onPress={() => this.handleEnter(name)}
-          />
-          <Button
-            title="FOLLOW"
-            color="white"
-            onPress={() => this.handleFollow(name)}
-          />
-        </View>
-      </ImageBackground>
-    </View> */
   );
 
   renderFollowedCard = ({ item: { image_url, name, genres }, index }) => (
@@ -127,28 +91,6 @@ class ArtistsEventsScreen extends Component<Props> {
       enterCallback={this.handleEnter}
       unfollowCallback={this.handleUnfollow}
     />
-    /* <TouchableOpacity
-      style={{
-        height: 50,
-        width: '100%',
-        paddingLeft: 16,
-        alignItems: 'center',
-        flexDirection: 'row',
-        backgroundColor: 'white',
-      }}
-      onPress={() => this.handleEnter(name)}
-    >
-      <Image
-        source={{ uri: image_url || utils.getplaceholder(40) }}
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          marginRight: 10,
-        }}
-      />
-      <Text>{name}</Text>
-    </TouchableOpacity> */
   );
 
   handleUnfollow = (name) => {
@@ -257,7 +199,8 @@ class ArtistsEventsScreen extends Component<Props> {
             renderItem={
               showArtistMedia ? this.renderArtistMedia : this.renderArtistEvents
             }
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
+            }
           />
         </View>
       </ScreenScrollContainer>
@@ -278,7 +221,8 @@ class ArtistsEventsScreen extends Component<Props> {
             horizontal
             data={overallContent.recommended}
             renderItem={this.renderRecommendedCard}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
+            }
           />
         </View>
         <View
@@ -298,7 +242,8 @@ class ArtistsEventsScreen extends Component<Props> {
           contentContainerStyle={{ alignItems: 'center' }}
           data={overallContent.followed}
           renderItem={this.renderFollowedCard}
-          keyExtractor={item => `${item.id}`}
+          keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
+          }
         />
       </ScreenScrollContainer>
     );
