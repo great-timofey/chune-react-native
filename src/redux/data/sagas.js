@@ -214,6 +214,7 @@ function* artistFollowingWorker({ type, payload: { artist } }) {
     }
     yield put(artistsEventsControlLoading(false));
   } catch (err) {
+    yield put(artistsEventsControlLoading(false));
     console.log(err);
   }
 }
