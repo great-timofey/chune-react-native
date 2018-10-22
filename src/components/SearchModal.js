@@ -37,9 +37,11 @@ class SearchModal extends Component {
   };
 
   handleClose = () => {
-    const { setSearchArtistResult, toggleSearch } = this.props;
+    const { setSearchArtistResult, toggleSearch, results } = this.props;
+    if (results.length !== 0) {
+      setSearchArtistResult([]);
+    }
     this.setState({ query: '' });
-    setSearchArtistResult([]);
     toggleSearch();
   };
 
