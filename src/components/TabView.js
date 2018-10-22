@@ -102,7 +102,6 @@ class TabView extends Component<Props> {
       iconName: 'arrow-back',
       key: 'Home',
     });
-    // if (activeTabIndex !== 2) tabNavigate(2);
   };
 
   handleUndrill = () => {
