@@ -13,13 +13,12 @@ import { store } from '../redux/store';
 import FAQScreen from '../screens/faq';
 import AuthScreen from '../screens/auth';
 import ModalScreen from '../screens/modal';
+import { isIphoneX } from './utils';
 import HomeTabView from '../components/TabView';
 import SideDrawer from '../components/SideDrawer';
 import TermsConditionsScreen from '../screens/t&c';
-import { userLogout } from '../redux/auth/actions';
 import { toggleSearch } from '../redux/common/actions';
 import PrivacyPolicyScreen from '../screens/privacyPolicy';
-import { setDataArtistsEventsSingle } from '../redux/data/actions';
 // export const authStack = generateRoutes(auth);
 
 const iconProps = {
@@ -95,7 +94,7 @@ const rootStack = {
           {
             paddingTop: 20,
             marginBottom: 4,
-            borderTopWidth: 21,
+            borderTopWidth: /* isIphoneX() ? 31 : */ 21,
             borderTopColor: '#52146C',
           },
           {

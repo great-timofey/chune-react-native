@@ -300,11 +300,11 @@ const SnackBar = styled.View`
   flex-direction: row;
   border-top-width: 1;
   padding-vertical: 10;
-  align-items: baseline;
+  align-items: center;
   background-color: #f2f2f2;
   justify-content: space-between;
   border-top-color: ${colors.grey};
-  height: ${_ => (isIphoneX ? 55 : 44)};
+  height: ${_ => (isIphoneX() ? 55 : 44)};
   padding-horizontal: ${props => (props.shrinkedText ? 90 : 70)};
 `;
 
