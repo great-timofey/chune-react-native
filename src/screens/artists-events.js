@@ -279,9 +279,10 @@ class ArtistsEventsScreen extends Component<Props> {
         <View style={{ paddingTop: 24, marginBottom: 32 }}>
           <Text
             style={{
-              marginBottom: 10,
-              paddingLeft: 16,
               fontSize: 20,
+              color: 'black',
+              paddingLeft: 16,
+              marginBottom: 10,
               fontFamily: 'Roboto-Regular',
             }}
           >
@@ -300,8 +301,9 @@ class ArtistsEventsScreen extends Component<Props> {
         >
           <Text
             style={{
-              marginBottom: 10,
               fontSize: 20,
+              color: 'black',
+              marginBottom: 10,
               fontFamily: 'Roboto-Regular',
             }}
           >

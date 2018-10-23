@@ -61,9 +61,13 @@ const ListCard = ({
             <Description>What Makes Flyers Untivaled</Description>
             <From>dewd</From>
             <Metadata>
-              <MetadataText>{source_name}</MetadataText>
+              <MetadataText numberOfLines={1} ellipsizeMode="tail">
+                {source_name}
+              </MetadataText>
               <MetadataText>{getDate(published_on)}</MetadataText>
-              <MetadataText>{artist_name}</MetadataText>
+              <MetadataText numberOfLines={1} ellipsizeMode="tail">
+                {artist_name}
+              </MetadataText>
             </Metadata>
           </TextContainer>
         </TouchableContainer>
@@ -137,5 +141,6 @@ const Metadata = styled.View`
 
 const MetadataText = styled(components.TextRegular)`
   font-size: 13;
+  max-width: 33%;
   color: ${colors.greyPrompts};
 `;
