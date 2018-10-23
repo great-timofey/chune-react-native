@@ -7,14 +7,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.airship.customwebview.CustomWebViewPackage;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.entria.views.RNViewOverflowPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.lufinkey.react.eventemitter.RNEventEmitterPackage;
 import com.lufinkey.react.spotify.RNSpotifyPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -43,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new CustomWebViewPackage(),
             new ReactNativeYouTube(),
             new RNViewOverflowPackage(),
             new RNGoogleSigninPackage(),

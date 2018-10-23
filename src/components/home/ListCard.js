@@ -1,9 +1,13 @@
 import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
 import { Text, WebView, View } from 'react-native';
 
+import moment from 'moment';
+import styled from 'styled-components';
 import YouTube from 'react-native-youtube';
+import AndroidWebView from 'react-native-android-fullscreen-webview-video';
+
+import VideoCard from '../VideoCard';
+import { isIOS } from '../../global/device';
 import { colors, components, utils } from '../../global';
 import { homeImagesPrefix } from '../../services/chuneAPI';
 
@@ -66,42 +70,12 @@ const ListCard = ({
       );
     case 'video':
       return (
-        <VideoContainer>
-          <View
-            style={{
-              paddingTop: 5,
-              paddingHorizontal: 5,
-              marginBottom: 5,
-              flexDirection: 'row',
-            }}
-          >
-            <VideoHeader numberOfLines={1} ellipsizeMode="tail">
-              {uppercaseSource(`via ${channel_name}`)}
-            </VideoHeader>
-            <VideoHeader
-              numberOfLines={1}
-              style={{ marginLeft: 10 }}
-              ellipsizeMode="tail"
-            >
-              {getDate(published_on)}
-            </VideoHeader>
-          </View>
-          <VideoHeader
-            style={{
-              paddingHorizontal: 5,
-            }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {description}
-          </VideoHeader>
-          <YouTube
-            videoId={youtube_id}
-            play={false}
-            fullscreen
-            style={{ alignSelf: 'stretch', height: 150 }}
-          />
-        </VideoContainer>
+        <VideoCard
+          youtubeId={youtube_id}
+          description={description}
+          publishedOn={getDate(published_on)}
+          channelName={uppercaseSource(`via ${channel_name}`)}
+        />
       );
     default:
       return <Text>{type}</Text>;
@@ -117,11 +91,6 @@ const Container = styled.View`
   margin-bottom: 12;
   flex-direction: column;
   background-color: white;
-`;
-
-const VideoContainer = styled(Container)`
-  height: auto;
-  flex-direction: column;
 `;
 
 const TouchableContainer = styled.TouchableOpacity`
@@ -148,10 +117,6 @@ const Header = styled(components.TextRegular)`
   font-size: 16;
   margin-bottom: 3;
   color: ${colors.black};
-`;
-
-const VideoHeader = styled(Header)`
-  font-weight: bold;
 `;
 
 const Description = styled(components.TextRegular)`

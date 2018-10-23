@@ -37,7 +37,8 @@ type Props = {
 
 class ArtistsEventsScreen extends Component<Props> {
   state = {
-    displayMediaType: '',
+    mediaTypes: ['All Media', 'Articles', 'Social', 'Videos', 'Tracks'],
+    displayMediaType: 'All Media',
     showArtistMedia: true,
   };
 
@@ -117,6 +118,8 @@ class ArtistsEventsScreen extends Component<Props> {
     drillCallback();
   };
 
+  handleMediaDisplayedType = () => {};
+
   showArtistMedia = () => this.setState({ showArtistMedia: true });
 
   showArtistEvents = () => this.setState({ showArtistMedia: false });
@@ -143,7 +146,7 @@ class ArtistsEventsScreen extends Component<Props> {
       return (
         <ScreenScrollContainer>
           <View style={{ paddingTop: 25, paddingHorizontal: 8 }}>
-            <View style={{ marginBottom: 25, paddingHorizontal: 8 }}>
+            <View style={{ marginBottom: 15, paddingHorizontal: 8 }}>
               <View
                 style={{
                   marginBottom: 15,
@@ -171,6 +174,7 @@ class ArtistsEventsScreen extends Component<Props> {
                   <Text
                     style={{
                       fontSize: 22,
+                      color: 'black',
                       marginBottom: 10,
                       fontWeight: 'bold',
                       fontFamily: 'Roboto-Medium',
@@ -191,7 +195,7 @@ class ArtistsEventsScreen extends Component<Props> {
                       },
                       isFollowed && {
                         backgroundColor: 'transparent',
-                        borderColor: 'rbga(255, 255, 255, 0.9)',
+                        borderColor: 'rgba(0, 0, 0, 0.12)',
                       },
                     ]}
                     onPress={() => (isFollowed ? this.handleUnfollow() : this.handleFollow())
@@ -241,10 +245,11 @@ class ArtistsEventsScreen extends Component<Props> {
               </View>
             </View>
             {showArtistMedia && (
-              <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                <Text style={{ color: 'grey' }}>
-                  {displayMediaType || 'All Media'}
-                </Text>
+              <TouchableOpacity
+                style={{ alignSelf: 'flex-end', marginBottom: 5 }}
+                onPress={this.handleMediaDisplayedType}
+              >
+                <Text style={{ color: 'grey' }}>{displayMediaType}</Text>
               </TouchableOpacity>
             )}
             <FlatList
