@@ -64,7 +64,7 @@ const ListCard = ({
               <MetadataText numberOfLines={1} ellipsizeMode="tail">
                 {source_name}
               </MetadataText>
-              <MetadataText>{getDate(published_on)}</MetadataText>
+              <Date>{getDate(published_on)}</Date>
               <MetadataText numberOfLines={1} ellipsizeMode="tail">
                 {artist_name}
               </MetadataText>
@@ -143,4 +143,9 @@ const MetadataText = styled(components.TextRegular)`
   font-size: 13;
   max-width: 33%;
   color: ${colors.greyPrompts};
+`;
+
+const Date = styled(MetadataText)`
+  max-width: auto;
+  margin-horizontal: 3;
 `;
