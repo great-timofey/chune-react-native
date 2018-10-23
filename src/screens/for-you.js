@@ -20,7 +20,9 @@ import {
 } from '../services/chuneAPI';
 import { getDataForYou } from '../redux/data/actions';
 
-import { colors, components, utils } from '../global';
+import {
+  colors, components, utils, device,
+} from '../global';
 
 class ForYouScreen extends PureComponent {
   renderCard = ({ item: { ...data } }) => {
@@ -36,10 +38,18 @@ class ForYouScreen extends PureComponent {
       <ActivityIndicator />
     ) : (
       <FlatList
-        style={{
-          paddingHorizontal: 8,
-          paddingTop: 8,
-        }}
+        contentContainerStyle={
+          device.isAndroid && {
+            paddingHorizontal: 8,
+            paddingTop: 8,
+          }
+        }
+        style={
+          device.isIOS && {
+            paddingHorizontal: 8,
+            paddingTop: 8,
+          }
+        }
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={getDataForYou} />
         }
