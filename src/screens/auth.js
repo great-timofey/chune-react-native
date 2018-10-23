@@ -1,7 +1,7 @@
-import { Image } from 'react-native';
+import React, { PureComponent } from 'react';
+import { Image, StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import React, { PureComponent } from 'react';
 
 import Spotify from 'rn-spotify-sdk';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import images from '../global/images';
 import colors from '../global/colors';
+import { isIphoneX } from '../global/utils';
 import AuthInput from '../components/AuthInput';
 import { setToken } from '../redux/auth/actions';
 
@@ -151,71 +152,74 @@ class AuthScreen extends PureComponent<Props> {
   render() {
     const { isSignUp } = this.state;
     return (
-      <KeyboardAwareScrollView extraScrollHeight={100}>
-        <MainContent>
-          <Logo source={images.logoChune} reducedMargin={isSignUp} />
-          <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
-          <InvitationPromptEmail>by email</InvitationPromptEmail>
-          <Form>
-            {isSignUp && <FormField label="Name" />}
-            <FormField
-              label="Email"
-              refCallback={(el) => {
-                this.emailRef = el;
-              }}
-            />
-            <FormField
-              password
-              label="Password"
-              refCallback={(el) => {
-                this.passwordRef = el;
-              }}
-            />
-          </Form>
-          {!isSignUp && (
-            <ForgetPasswordButton>
-              <ForgetPasswordText>Forgot password?</ForgetPasswordText>
-            </ForgetPasswordButton>
-          )}
-          <EnterButton
-            onPress={isSignUp ? this.handleSignUp : this.handleSignIn}
-          >
-            <EnterButtonText>
-              {`Sign ${isSignUp ? 'up' : 'in'}`}
-            </EnterButtonText>
-          </EnterButton>
-          <InvitationPromptSocials>or by socials</InvitationPromptSocials>
-          <ExternalAuthContainer>
-            <SpotifyButton onPress={this._handleAuthSpotify}>
-              <SpotifyButtonImage source={images.logoSpotify} />
-            </SpotifyButton>
-            <Socials>
-              <FacebookButton onPress={this._handleAuthFb}>
-                <Image source={images.logoFacebook} />
-              </FacebookButton>
-              <TwitterButton>
-                <Image source={images.logoTwitter} />
-              </TwitterButton>
-              <GoogleButton onPress={this._handleAuthGoogle}>
-                <Image source={images.logoGooglePlus} />
-              </GoogleButton>
-            </Socials>
-          </ExternalAuthContainer>
-        </MainContent>
-        <SnackBar shrinkedText={isSignUp}>
-          <SnackBarText>
-            {isSignUp ? 'Have an account?' : "Don't have an account?"}
-          </SnackBarText>
-          <ToggleEnterModeButton
-            onPress={() => this.setState(({ isSignUp }) => ({ isSignUp: !isSignUp }))
-            }
-          >
-            <ToggleEnterModeButtonText>
-              {`Sign ${isSignUp ? 'in' : 'up'}`}
-            </ToggleEnterModeButtonText>
-          </ToggleEnterModeButton>
-        </SnackBar>
-      </KeyboardAwareScrollView>
+      <View style={{ flex: 1 }}>
+        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+          <MainContent>
+            <Logo source={images.logoChune} reducedMargin={isSignUp} />
+            <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
+            <InvitationPromptEmail>by email</InvitationPromptEmail>
+            <Form>
+              {isSignUp && <FormField label="Name" />}
+              <FormField
+                label="Email"
+                refCallback={(el) => {
+                  this.emailRef = el;
+                }}
+              />
+              <FormField
+                password
+                label="Password"
+                refCallback={(el) => {
+                  this.passwordRef = el;
+                }}
+              />
+            </Form>
+            {!isSignUp && (
+              <ForgetPasswordButton>
+                <ForgetPasswordText>Forgot password?</ForgetPasswordText>
+              </ForgetPasswordButton>
+            )}
+            <EnterButton
+              onPress={isSignUp ? this.handleSignUp : this.handleSignIn}
+            >
+              <EnterButtonText>
+                {`Sign ${isSignUp ? 'up' : 'in'}`}
+              </EnterButtonText>
+            </EnterButton>
+            <InvitationPromptSocials>or by socials</InvitationPromptSocials>
+            <ExternalAuthContainer>
+              <SpotifyButton onPress={this._handleAuthSpotify}>
+                <SpotifyButtonImage source={images.logoSpotify} />
+              </SpotifyButton>
+              <Socials>
+                <FacebookButton onPress={this._handleAuthFb}>
+                  <Image source={images.logoFacebook} />
+                </FacebookButton>
+                <TwitterButton>
+                  <Image source={images.logoTwitter} />
+                </TwitterButton>
+                <GoogleButton onPress={this._handleAuthGoogle}>
+                  <Image source={images.logoGooglePlus} />
+                </GoogleButton>
+              </Socials>
+            </ExternalAuthContainer>
+          </MainContent>
+          <SnackBar shrinkedText={isSignUp}>
+            <SnackBarText>
+              {isSignUp ? 'Have an account?' : "Don't have an account?"}
+            </SnackBarText>
+            <ToggleEnterModeButton
+              onPress={() => this.setState(({ isSignUp }) => ({ isSignUp: !isSignUp }))
+              }
+            >
+              <ToggleEnterModeButtonText>
+                {`Sign ${isSignUp ? 'in' : 'up'}`}
+              </ToggleEnterModeButtonText>
+            </ToggleEnterModeButton>
+          </SnackBar>
+        </KeyboardAwareScrollView>
+      </View>
     );
   }
 }
@@ -233,19 +237,19 @@ export default connect(
 )(AuthScreen);
 
 const EnterButton = styled.TouchableOpacity`
+  height: 45;
+  width: 100%;
+  border-radius: 3;
   justify-content: center;
   background-color: ${colors.accent};
-  width: 100%;
-  height: 45;
-  border-radius: 3;
 `;
 
 const MainContent = styled.View`
   flex: 1;
   padding-top: 35;
   padding-bottom: 30;
-  padding-horizontal: 16;
   align-items: center;
+  padding-horizontal: 16;
   background-color: white;
 `;
 
@@ -292,16 +296,16 @@ const EnterButtonText = styled.Text`
 `;
 
 const SnackBar = styled.View`
-  padding-vertical: 10;
-  padding-horizontal: ${props => (props.shrinkedText ? 90 : 70)};
-  background-color: #f2f2f2;
   width: 100%;
-  height: 44;
   flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
   border-top-width: 1;
+  padding-vertical: 10;
+  align-items: center;
+  background-color: #f2f2f2;
+  justify-content: space-between;
   border-top-color: ${colors.grey};
+  height: ${_ => (isIphoneX() ? 55 : 44)};
+  padding-horizontal: ${props => (props.shrinkedText ? 90 : 70)};
 `;
 
 const ToggleEnterModeButtonText = styled.Text`

@@ -1,5 +1,5 @@
 import createSagaMiddleware from 'redux-saga';
-import { persistReducer, persistStore } from 'redux-persist';
+import { persistReducer, persistStore, createTransform } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -7,8 +7,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import authReducer from './auth/reducer';
 import authSagas from './auth/sagas';
 
-import homeReducer from './home/reducer';
-import homeSagas from './home/sagas';
+import dataReducer from './data/reducer';
+import dataSagas from './data/sagas';
 
 import playerReducer from './player/reducer';
 import playerSagas from './player/sagas';
@@ -20,9 +20,10 @@ const authPersistConfig = {
   storage,
 };
 
-const homePersistConfig = {
-  key: 'home',
+const dataPersistConfig = {
+  key: 'data',
   storage,
+  whitelist: ['home', 'forYou'],
 };
 
 const playerPersistConfig = {
@@ -40,7 +41,7 @@ export const store = createStore(
     auth: persistReducer(authPersistConfig, authReducer),
     player: persistReducer(playerPersistConfig, playerReducer),
     common: commonReducer,
-    // home: persistReducer(homePersistConfig, homeReducer),
+    data: persistReducer(dataPersistConfig, dataReducer),
   }),
   composeWithDevTools(applyMiddleware(...middleware)),
 );
@@ -51,7 +52,7 @@ export default function configureStore() {
   // run sagas
   sagaMiddleware.run(authSagas);
   sagaMiddleware.run(playerSagas);
-  // sagaMiddleware.run(homeSagas);
+  sagaMiddleware.run(dataSagas);
 
   return {
     store,

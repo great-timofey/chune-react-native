@@ -28,7 +28,6 @@
     "react-native-material-textfield": "^0.12.0",
     "react-native-modal": "^6.5.0",
     "react-native-scrollable-tab-view": "git+https://github.com/happypancake/react-native-scrollable-tab-view.git",
-    "react-native-track-player": "^0.2.5",
     "react-native-underline-tabbar": "^1.3.6",
     "react-native-vector-icons": "^4.6.0",
     "react-native-view-overflow": "^0.0.3",

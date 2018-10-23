@@ -12,8 +12,8 @@ type Props = {
   image: string,
 };
 
-export default ({ main, data: { url, title, image }, callback }: Props) => (
-  <Container main={main} onPress={() => callback(url)}>
+const MainCard = ({ main, data: { url, title, image }, callback }: Props) => (
+  <Container main={main} onPress={() => callback(url)} activeOpacity={1}>
     <BackgroundImage
       resizeMode="cover"
       source={{
@@ -35,6 +35,8 @@ export default ({ main, data: { url, title, image }, callback }: Props) => (
     </BackgroundImage>
   </Container>
 );
+
+export default MainCard;
 
 const TextAligner = styled.View`
   flex: 1;

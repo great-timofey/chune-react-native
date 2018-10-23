@@ -8,7 +8,6 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
 import com.inprogress.reactnativeyoutube.ReactNativeYouTube;
-import guichaguri.trackplayer.TrackPlayer;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.entria.views.RNViewOverflowPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
@@ -45,8 +44,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new ReactNativeYouTube(),
-            new TrackPlayer(),
-            new RNGoogleSigninPackage(),
             new RNViewOverflowPackage(),
             new RNGoogleSigninPackage(),
             new FBSDKPackage(mCallbackManager),

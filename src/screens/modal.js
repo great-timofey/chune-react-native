@@ -8,9 +8,7 @@ import { colors } from '../global';
 
 export default class ModalScreen extends Component {
   static navigationOptions = {
-    header: (
-      <View style={{ width, height: 20, backgroundColor: colors.statusBar }} />
-    ),
+    header: <View style={{ height: 20, backgroundColor: '#52146C' }} />,
   };
 
   render() {
@@ -18,19 +16,31 @@ export default class ModalScreen extends Component {
     const uri = navigation.getParam('url', 'www.google.com');
     return (
       <Fragment>
-        <Icon.Button
-          name="x"
-          color="white"
-          backgroundColor="black"
-          onPress={() => navigation.goBack()}
-          iconStyle={{
-            width: 24,
-            height: 24,
-            padding: 0,
-            marginRight: 0,
+        <View
+          style={{
+            width: 30,
+            height: 30,
+            top: 20,
+            right: 10,
+            zIndex: 1,
+            position: 'absolute',
           }}
-          borderRadius={0}
-        />
+        >
+          <Icon.Button
+            name="x"
+            color="white"
+            backgroundColor="transparent"
+            size={24}
+            onPress={() => navigation.goBack()}
+            iconStyle={{
+              width: 24,
+              height: 24,
+              padding: 0,
+              marginRight: 0,
+            }}
+            borderRadius={0}
+          />
+        </View>
         <WebView
           originWhitelist={['*']}
           style={{ width, height }}

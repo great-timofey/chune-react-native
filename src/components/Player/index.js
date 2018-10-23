@@ -15,9 +15,9 @@ import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import { API } from '../../services/chuneAPI';
 import Control from '../Control';
 import TrackCard from '../TrackCard';
+import { API } from '../../services/chuneAPI';
 import PlayerTopPanel from '../PlayerTopPanel';
 
 import {
@@ -47,55 +47,57 @@ class Player extends Component<Props> {
   };
 
   handleSkipForward = () => {
-    // const {
-    // topTracks,
-    // chuneSupply,
-    // currentTrack,
-    // setCurrentTrack,
-    // togglePlaying,
-    // } = this.props;
-    // //const { showTopTracks } = this.state;
-    // const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
-    // currentTrack,
-    // );
-    // if (
-    // currentTrackIndex
-    //= == (showTopTracks ? topTracks.length : chuneSupply.length) - 1
-    // ) {
-    // setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
-    // togglePlaying();
-    // return;
-    // }
-    // setCurrentTrack(
-    // showTopTracks
-    // ? topTracks[currentTrackIndex + 1]
-    // : chuneSupply[currentTrackIndex + 1],
-    // );
+    /*
+    const {
+      topTracks,
+      chuneSupply,
+      currentTrack,
+      setCurrentTrack,
+      togglePlaying,
+    } = this.props;
+    // const { showTopTracks } = this.state;
+    const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+      currentTrack,
+    );
+    if (
+      currentTrackIndex
+      === (showTopTracks ? topTracks.length : chuneSupply.length) - 1
+    ) {
+      setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+      togglePlaying();
+      return;
+    }
+    setCurrentTrack(
+      showTopTracks
+        ? topTracks[currentTrackIndex + 1]
+        : chuneSupply[currentTrackIndex + 1],
+    );
+    */
   };
 
   handleSkipBack = () => {
-    // const {
-    // topTracks,
-    // chuneSupply,
-    // currentTrack,
-    // setCurrentTrack,
-    // togglePlaying,
-    // } = this.props;
-    // const { showTopTracks } = this.state;
-    // const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
-    // currentTrack,
-    // );
-    // // console.log(topTracks.length);
-    // if (currentTrackIndex === 0) {
-    // setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
-    // // togglePlaying();
-    // return;
-    // }
-    // setCurrentTrack(
-    // showTopTracks
-    // ? topTracks[currentTrackIndex - 1]
-    // : chuneSupply[currentTrackIndex - 1],
-    // );
+    /*const {
+      topTracks,
+      chuneSupply,
+      currentTrack,
+      setCurrentTrack,
+      togglePlaying,
+    } = this.props;
+    const { showTopTracks } = this.state;
+    const currentTrackIndex = (showTopTracks ? topTracks : chuneSupply).indexOf(
+      currentTrack,
+    );
+    // console.log(topTracks.length);
+    if (currentTrackIndex === 0) {
+      setCurrentTrack(showTopTracks ? topTracks[0] : chuneSupply[0]);
+      // togglePlaying();
+      return;
+    }
+    setCurrentTrack(
+      showTopTracks
+        ? topTracks[currentTrackIndex - 1]
+        : chuneSupply[currentTrackIndex - 1],
+    );*/
   };
 
   handleShuffle = () => {};
