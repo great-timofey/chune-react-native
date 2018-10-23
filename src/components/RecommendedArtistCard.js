@@ -32,7 +32,7 @@ const RecommendedArtistCard = ({
       resizeMode="cover"
       source={{ uri: imageUrl || utils.getPlaceholder(200) }}
     >
-      <DescriptionContainer style={{}}>
+      <DescriptionContainer>
         <Genre>{genre}</Genre>
         <Name>{name}</Name>
       </DescriptionContainer>

@@ -1,5 +1,7 @@
-import React from 'react';
-import { Text, WebView, View } from 'react-native';
+import React, { Fragment } from 'react';
+import {
+  Text, WebView, View, StatusBar,
+} from 'react-native';
 
 import moment from 'moment';
 import styled from 'styled-components';
@@ -41,7 +43,6 @@ const VideoCard = ({
     </VideoHeader>
     {isIOS ? (
       <IOSYoutubeView
-        apiKey="AIzaSyBOhLIl3V_MIUbj3eswBbl8Zrru2JNaf4s"
         videoId={youtubeId}
         play={false}
         fullscreen

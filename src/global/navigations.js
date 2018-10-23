@@ -9,11 +9,11 @@ import styles from './styles';
 import { platformSelect } from './utils';
 import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 
+import { isIphoneX } from './utils';
 import { store } from '../redux/store';
 import FAQScreen from '../screens/faq';
 import AuthScreen from '../screens/auth';
 import ModalScreen from '../screens/modal';
-import { isIphoneX } from './utils';
 import HomeTabView from '../components/TabView';
 import SideDrawer from '../components/SideDrawer';
 import TermsConditionsScreen from '../screens/t&c';
@@ -94,7 +94,7 @@ const rootStack = {
           {
             paddingTop: 20,
             marginBottom: 4,
-            borderTopWidth: /* isIphoneX() ? 31 : */ 21,
+            borderTopWidth: /* isIphoneX ? 31 : */ 21,
             borderTopColor: '#52146C',
           },
           {

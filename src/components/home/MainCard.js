@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import config from '../../global/config';
 import { colors, components, utils } from '../../global';
-import { featuredArticleImageUrl } from '../../services/chuneAPI';
 
 type Props = {
   main: boolean,
@@ -17,7 +17,7 @@ const MainCard = ({ main, data: { url, title, image }, callback }: Props) => (
     <BackgroundImage
       resizeMode="cover"
       source={{
-        uri: `${featuredArticleImageUrl}${image}`,
+        uri: `${config.API.IMAGES.FULL}${image}`,
       }}
     >
       <TextAligner>
@@ -27,7 +27,7 @@ const MainCard = ({ main, data: { url, title, image }, callback }: Props) => (
           </Header>
           {main && (
             <ReadMoreButton>
-              <ReadMoreButtonText>Read More</ReadMoreButtonText>
+              <ReadMoreButtonText>READ MORE</ReadMoreButtonText>
             </ReadMoreButton>
           )}
         </TextContainer>
@@ -71,5 +71,4 @@ const ReadMoreButton = styled.TouchableOpacity`
 
 const ReadMoreButtonText = styled(components.TextMedium)`
   color: white;
-  text-transform: uppercase;
 `;

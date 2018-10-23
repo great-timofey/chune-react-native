@@ -18,14 +18,6 @@ export const clearAuthToken = () => {
   API.defaults.headers.common.Authorization = null;
 };
 
-export const homeImagesPrefix = `${CONFIG.API_URL_IMAGES}${
-  CONFIG.API.IMAGES.MEDIUM
-}`;
-
-export const featuredArticleImageUrl = `${CONFIG.API_URL_IMAGES}${
-  CONFIG.API.IMAGES.FULL
-}`;
-
 export const getTopTracks = (): Promise => API.get(CONFIG.API.TRACKS.GET_TOP).then(
   response => response && response.data,
 );

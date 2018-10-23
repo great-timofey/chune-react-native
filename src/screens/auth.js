@@ -43,8 +43,7 @@ class AuthScreen extends PureComponent<Props> {
     // GoogleLoginManager.configure({
     // iosClientId: googleAuthOptions.iosClientId,
     // });
-
-    Spotify.initialize(spotifyAuthOptions);
+    // Spotify.initialize(spotifyAuthOptions);
   }
 
   _handleAuthSpotify = async () => {
@@ -153,7 +152,10 @@ class AuthScreen extends PureComponent<Props> {
     const { isSignUp } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ flex: 1 }}
+          extraHeight={100}
+        >
           <StatusBar barStyle="dark-content" backgroundColor="transparent" />
           <MainContent>
             <Logo source={images.logoChune} reducedMargin={isSignUp} />
@@ -304,7 +306,7 @@ const SnackBar = styled.View`
   background-color: #f2f2f2;
   justify-content: space-between;
   border-top-color: ${colors.grey};
-  height: ${_ => (isIphoneX() ? 55 : 44)};
+  height: ${_ => (isIphoneX ? 55 : 44)};
   padding-horizontal: ${props => (props.shrinkedText ? 90 : 70)};
 `;
 

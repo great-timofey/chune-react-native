@@ -7,9 +7,8 @@ import YouTube from 'react-native-youtube';
 import AndroidWebView from 'react-native-android-fullscreen-webview-video';
 
 import VideoCard from '../VideoCard';
-import { isIOS } from '../../global/device';
+import config from '../../global/config';
 import { colors, components, utils } from '../../global';
-import { homeImagesPrefix } from '../../services/chuneAPI';
 
 type Props = {
   title: string,
@@ -51,7 +50,7 @@ const ListCard = ({
           <Picture
             resizeMode="cover"
             source={{
-              uri: homeImagesPrefix + image,
+              uri: `${config.API.IMAGES.MEDIUM}${image}`,
             }}
           />
           <TextContainer>
