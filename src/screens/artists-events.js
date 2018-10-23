@@ -259,10 +259,11 @@ class ArtistsEventsScreen extends Component<Props> {
               keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
               }
             />
-            {artistContent.events.length === 0 && (
-              <View>
-                <Text>This artist has no events for recent time</Text>
-              </View>
+            {artistContent.events.length === 0
+              && !showArtistMedia && (
+                <View>
+                  <Text>This artist has no events for chosen period</Text>
+                </View>
             )}
           </View>
         </ScreenScrollContainer>
