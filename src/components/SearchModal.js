@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import {
+  View,
+  ScrollView,
   FlatList,
   Platform,
-  ActivityIndicator,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 
 import styled from 'styled-components';
@@ -92,7 +94,17 @@ class SearchModal extends PureComponent {
               <ActivityIndicator color={colors.accent} />
             </LoadingView>
           ) : (
-            <FlatList data={results} renderItem={this.renderOption} />
+            <FlatList
+              contentContainerStyle={{
+                marginBottom: -5,
+              }}
+              style={{
+                flex: 1,
+                width: utils.deviceWidth,
+              }}
+              data={results}
+              renderItem={this.renderOption}
+            />
           )}
         </ModalView>
       </ViewOverflow>
@@ -122,7 +134,6 @@ export default connect(
 const ModalView = styled(Modal)`
   top: 0;
   flex: 1;
-  padding-left: 20;
   position: absolute;
   background-color: white;
   align-items: flex-start;
@@ -143,6 +154,7 @@ const SearchField = styled.TextInput`
   height: 40;
   width: 100%;
   font-size: 18;
+  padding-left: 20;
 `;
 
 const ClearButtonView = styled.View`
@@ -155,16 +167,20 @@ const ClearButtonView = styled.View`
 `;
 
 const LoadingView = styled.View`
-  position: absolute;
   top: 10;
   right: 30;
+  position: absolute;
 `;
 
 const ResultButton = styled.TouchableOpacity`
-  height: 20;
+  height: 30;
+  width: 100%;
+  padding-left: 20;
   margin-bottom: 5;
+  border-bottom-width: 2;
+  border-bottom-color: grey;
 `;
 
 const ResultButtonText = styled(components.TextRegular)`
-  font-size: 17;
+  font-size: 18;
 `;
