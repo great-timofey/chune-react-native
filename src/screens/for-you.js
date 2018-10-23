@@ -56,6 +56,7 @@ class ForYouScreen extends PureComponent {
         data={contentFeed}
         renderItem={this.renderCard}
         keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
       />
     );
   }

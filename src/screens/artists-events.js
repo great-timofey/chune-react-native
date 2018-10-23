@@ -144,7 +144,7 @@ class ArtistsEventsScreen extends Component<Props> {
     if (currentArtist) {
       const isFollowed = this.calculateArtistIfFollowed();
       return (
-        <ScreenScrollContainer>
+        <ScreenScrollContainer showsVerticalScrollIndicator={false}>
           <View style={{ paddingTop: 25, paddingHorizontal: 8 }}>
             <View style={{ marginBottom: 15, paddingHorizontal: 8 }}>
               <View
@@ -263,6 +263,7 @@ class ArtistsEventsScreen extends Component<Props> {
               }
               keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
               }
+              showsVerticalScrollIndicator={false}
             />
             {artistContent.events.length === 0
               && !showArtistMedia && (
@@ -275,7 +276,7 @@ class ArtistsEventsScreen extends Component<Props> {
       );
     }
     return (
-      <ScreenScrollContainer>
+      <ScreenScrollContainer showsVerticalScrollIndicator={false}>
         <View style={{ paddingTop: 24, marginBottom: 32 }}>
           <Text
             style={{
@@ -291,6 +292,7 @@ class ArtistsEventsScreen extends Component<Props> {
           <FlatList
             horizontal
             data={overallContent.recommended}
+            showsHorizontalScrollIndicator={false}
             renderItem={this.renderRecommendedCard}
             keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
             }
@@ -311,6 +313,7 @@ class ArtistsEventsScreen extends Component<Props> {
           </Text>
         </View>
         <FlatList
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{ alignItems: 'center' }}
           data={overallContent.followed}
           renderItem={this.renderFollowedCard}

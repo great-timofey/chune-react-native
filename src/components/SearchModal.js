@@ -104,6 +104,7 @@ class SearchModal extends PureComponent {
               }}
               data={results}
               renderItem={this.renderOption}
+              showsVerticalScrollIndicator={false}
             />
           )}
         </ModalView>

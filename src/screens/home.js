@@ -34,6 +34,7 @@ class HomeScreen extends PureComponent {
           <ActivityIndicator />
         ) : (
           <ScreenScrollContainer
+            showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={loading} onRefresh={getDataHome} />
             }
@@ -63,6 +64,7 @@ class HomeScreen extends PureComponent {
                 data={contentFeed}
                 renderItem={this.renderCard}
                 keyExtractor={item => item.id}
+                showsVerticalScrollIndicator={false}
               />
             </View>
           </ScreenScrollContainer>

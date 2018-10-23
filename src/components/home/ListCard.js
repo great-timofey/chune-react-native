@@ -91,6 +91,7 @@ export default ListCard;
 const Container = styled.View`
   width: 100%;
   height: 100;
+  overflow: hidden;
   border-radius: 5;
   margin-bottom: 12;
   flex-direction: column;
@@ -99,7 +100,9 @@ const Container = styled.View`
 
 const TouchableContainer = styled.TouchableOpacity`
   width: 100%;
-  height: 100;
+  height: 104;
+  overflow: hidden;
+  border-radius: 5;
   margin-bottom: 12;
   flex-direction: row;
   background-color: white;
