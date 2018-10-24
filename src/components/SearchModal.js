@@ -67,6 +67,7 @@ class SearchModal extends PureComponent {
           animationOutTiming={1}
           isVisible={isSearchOpen}
           onBackdropPress={this.handleClose}
+          onBackButtonPress={this.handleClose}
         >
           <SearchField
             autoFocus

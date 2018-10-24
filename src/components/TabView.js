@@ -17,8 +17,8 @@ import { height } from '../global/device';
 import ForYouScreen from '../screens/for-you';
 import { headerLeft } from '../global/navigations';
 import ArtistsEventsScreen from '../screens/artists-events';
-import { tabNavigate } from '../redux/common/actions';
 import { setDataArtistsEventsSingle } from '../redux/data/actions';
+import { tabNavigate, toggleSearch } from '../redux/common/actions';
 
 type Props = {
   navigation: Object,
@@ -39,7 +39,7 @@ class TabView extends Component<Props> {
     isPlayerOpen: false,
   };
 
-  componentDidMount() {
+   componentDidMount() {
     const { navigation } = this.props;
     navigation.setParams({
       handleUndrill: this.handleUndrill,
@@ -56,7 +56,7 @@ class TabView extends Component<Props> {
   }
 
   handleBackButtonAndroid = () => {
-    const { activeTabIndex, currentArtist, navigation } = this.props;
+    const { currentArtist, activeTabIndex } = this.props;
     if (activeTabIndex === 2 && currentArtist) {
       this.handleUndrill();
       return true;
@@ -66,7 +66,7 @@ class TabView extends Component<Props> {
       { text: 'OK', onPress: () => BackHandler.exitApp() },
     ]);
     return true;
-  };
+  }; 
 
   handleDrawer = () => this.props.navigation.openDrawer();
 
@@ -150,7 +150,7 @@ class TabView extends Component<Props> {
 
   render() {
     const { isPlayerOpen } = this.state;
-    const { isSearchOpen, activeTabIndex } = this.props;
+    const { isSearchOpen, activeTabIndex, toggleSearch } = this.props;
     return (
       <Fragment>
         <ScrollableTabView
@@ -205,6 +205,7 @@ export default connect(
   }),
   {
     tabNavigate,
+    toggleSearch,
     setDataArtistsEventsSingle,
   },
 )(TabView);

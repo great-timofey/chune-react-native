@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, WebView, View } from 'react-native';
+import { Text } from 'react-native';
 
 import moment from 'moment';
 import styled from 'styled-components';
@@ -12,11 +12,11 @@ import { isAndroid } from '../../global/device';
 import { colors, components, utils } from '../../global';
 
 type Props = {
+  type: string,
   title: string,
   image: string,
   sourceName: string,
   artistName: string,
-  type: string,
 };
 
 const ListCard = ({
@@ -109,8 +109,8 @@ const TouchableContainer = styled.TouchableOpacity`
 `;
 
 const Picture = styled.Image`
-  width: 100;
-  height: 100;
+  width: ${isAndroid ? 104 : 100};
+  height: ${isAndroid ? 104 : 100};
 `;
 
 const TextContainer = styled.View`
