@@ -1,14 +1,41 @@
-import {
-  View, WebView, Text, TouchableOpacity, Button,
-} from 'react-native';
 import React, { Component, Fragment } from 'react';
+import {
+  Text,
+  View,
+  Button,
+  WebView,
+  BackHandler,
+  TouchableOpacity,
+} from 'react-native';
+
 import Icon from 'react-native-vector-icons/Feather';
-import { width, height } from '../global/device';
+
 import { colors } from '../global';
+import { width, height, isAndroid } from '../global/device';
 
 export default class ModalScreen extends Component {
   static navigationOptions = {
-    header: <View style={{ height: 20, backgroundColor: '#52146C' }} />,
+    header: () => (isAndroid ? null : (
+      <View style={{ height: 20, backgroundColor: '#52146C' }} />
+    )),
+  };
+
+  componentDidMount() {
+    const { navigation } = this.props;
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonAndroid,
+    );
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
+  handleBackButtonAndroid = () => {
+    const { navigation } = this.props;
+    navigation.goBack();
+    return true;
   };
 
   render() {
@@ -20,7 +47,7 @@ export default class ModalScreen extends Component {
           style={{
             width: 30,
             height: 30,
-            top: 20,
+            top: isAndroid ? 10 : 20,
             right: 10,
             zIndex: 1,
             position: 'absolute',

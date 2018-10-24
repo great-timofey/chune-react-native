@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import {
   View,
+  Alert,
   FlatList,
   RefreshControl,
   ActivityIndicator,
@@ -75,7 +76,8 @@ class HomeScreen extends PureComponent {
 }
 
 export default connect(
-  ({ auth, data: { home } }) => ({
+  ({ auth, data: { home }, common: { activeTabIndex } }) => ({
+    activeTabIndex,
     token: auth.token,
     featured: home.featured,
     contentFeed: home.contentFeed,

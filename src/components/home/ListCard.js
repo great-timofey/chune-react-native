@@ -8,6 +8,7 @@ import AndroidWebView from 'react-native-android-fullscreen-webview-video';
 
 import VideoCard from '../VideoCard';
 import config from '../../global/config';
+import { isAndroid } from '../../global/device';
 import { colors, components, utils } from '../../global';
 
 type Props = {
@@ -99,12 +100,12 @@ const Container = styled.View`
 
 const TouchableContainer = styled.TouchableOpacity`
   width: 100%;
-  height: 104;
   overflow: hidden;
   border-radius: 5;
   margin-bottom: 12;
   flex-direction: row;
   background-color: white;
+  height: ${isAndroid ? 104 : 100};
 `;
 
 const Picture = styled.Image`
