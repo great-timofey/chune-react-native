@@ -1,18 +1,22 @@
 import React from 'react';
+import { Text } from 'react-native';
+
 import moment from 'moment';
 import styled from 'styled-components';
-import { Text, WebView, View } from 'react-native';
-
 import YouTube from 'react-native-youtube';
+import AndroidWebView from 'react-native-android-fullscreen-webview-video';
+
+import VideoCard from '../VideoCard';
+import config from '../../global/config';
+import { isAndroid } from '../../global/device';
 import { colors, components, utils } from '../../global';
-import { homeImagesPrefix } from '../../services/chuneAPI';
 
 type Props = {
+  type: string,
   title: string,
   image: string,
   sourceName: string,
   artistName: string,
-  type: string,
 };
 
 const ListCard = ({
@@ -47,7 +51,7 @@ const ListCard = ({
           <Picture
             resizeMode="cover"
             source={{
-              uri: homeImagesPrefix + image,
+              uri: `${config.API.IMAGES.MEDIUM}${image}`,
             }}
           />
           <TextContainer>
@@ -57,51 +61,25 @@ const ListCard = ({
             <Description>What Makes Flyers Untivaled</Description>
             <From>dewd</From>
             <Metadata>
-              <MetadataText>{source_name}</MetadataText>
-              <MetadataText>{getDate(published_on)}</MetadataText>
-              <MetadataText>{artist_name}</MetadataText>
+              <MetadataText numberOfLines={1} ellipsizeMode="tail">
+                {source_name}
+              </MetadataText>
+              <Date>{getDate(published_on)}</Date>
+              <MetadataText numberOfLines={1} ellipsizeMode="tail">
+                {artist_name}
+              </MetadataText>
             </Metadata>
           </TextContainer>
         </TouchableContainer>
       );
     case 'video':
       return (
-        <VideoContainer>
-          <View
-            style={{
-              paddingTop: 5,
-              paddingHorizontal: 5,
-              marginBottom: 5,
-              flexDirection: 'row',
-            }}
-          >
-            <VideoHeader numberOfLines={1} ellipsizeMode="tail">
-              {uppercaseSource(`via ${channel_name}`)}
-            </VideoHeader>
-            <VideoHeader
-              numberOfLines={1}
-              style={{ marginLeft: 10 }}
-              ellipsizeMode="tail"
-            >
-              {getDate(published_on)}
-            </VideoHeader>
-          </View>
-          <VideoHeader
-            style={{
-              paddingHorizontal: 5,
-            }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {description}
-          </VideoHeader>
-          <YouTube
-            videoId={youtube_id}
-            play={false}
-            fullscreen
-            style={{ alignSelf: 'stretch', height: 150 }}
-          />
-        </VideoContainer>
+        <VideoCard
+          youtubeId={youtube_id}
+          description={description}
+          publishedOn={getDate(published_on)}
+          channelName={uppercaseSource(`via ${channel_name}`)}
+        />
       );
     default:
       return <Text>{type}</Text>;
@@ -113,28 +91,26 @@ export default ListCard;
 const Container = styled.View`
   width: 100%;
   height: 100;
+  overflow: hidden;
   border-radius: 5;
   margin-bottom: 12;
   flex-direction: column;
   background-color: white;
 `;
 
-const VideoContainer = styled(Container)`
-  height: auto;
-  flex-direction: column;
-`;
-
 const TouchableContainer = styled.TouchableOpacity`
   width: 100%;
-  height: 100;
+  overflow: hidden;
+  border-radius: 5;
   margin-bottom: 12;
   flex-direction: row;
   background-color: white;
+  height: ${isAndroid ? 104 : 100};
 `;
 
 const Picture = styled.Image`
-  width: 100;
-  height: 100;
+  width: ${isAndroid ? 104 : 100};
+  height: ${isAndroid ? 104 : 100};
 `;
 
 const TextContainer = styled.View`
@@ -148,10 +124,6 @@ const Header = styled(components.TextRegular)`
   font-size: 16;
   margin-bottom: 3;
   color: ${colors.black};
-`;
-
-const VideoHeader = styled(Header)`
-  font-weight: bold;
 `;
 
 const Description = styled(components.TextRegular)`
@@ -172,5 +144,11 @@ const Metadata = styled.View`
 
 const MetadataText = styled(components.TextRegular)`
   font-size: 13;
+  max-width: 33%;
   color: ${colors.greyPrompts};
+`;
+
+const Date = styled(MetadataText)`
+  max-width: auto;
+  margin-horizontal: 3;
 `;

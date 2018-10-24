@@ -6129,6 +6129,11 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-native-android-fullscreen-webview-video@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-android-fullscreen-webview-video/-/react-native-android-fullscreen-webview-video-1.0.3.tgz#305a7249b42e406caed1401b47ac5a3d53049134"
+  integrity sha512-Py3Zwc2e+FyNGq1EWGO7jA0R3p2R1c092fT2CIm7HvHUBDCQv1TAl7J6XIJ3g6E2JT3dZ0LV20PkgvCVxT23aw==
+
 react-native-animatable@^1.2.4:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.0.tgz#b5c3940fc758cfd9b2fe54613a457c4b6962b46e"

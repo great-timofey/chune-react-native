@@ -5,16 +5,18 @@ import { colors, components, utils } from '../global';
 
 type Props = {
   name: string,
+  genre: string,
   imageUrl: string,
-  callback: Function,
+  enterCallback: Function,
+  unfollowCallback: Function,
 };
 
 const FollowedArtistCard = ({
   name,
+  genre,
   imageUrl,
   enterCallback,
   unfollowCallback,
-  genre,
 }: Props) => (
   <Container
     style={{
@@ -44,8 +46,8 @@ const FollowedArtistCard = ({
 export default FollowedArtistCard;
 
 const Container = styled.View`
-  height: 120;
   width: 320;
+  height: 120;
   border-width: 1;
   border-radius: 5;
   overflow: hidden;
@@ -60,8 +62,6 @@ const Cover = styled.Image`
   width: 120;
   height: 120;
   margin-right: 20;
-  border-top-left-radius: 20;
-  border-bottom-left-radius: 20;
 `;
 
 const DescriptionContainer = styled.View`

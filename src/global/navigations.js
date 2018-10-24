@@ -1,24 +1,22 @@
 import R from 'ramda';
 import React from 'react';
 import { Alert, View, Text } from 'react-native';
-import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 
 import colors from './colors';
 import styles from './styles';
-import { platformSelect } from './utils';
-import { HomeScreenName, AuthScreenName } from '../navigation/screens';
-
 import { store } from '../redux/store';
 import FAQScreen from '../screens/faq';
 import AuthScreen from '../screens/auth';
 import ModalScreen from '../screens/modal';
-import { isIphoneX } from './utils';
 import HomeTabView from '../components/TabView';
 import SideDrawer from '../components/SideDrawer';
 import TermsConditionsScreen from '../screens/t&c';
+import { isIphoneX, platformSelect } from './utils';
 import { toggleSearch } from '../redux/common/actions';
 import PrivacyPolicyScreen from '../screens/privacyPolicy';
+import { HomeScreenName, AuthScreenName } from '../navigation/screens';
 // export const authStack = generateRoutes(auth);
 
 const iconProps = {
@@ -94,7 +92,7 @@ const rootStack = {
           {
             paddingTop: 20,
             marginBottom: 4,
-            borderTopWidth: /* isIphoneX() ? 31 : */ 21,
+            borderTopWidth: /* isIphoneX ? 31 : */ 21,
             borderTopColor: '#52146C',
           },
           {

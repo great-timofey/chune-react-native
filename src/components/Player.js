@@ -15,19 +15,18 @@ import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
-import Control from '../Control';
-import TrackCard from '../TrackCard';
-import { API } from '../../services/chuneAPI';
-import PlayerTopPanel from '../PlayerTopPanel';
+import Control from './Control';
+import TrackCard from './TrackCard';
+import PlayerTopPanel from './PlayerTopPanel';
 
 import {
   getTracks,
+  togglePlaying,
   setCurrentTrack,
   setCurrentTracks,
   setCurrentTracksType,
-  togglePlaying,
-} from '../../redux/player/actions';
-import { colors, components, utils } from '../../global';
+} from '../redux/player/actions';
+import { colors, components, utils } from '../global';
 
 type Props = {
   currentTrack: Object,
@@ -76,7 +75,7 @@ class Player extends Component<Props> {
   };
 
   handleSkipBack = () => {
-    /*const {
+    /* const {
       topTracks,
       chuneSupply,
       currentTrack,
@@ -97,7 +96,7 @@ class Player extends Component<Props> {
       showTopTracks
         ? topTracks[currentTrackIndex - 1]
         : chuneSupply[currentTrackIndex - 1],
-    );*/
+    ); */
   };
 
   handleShuffle = () => {};

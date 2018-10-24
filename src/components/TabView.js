@@ -1,5 +1,7 @@
-import { Platform, Text, View } from 'react-native';
 import React, { Component, Fragment } from 'react';
+import {
+  Alert, Platform, Text, View, BackHandler,
+} from 'react-native';
 
 import { connect } from 'react-redux';
 import TabBar from 'react-native-underline-tabbar';
@@ -15,12 +17,11 @@ import { height } from '../global/device';
 import ForYouScreen from '../screens/for-you';
 import { headerLeft } from '../global/navigations';
 import ArtistsEventsScreen from '../screens/artists-events';
-import { toggleDrill, tabNavigate } from '../redux/common/actions';
 import { setDataArtistsEventsSingle } from '../redux/data/actions';
+import { tabNavigate, toggleSearch } from '../redux/common/actions';
 
 type Props = {
   navigation: Object,
-  toggleDrill: Function,
 };
 
 class TabView extends Component<Props> {
@@ -38,13 +39,34 @@ class TabView extends Component<Props> {
     isPlayerOpen: false,
   };
 
-  componentDidMount() {
+   componentDidMount() {
     const { navigation } = this.props;
     navigation.setParams({
       handleUndrill: this.handleUndrill,
       handleDrawer: this.handleDrawer,
     });
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonAndroid,
+    );
   }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
+  handleBackButtonAndroid = () => {
+    const { currentArtist, activeTabIndex } = this.props;
+    if (activeTabIndex === 2 && currentArtist) {
+      this.handleUndrill();
+      return true;
+    }
+    Alert.alert('Confirm exit', 'Do you want to quit the app?', [
+      { text: 'CANCEL', style: 'cancel' },
+      { text: 'OK', onPress: () => BackHandler.exitApp() },
+    ]);
+    return true;
+  }; 
 
   handleDrawer = () => this.props.navigation.openDrawer();
 
@@ -128,7 +150,7 @@ class TabView extends Component<Props> {
 
   render() {
     const { isPlayerOpen } = this.state;
-    const { isSearchOpen, activeTabIndex } = this.props;
+    const { isSearchOpen, activeTabIndex, toggleSearch } = this.props;
     return (
       <Fragment>
         <ScrollableTabView
@@ -182,8 +204,8 @@ export default connect(
     artistsEventsLoading: artistsEvents.loading,
   }),
   {
-    toggleDrill,
     tabNavigate,
+    toggleSearch,
     setDataArtistsEventsSingle,
   },
 )(TabView);

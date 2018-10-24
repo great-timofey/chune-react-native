@@ -6,7 +6,6 @@ export default {
 
   IP,
   API_URL: `https://${IP}${API_VERSION}`,
-  API_URL_IMAGES: `https://${IP}/`,
   HEADERS: {
     'content-type': 'application/json',
   },
@@ -19,8 +18,8 @@ export default {
       GET_SUPPLY: 'tracks/sources/2/',
     },
     IMAGES: {
-      FULL: 'static/imgs/full/',
-      MEDIUM: 'static/imgs/thumbs/medium/',
+      FULL: `https://${IP}/static/imgs/full/`,
+      MEDIUM: `https://${IP}/static/imgs/thumbs/medium/`,
     },
   },
 };

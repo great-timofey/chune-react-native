@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { connect } from 'react-redux';
+import { ActivityIndicator, StatusBar } from 'react-native';
 
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { isAndroid } from '../global/device';
 
 type Props = {
   loading: Boolean,
@@ -13,6 +15,7 @@ class Spinner extends Component<Props> {
     const { loading } = this.props;
     const data = loading ? (
       <Overlay>
+        {isAndroid && <StatusBar backgroundColor="#A98AB6" />}
         <ActivityIndicator color="black" styles={{ flex: 1 }} size="large" />
       </Overlay>
     ) : null;

@@ -37,7 +37,8 @@ type Props = {
 
 class ArtistsEventsScreen extends Component<Props> {
   state = {
-    displayMediaType: '',
+    mediaTypes: ['All Media', 'Articles', 'Social', 'Videos', 'Tracks'],
+    displayMediaType: 'All Media',
     showArtistMedia: true,
   };
 
@@ -117,6 +118,8 @@ class ArtistsEventsScreen extends Component<Props> {
     drillCallback();
   };
 
+  handleMediaDisplayedType = () => {};
+
   showArtistMedia = () => this.setState({ showArtistMedia: true });
 
   showArtistEvents = () => this.setState({ showArtistMedia: false });
@@ -141,9 +144,9 @@ class ArtistsEventsScreen extends Component<Props> {
     if (currentArtist) {
       const isFollowed = this.calculateArtistIfFollowed();
       return (
-        <ScreenScrollContainer>
+        <ScreenScrollContainer showsVerticalScrollIndicator={false}>
           <View style={{ paddingTop: 25, paddingHorizontal: 8 }}>
-            <View style={{ marginBottom: 25, paddingHorizontal: 8 }}>
+            <View style={{ marginBottom: 15, paddingHorizontal: 8 }}>
               <View
                 style={{
                   marginBottom: 15,
@@ -171,6 +174,7 @@ class ArtistsEventsScreen extends Component<Props> {
                   <Text
                     style={{
                       fontSize: 22,
+                      color: 'black',
                       marginBottom: 10,
                       fontWeight: 'bold',
                       fontFamily: 'Roboto-Medium',
@@ -191,7 +195,7 @@ class ArtistsEventsScreen extends Component<Props> {
                       },
                       isFollowed && {
                         backgroundColor: 'transparent',
-                        borderColor: 'rbga(255, 255, 255, 0.9)',
+                        borderColor: 'rgba(0, 0, 0, 0.12)',
                       },
                     ]}
                     onPress={() => (isFollowed ? this.handleUnfollow() : this.handleFollow())
@@ -241,10 +245,11 @@ class ArtistsEventsScreen extends Component<Props> {
               </View>
             </View>
             {showArtistMedia && (
-              <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                <Text style={{ color: 'grey' }}>
-                  {displayMediaType || 'All Media'}
-                </Text>
+              <TouchableOpacity
+                style={{ alignSelf: 'flex-end', marginBottom: 5 }}
+                onPress={this.handleMediaDisplayedType}
+              >
+                <Text style={{ color: 'grey' }}>{displayMediaType}</Text>
               </TouchableOpacity>
             )}
             <FlatList
@@ -258,24 +263,27 @@ class ArtistsEventsScreen extends Component<Props> {
               }
               keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
               }
+              showsVerticalScrollIndicator={false}
             />
-            {artistContent.events.length === 0 && (
-              <View>
-                <Text>This artist has no events for recent time</Text>
-              </View>
+            {artistContent.events.length === 0
+              && !showArtistMedia && (
+                <View>
+                  <Text>This artist has no events for chosen period</Text>
+                </View>
             )}
           </View>
         </ScreenScrollContainer>
       );
     }
     return (
-      <ScreenScrollContainer>
+      <ScreenScrollContainer showsVerticalScrollIndicator={false}>
         <View style={{ paddingTop: 24, marginBottom: 32 }}>
           <Text
             style={{
-              marginBottom: 10,
-              paddingLeft: 16,
               fontSize: 20,
+              color: 'black',
+              paddingLeft: 16,
+              marginBottom: 10,
               fontFamily: 'Roboto-Regular',
             }}
           >
@@ -284,6 +292,7 @@ class ArtistsEventsScreen extends Component<Props> {
           <FlatList
             horizontal
             data={overallContent.recommended}
+            showsHorizontalScrollIndicator={false}
             renderItem={this.renderRecommendedCard}
             keyExtractor={item => (item.id && `${item.id}`) || item.youtube_id || item.embed_url
             }
@@ -294,8 +303,9 @@ class ArtistsEventsScreen extends Component<Props> {
         >
           <Text
             style={{
-              marginBottom: 10,
               fontSize: 20,
+              color: 'black',
+              marginBottom: 10,
               fontFamily: 'Roboto-Regular',
             }}
           >
@@ -303,6 +313,7 @@ class ArtistsEventsScreen extends Component<Props> {
           </Text>
         </View>
         <FlatList
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{ alignItems: 'center' }}
           data={overallContent.followed}
           renderItem={this.renderFollowedCard}

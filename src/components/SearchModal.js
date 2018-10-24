@@ -1,14 +1,16 @@
 import React, { PureComponent } from 'react';
 import {
+  View,
   FlatList,
   Platform,
-  ActivityIndicator,
+  ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Modal from 'react-native-modal';
-import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
 import ViewOverflow from 'react-native-view-overflow';
 
@@ -17,6 +19,7 @@ import {
   setSearchArtistResult,
   getDataArtistsEventsSingle,
 } from '../redux/data/actions';
+import { isAndroid } from '../global/device';
 import { utils, components, colors } from '../global';
 import { toggleSearch } from '../redux/common/actions';
 
@@ -64,6 +67,7 @@ class SearchModal extends PureComponent {
           animationOutTiming={1}
           isVisible={isSearchOpen}
           onBackdropPress={this.handleClose}
+          onBackButtonPress={this.handleClose}
         >
           <SearchField
             autoFocus
@@ -71,7 +75,7 @@ class SearchModal extends PureComponent {
             onChangeText={this.handleSearch}
             placeholder="Search to find and follow artist"
           />
-          <ClearButtonView>
+          <ClearButtonContainer>
             <Icon.Button
               name="x"
               size={20}
@@ -86,13 +90,24 @@ class SearchModal extends PureComponent {
               }}
               borderRadius={0}
             />
-          </ClearButtonView>
+          </ClearButtonContainer>
           {loading ? (
             <LoadingView>
               <ActivityIndicator color={colors.accent} />
             </LoadingView>
           ) : (
-            <FlatList data={results} renderItem={this.renderOption} />
+            <FlatList
+              contentContainerStyle={{
+                marginBottom: -5,
+              }}
+              style={{
+                flex: 1,
+                width: utils.deviceWidth,
+              }}
+              data={results}
+              renderItem={this.renderOption}
+              showsVerticalScrollIndicator={false}
+            />
           )}
         </ModalView>
       </ViewOverflow>
@@ -120,32 +135,23 @@ export default connect(
 )(SearchModal);
 
 const ModalView = styled(Modal)`
-  top: 0;
   flex: 1;
-  padding-left: 20;
+  left: -20;
   position: absolute;
   background-color: white;
   align-items: flex-start;
+  ${isAndroid && 'top: -20'};
   width: ${utils.deviceWidth};
-  ${Platform.select({
-    android: {
-      top: -10,
-      left: -18,
-    },
-    ios: {
-      top: 10,
-      left: -19,
-    },
-  })};
 `;
 
 const SearchField = styled.TextInput`
   height: 40;
   width: 100%;
   font-size: 18;
+  padding-left: 15;
 `;
 
-const ClearButtonView = styled.View`
+const ClearButtonContainer = styled.View`
   top: 0;
   right: 5;
   width: 30;
@@ -155,16 +161,20 @@ const ClearButtonView = styled.View`
 `;
 
 const LoadingView = styled.View`
-  position: absolute;
   top: 10;
   right: 30;
+  position: absolute;
 `;
 
 const ResultButton = styled.TouchableOpacity`
-  height: 20;
+  height: 30;
+  width: 100%;
+  padding-left: 20;
   margin-bottom: 5;
+  border-bottom-width: 2;
+  border-bottom-color: grey;
 `;
 
 const ResultButtonText = styled(components.TextRegular)`
-  font-size: 17;
+  font-size: 18;
 `;
