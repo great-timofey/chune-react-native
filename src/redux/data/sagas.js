@@ -8,13 +8,13 @@ import {
   API,
   searchArtist,
   getTopTracks,
-  setAuthToken,
   followArtist,
   getArtistData,
   unfollowArtist,
   getHomeContent,
   verifyAuthToken,
   getArtistEvents,
+  setChuneAuthToken,
   getTracksOfChosenType,
   getContentForYouFirst,
   getContentForYouSecond,
@@ -185,7 +185,6 @@ function* sagas() {
   yield takeLatest(DATA_ACTIONS.FOLLOW_ARTIST_REQUEST, artistFollowingWorker);
   yield takeLatest(DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST, artistFollowingWorker);
   yield takeLatest(DATA_ACTIONS.SEARCH_ARTIST_REQUEST, searchArtistWorker);
-  yield takeLatest(rehydrate, getDataArtistsEventsOverallWorker);
 }
 
 export default sagas;

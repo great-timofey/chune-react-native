@@ -11,8 +11,9 @@ type Props = {
 // validation function : onChangeText={value => validation(value)}
 const AuthInput = ({
   label,
-  password,
   error,
+  password,
+  invisible,
   validation,
   refCallback,
 }: Props) => (
@@ -23,7 +24,11 @@ const AuthInput = ({
     fontSize={16}
     label={label}
     labelHeight={25}
-    containerStyle={{ height: 25, marginBottom: 40 }}
+    containerStyle={{
+      display: invisible ? 'none' : 'flex',
+      height: 25,
+      marginBottom: 40,
+    }}
     baseColor="grey"
     tintColor="#7B1FA2"
     error={error}

@@ -1,21 +1,22 @@
 import React, { PureComponent } from 'react';
-import { Image, StatusBar, View } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {
+  Image, StatusBar, View, Alert,
+} from 'react-native';
 
 import Spotify from 'rn-spotify-sdk';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { bindActionCreators } from 'redux';
 import { LoginManager as FacebookLoginManager } from 'react-native-fbsdk';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import { GoogleSignin as GoogleLoginManager } from 'react-native-google-signin';
 
-import images from '../global/images';
-import colors from '../global/colors';
-import { isIphoneX } from '../global/utils';
 import AuthInput from '../components/AuthInput';
-import { setToken } from '../redux/auth/actions';
-
-import { API } from '../services/chuneAPI';
+import {
+  images, colors, device, components,
+} from '../global';
+import { setError } from '../redux/common/actions';
+import { requestSignInUser, requestSignUpUser } from '../redux/auth/actions';
 import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
 
 type Props = {
@@ -28,10 +29,6 @@ class AuthScreen extends PureComponent<Props> {
   };
 
   state = {
-    userInfo: null,
-    authorized: false,
-    //  for testing
-    input: '',
     error: {
       name: '',
     },
@@ -39,14 +36,7 @@ class AuthScreen extends PureComponent<Props> {
     isSignUp: false,
   };
 
-  componentDidMount() {
-    // GoogleLoginManager.configure({
-    // iosClientId: googleAuthOptions.iosClientId,
-    // });
-    // Spotify.initialize(spotifyAuthOptions);
-  }
-
-  _handleAuthSpotify = async () => {
+  handleAuthSpotify = async () => {
     const loggedIn = await Spotify.login();
     if (loggedIn) {
       try {
@@ -63,22 +53,21 @@ class AuthScreen extends PureComponent<Props> {
 
           //  use code below to login with spotify backend endpoint
 
-          // const userInfo = JSON.stringify({
-          // email: user && user.email,
-          // first_name: user && user.display_name,
-          // last_name: user && user.display_name,
-          // artists: [],
-          // });
+          /* const userInfo = JSON.stringify({
+            email: user && user.email,
+            first_name: user && user.display_name,
+            last_name: user && user.display_name,
+            artists: [],
+          });
 
-          // API.post('users/social/login/spotify', userInfo)
-          // .then((res) => {
-          // console.log(777, 'spotify', res);
-          // })
-          // .catch((e) => {
-          // console.log(555, 'spotify', e);
-          // });
+          API.post('users/social/login/spotify', userInfo)
+            .then((res) => {
+              console.log(777, 'spotify', res);
+            })
+            .catch((e) => {
+              console.log(555, 'spotify', e);
+            }); */
         }
-        this.setState({ authorized: true });
       } catch (err) {
         alert('Error', err.message);
       }
@@ -87,19 +76,18 @@ class AuthScreen extends PureComponent<Props> {
     }
   };
 
-  _handleAuthGoogle = async () => {
+  handleAuthGoogle = async () => {
     try {
-      //  commented because of google login lib bug
-      // await GoogleLoginManager.hasPlayServices();
-      // const userInfo = await GoogleLoginManager.signIn();
-      // console.log(userInfo);
-      this.setState({ authorized: true });
+      /* commented because of google login lib bug
+       await GoogleLoginManager.hasPlayServices();
+       const userInfo = await GoogleLoginManager.signIn();
+       console.log(userInfo); */
     } catch (error) {
       console.log(error);
     }
   };
 
-  _handleAuthFb = () => {
+  handleAuthFb = () => {
     FacebookLoginManager.logInWithReadPermissions(['public_profile']).then(
       (result) => {
         if (result.isCancelled) {
@@ -108,7 +96,6 @@ class AuthScreen extends PureComponent<Props> {
           console.log(
             `Login success with permissions: ${result.grantedPermissions}`,
           );
-          this.setState({ authorized: true });
         }
       },
       (error) => {
@@ -117,39 +104,35 @@ class AuthScreen extends PureComponent<Props> {
     );
   };
 
-  handleSignIn = () => {
-    const { authorized } = this.state;
-    const { navigation, setToken } = this.props;
-
-    const user = JSON.stringify({
-      // name,
-      // email: this.emailRef.input._getText(),
-      // password: this.passwordRef.input._getText(),
-      email: 'tim2@mail.com',
-      password: 'aA12345',
-    });
-
-    API.post('users/login', user)
-      .then((res) => {
-        console.log(123, res);
-        return res.data.token;
-      })
-      .then((token) => {
-        setToken(token);
-      })
-      .then(_ => navigation.navigate('Home'))
-      .catch((e) => {
-        console.log(666, e);
-      });
+  handleToggleAuthMode = () => {
+    const { nameRef, emailRef, passwordRef } = this;
+    nameRef.input.clear();
+    emailRef.input.clear();
+    passwordRef.input.clear();
+    this.setState(({ isSignUp }) => ({ isSignUp: !isSignUp }));
   };
 
-  //  TODO: implement sign up
-  handleSignUp = () => {
-    console.log('here goes sign up');
+  handleEnter = () => {
+    const { isSignUp } = this.state;
+    const { navigation, requestSignInUser, requestSignUpUser } = this.props;
+
+    const user = {
+      name: this.nameRef.input._getText(),
+      email: this.emailRef.input._getText(),
+      password: this.passwordRef.input._getText(),
+    };
+
+    if (isSignUp) {
+      requestSignUpUser(user);
+      return;
+    }
+
+    requestSignInUser(user);
   };
 
   render() {
     const { isSignUp } = this.state;
+    const { error, setError } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <KeyboardAwareScrollView
@@ -161,8 +144,18 @@ class AuthScreen extends PureComponent<Props> {
             <Logo source={images.logoChune} reducedMargin={isSignUp} />
             <Invitation>{`Sign ${isSignUp ? 'up' : 'in'}`}</Invitation>
             <InvitationPromptEmail>by email</InvitationPromptEmail>
+            {error
+              && Alert.alert('Error', error, [
+                { text: 'OK', onPress: () => setError() },
+              ])}
             <Form>
-              {isSignUp && <FormField label="Name" />}
+              <FormField
+                invisible={!isSignUp}
+                label="Name"
+                refCallback={(el) => {
+                  this.nameRef = el;
+                }}
+              />
               <FormField
                 label="Email"
                 refCallback={(el) => {
@@ -182,9 +175,7 @@ class AuthScreen extends PureComponent<Props> {
                 <ForgetPasswordText>Forgot password?</ForgetPasswordText>
               </ForgetPasswordButton>
             )}
-            <EnterButton
-              onPress={isSignUp ? this.handleSignUp : this.handleSignIn}
-            >
+            <EnterButton onPress={this.handleEnter}>
               <EnterButtonText>
                 {`Sign ${isSignUp ? 'up' : 'in'}`}
               </EnterButtonText>
@@ -211,10 +202,7 @@ class AuthScreen extends PureComponent<Props> {
             <SnackBarText>
               {isSignUp ? 'Have an account?' : "Don't have an account?"}
             </SnackBarText>
-            <ToggleEnterModeButton
-              onPress={() => this.setState(({ isSignUp }) => ({ isSignUp: !isSignUp }))
-              }
-            >
+            <ToggleEnterModeButton onPress={this.handleToggleAuthMode}>
               <ToggleEnterModeButtonText>
                 {`Sign ${isSignUp ? 'in' : 'up'}`}
               </ToggleEnterModeButtonText>
@@ -228,13 +216,15 @@ class AuthScreen extends PureComponent<Props> {
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    setToken,
+    setError,
+    requestSignInUser,
+    requestSignUpUser,
   },
   dispatch,
 );
 
 export default connect(
-  () => ({}),
+  ({ common: { error } }) => ({ error }),
   mapDispatchToProps,
 )(AuthScreen);
 
@@ -256,10 +246,10 @@ const MainContent = styled.View`
 `;
 
 const Logo = styled.Image`
-  margin-bottom: ${props => (props.reducedMargin ? '35' : '60')};
+  margin-bottom: ${({ reducedMargin }) => (reducedMargin ? '35' : '60')};
 `;
 
-const Invitation = styled.Text`
+const Invitation = styled(components.TextMedium)`
   font-size: 20;
   text-align: center;
   font-weight: 600;
@@ -267,7 +257,7 @@ const Invitation = styled.Text`
   color: ${colors.black};
 `;
 
-const InvitationPromptEmail = styled.Text`
+const InvitationPromptEmail = styled(components.TextRegular)`
   font-size: 14;
   color: ${colors.greyPrompts};
 `;
@@ -301,34 +291,34 @@ const SnackBar = styled.View`
   width: 100%;
   flex-direction: row;
   border-top-width: 1;
-  padding-vertical: 10;
   align-items: center;
+  padding-vertical: 10;
   background-color: #f2f2f2;
   justify-content: space-between;
   border-top-color: ${colors.grey};
-  height: ${_ => (isIphoneX ? 55 : 44)};
-  padding-horizontal: ${props => (props.shrinkedText ? 90 : 70)};
+  height: ${device.isIphoneX ? 55 : 44};
+  padding-horizontal: ${({ shrinkedText }) => (shrinkedText ? 90 : 70)};
 `;
 
-const ToggleEnterModeButtonText = styled.Text`
-  color: ${colors.accent};
-  font-weight: 700;
+const ToggleEnterModeButtonText = styled(components.TextMedium)`
   font-size: 20;
+  font-weight: 600;
+  color: ${colors.accent};
 `;
 
 const Socials = styled.View`
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   padding-horizontal: 17;
+  justify-content: space-between;
 `;
 
 const SpotifyButton = styled.TouchableOpacity`
-  justify-content: center;
   border-width: 1;
   border-radius: 10;
-  border-color: #979797;
   margin-bottom: 20;
+  border-color: #979797;
+  justify-content: center;
 `;
 
 const SpotifyButtonImage = styled.Image`
@@ -336,10 +326,10 @@ const SpotifyButtonImage = styled.Image`
   margin-horizontal: 28;
 `;
 
-const SnackBarText = styled.Text``;
 const FormField = styled(AuthInput)``;
 const ExternalAuthContainer = styled.View``;
 const GoogleButton = styled.TouchableOpacity``;
 const TwitterButton = styled.TouchableOpacity``;
 const FacebookButton = styled.TouchableOpacity``;
+const SnackBarText = styled(components.TextRegular)``;
 const ToggleEnterModeButton = styled.TouchableOpacity``;

@@ -12,3 +12,8 @@ export const tabNavigate = index => ({
   type: COMMON_ACTIONS.TAB_NAVIGATE,
   payload: { index },
 });
+
+export const setError = error => ({
+  type: COMMON_ACTIONS.SET_ERROR,
+  payload: { error },
+});

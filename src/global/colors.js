@@ -1,5 +1,6 @@
 export default {
   grey: '#D8D8D8',
+  error: '#FF204C',
   black: '#210130',
   white: '#FFFFFF',
   accent: '#7B1FA2',
