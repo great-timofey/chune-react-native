@@ -6,15 +6,38 @@ export const API = axios.create({
   headers: CONFIG.HEADERS,
 });
 
-export const verifyAuthToken = (token) => {
-  API.post('token/verify', token).then(response => response && response.data);
-};
+export const signIn = user => new Promise((res, rej) => {
+  API.post('users/login', user)
+    .then(response => res(response))
+    .catch(err => rej(err));
+});
 
-export const setAuthToken = (token) => {
+export const signUp = user => new Promise((res, rej) => {
+  API.post('users/', user)
+    .then(response => res(response.data))
+    .catch(err => rej(err));
+});
+
+export const verifyChuneAuthToken = token => new Promise((res, rej) => {
+  API.post('token/verify', token)
+    .then(response => res(response.data))
+    .catch(err => rej(err));
+});
+
+//  seems like it doesn't work
+export const refreshChuneAuthToken = token => new Promise((res, rej) => {
+  API.post('token/refresh', token)
+    .then((response) => {
+      res(response.data);
+    })
+    .catch(err => rej(err));
+});
+
+export const setChuneAuthToken = (token) => {
   API.defaults.headers.common.Authorization = `JWT ${token}`;
 };
 
-export const clearAuthToken = () => {
+export const clearChuneAuthToken = () => {
   API.defaults.headers.common.Authorization = null;
 };
 
