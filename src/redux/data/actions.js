@@ -42,6 +42,11 @@ export const artistsEventsControlLoading = loading => ({
   payload: { loading },
 });
 
+export const forYouControlLoading = loading => ({
+  type: DATA_ACTIONS.FOR_YOU_CONTROL_LOADING,
+  payload: { loading },
+});
+
 export const requestArtistFollow = artist => ({
   type: DATA_ACTIONS.FOLLOW_ARTIST_REQUEST,
   payload: { artist },

@@ -17,7 +17,6 @@ import { MainCard, ListCard } from '../components/home';
 class HomeScreen extends PureComponent {
   renderCard = ({ item: { ...data } }) => {
     const { modalCallback } = this.props;
-    // console.log(data);
     return <ListCard {...data} callback={modalCallback} />;
   };
 
@@ -32,7 +31,9 @@ class HomeScreen extends PureComponent {
     return (
       <ScreenContainer>
         {loading ? (
-          <ActivityIndicator />
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={colors.accent} />
+        </View>
         ) : (
           <ScreenScrollContainer
             showsVerticalScrollIndicator={false}
@@ -76,12 +77,18 @@ class HomeScreen extends PureComponent {
 }
 
 export default connect(
-  ({ auth, data: { home }, common: { activeTabIndex } }) => ({
+  ({
+    auth: { token },
+    data: {
+      home: { featured, contentFeed },
+    },
+    common: { activeTabIndex },
+  }) => ({
+    token,
+    featured,
+    contentFeed,
     activeTabIndex,
-    token: auth.token,
-    featured: home.featured,
-    contentFeed: home.contentFeed,
-    loading: !home.featured.length && !home.contentFeed.length,
+    loading: !featured.length && !contentFeed.length,
   }),
   { getDataHome },
 )(HomeScreen);

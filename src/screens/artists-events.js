@@ -275,6 +275,19 @@ class ArtistsEventsScreen extends Component<Props> {
         </ScreenScrollContainer>
       );
     }
+    if (
+      overallContent.recommended.length === 0
+      && overallContent.followed.length === 0
+    ) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text>
+            You have no currently followed or recommended artists. Use 'Search'
+            menu below
+          </Text>
+        </View>
+      );
+    }
     return (
       <ScreenScrollContainer showsVerticalScrollIndicator={false}>
         <View style={{ paddingTop: 24, marginBottom: 32 }}>

@@ -9,10 +9,11 @@ const INITIAL_STATE = {
     contentFeed: [],
   },
   forYou: {
+    loading: false,
     contentFeed: [],
   },
   artistsEvents: {
-    loading: true,
+    loading: false,
     overallContent: {
       followed: [],
       recommended: [],
@@ -53,6 +54,8 @@ const searchResultsHandler = ({ results = [] }) => R.pipe(R.assocPath(['search',
 
 const searchLoadingHandler = ({ value }) => R.assocPath(['search', 'loading'], value);
 
+const forYouLoadingHandler = ({ loading }) => R.assocPath(['forYou', 'loading'], loading);
+
 const logoutHandler = () => R.pipe(R.always(INITIAL_STATE));
 
 const HANDLERS = {
@@ -61,6 +64,7 @@ const HANDLERS = {
   [DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_OVERALL_SUCCESS]: dataArtistsEventsOverallHandler,
   [DATA_ACTIONS.GET_DATA_ARTISTS_EVENTS_SINGLE_SUCCESS]: dataArtistsEventsSingleHandler,
   [DATA_ACTIONS.ARTISTS_EVENTS_CONTROL_LOADING]: dataArtistsEventsLoadingHandler,
+  [DATA_ACTIONS.FOR_YOU_CONTROL_LOADING]: forYouLoadingHandler,
   [DATA_ACTIONS.SEARCH_ARTIST_SUCCESS]: searchResultsHandler,
   [DATA_ACTIONS.SEARCH_ARTIST_SET_LOADING]: searchLoadingHandler,
   [AUTH_ACTIONS.LOGOUT]: logoutHandler,

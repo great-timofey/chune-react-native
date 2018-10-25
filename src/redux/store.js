@@ -20,10 +20,23 @@ const authPersistConfig = {
   storage,
 };
 
+const blacklistTransforms = createTransform((inboundState, key) => {
+  if (key === 'artistsEvents') {
+    return {
+      loading: null,
+      overallContent: { ...inboundState.overallContent },
+      currentArtist: null,
+      artistContent: null,
+    };
+  }
+  return inboundState;
+});
+
 const dataPersistConfig = {
   key: 'data',
   storage,
-  whitelist: ['home', 'forYou'],
+  transforms: [blacklistTransforms],
+  whitelist: ['home', 'forYou', 'artistsEvents'],
 };
 
 const playerPersistConfig = {

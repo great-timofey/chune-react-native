@@ -21,6 +21,8 @@ import { spotifyAuthOptions /* googleAuthOptions */ } from '../services/auth';
 
 type Props = {
   navigation: Object,
+  requestSignInUser: Function,
+  requestSignUpUser: Function,
 };
 
 class AuthScreen extends PureComponent<Props> {
@@ -123,7 +125,7 @@ class AuthScreen extends PureComponent<Props> {
     };
 
     if (isSignUp) {
-      requestSignUpUser(user);
+      this.props.requestSignUpUser(user);
       return;
     }
 
@@ -136,8 +138,8 @@ class AuthScreen extends PureComponent<Props> {
     return (
       <View style={{ flex: 1 }}>
         <KeyboardAwareScrollView
-          contentContainerStyle={{ flex: 1 }}
           extraHeight={100}
+          contentContainerStyle={{ flex: 1 }}
         >
           <StatusBar barStyle="dark-content" backgroundColor="transparent" />
           <MainContent>
@@ -182,17 +184,17 @@ class AuthScreen extends PureComponent<Props> {
             </EnterButton>
             <InvitationPromptSocials>or by socials</InvitationPromptSocials>
             <ExternalAuthContainer>
-              <SpotifyButton onPress={this._handleAuthSpotify}>
+              <SpotifyButton onPress={this.handleAuthSpotify}>
                 <SpotifyButtonImage source={images.logoSpotify} />
               </SpotifyButton>
               <Socials>
-                <FacebookButton onPress={this._handleAuthFb}>
+                <FacebookButton onPress={this.handleAuthFb}>
                   <Image source={images.logoFacebook} />
                 </FacebookButton>
                 <TwitterButton>
                   <Image source={images.logoTwitter} />
                 </TwitterButton>
-                <GoogleButton onPress={this._handleAuthGoogle}>
+                <GoogleButton onPress={this.handleAuthGoogle}>
                   <Image source={images.logoGooglePlus} />
                 </GoogleButton>
               </Socials>

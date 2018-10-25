@@ -95,12 +95,17 @@ function* getAppDataWorker() {
   if (isGlobalLoading) yield put(toggleGlobalLoading());
 }
 
+function* logoutWorker() {
+  yield call(clearChuneAuthToken);
+}
+
 function* authSaga() {
+  yield takeLatest(rehydrate, tokenWorker);
+  yield takeLatest(AUTH_ACTIONS.LOGOUT, logoutWorker);
   yield takeLatest(AUTH_ACTIONS.SIGN_IN_REQUEST, authWorker);
   yield takeLatest(AUTH_ACTIONS.SIGN_UP_REQUEST, authWorker);
   yield takeLatest(AUTH_ACTIONS.SIGN_IN_SUCCESS, getAppDataWorker);
   yield takeLatest(AUTH_ACTIONS.SIGN_UP_SUCCESS, getAppDataWorker);
-  yield takeLatest(rehydrate, tokenWorker);
 }
 
 export default authSaga;

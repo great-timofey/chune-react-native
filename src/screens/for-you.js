@@ -34,9 +34,17 @@ class ForYouScreen extends PureComponent {
     const {
       loading, contentFeed, getDataForYou, modalCallback,
     } = this.props;
-    return loading ? (
-      <ActivityIndicator />
-    ) : (
+    if (contentFeed.length === 0) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text>
+            You have no currently followed or recommended artists. Use 'Search'
+            menu below
+          </Text>
+        </View>
+      );
+    }
+    return (
       <FlatList
         contentContainerStyle={
           device.isAndroid && {
@@ -63,10 +71,15 @@ class ForYouScreen extends PureComponent {
 }
 
 export default connect(
-  ({ auth, data: { forYou } }) => ({
-    token: auth.token,
-    contentFeed: forYou.contentFeed,
-    loading: !forYou.contentFeed.length,
+  ({
+    auth: { token },
+    data: {
+      forYou: { contentFeed, loading },
+    },
+  }) => ({
+    token,
+    loading,
+    contentFeed,
   }),
   { getDataForYou },
 )(ForYouScreen);

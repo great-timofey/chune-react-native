@@ -27,6 +27,7 @@ import {
   getDataForYou,
   setDataForYou,
   requestSearchArtist,
+  forYouControlLoading,
   setSearchArtistResult,
   setSearchArtistLoading,
   getDataArtistsEventsSingle,
@@ -49,6 +50,7 @@ function* getDataHomeWorker() {
 }
 
 function* getDataForYouWorker() {
+  yield put(forYouControlLoading(true));
   try {
     let data = yield call(getContentForYouFirst);
     if (
@@ -61,6 +63,8 @@ function* getDataForYouWorker() {
     yield put(setDataForYou(contentFeed));
   } catch (err) {
     console.log(err);
+  } finally {
+    yield put(forYouControlLoading(false));
   }
 }
 
@@ -135,7 +139,10 @@ function* artistFollowingWorker({ type, payload: { artist } }) {
           ? 'Artist has been successfully added to Followed'
           : 'Artist Following Error',
       );
-      if (successful) yield put(getDataArtistsEventsOverall());
+      if (successful) {
+        yield put(getDataArtistsEventsOverall());
+        yield put(getDataForYou());
+      }
     } else if (type === DATA_ACTIONS.UNFOLLOW_ARTIST_REQUEST) {
       const response = yield call(unfollowArtist, artist);
       const successful = response === 'success';
@@ -144,7 +151,10 @@ function* artistFollowingWorker({ type, payload: { artist } }) {
           ? 'Artist has been successfully removed from Followed'
           : 'Artist Unfollowing Error',
       );
-      if (successful) yield put(getDataArtistsEventsOverall());
+      if (successful) {
+        yield put(getDataArtistsEventsOverall());
+        yield put(getDataForYou());
+      }
     }
   } catch (err) {
     console.log(err);
