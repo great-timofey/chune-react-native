@@ -34,6 +34,9 @@ function* tokenWorker() {
         console.log('chune token is valid, no need to refresh');
       }
     } catch (err) {
+      alert(
+        'Your authorization data need to be refreshed. Please, login again.',
+      );
       console.log('chune token invalid');
       console.log(err.response);
     }
